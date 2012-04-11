@@ -10,6 +10,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.apache.log4j.Logger;
+
 /**
  * The Class Alarm that defines an alarm.
  */
@@ -26,8 +28,11 @@ public class Alarm {
 
 	/** The creation date. */
 	private final Date creationDate=new Date();
+	
+	/** The logger. */
+	private static Logger log = Logger.getLogger(Alarm.class);
 
-	/**
+	/** 
 	 * Checks if the alarm should be triggered.
 	 *
 	 * @param data the environment data which provides enough information for the 
@@ -38,7 +43,10 @@ public class Alarm {
 	{
 		for(AlarmTrigger t:triggers)
 			if(t.shouldTrigger(data))
+			{
+				log.info("Alarm "+this+" triggered by "+t);
 				return true;
+			}
 
 		return false;
 	}
@@ -53,6 +61,14 @@ public class Alarm {
 		this.actions = new LinkedList<AlarmAction>();
 	}
 	
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "Alarm [enabled=" + enabled + ", triggers=" + triggers
+				+ ", actions=" + actions + "]";
+	}
 	/**
 	 * Checks if is enabled.
 	 *
