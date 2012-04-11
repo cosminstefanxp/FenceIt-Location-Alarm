@@ -1,8 +1,5 @@
 package com.fenceit;
 
-import java.io.File;
-import java.io.IOException;
-
 import org.apache.log4j.Level;
 
 import android.os.Environment;

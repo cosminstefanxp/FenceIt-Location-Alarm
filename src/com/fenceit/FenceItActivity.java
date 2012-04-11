@@ -30,8 +30,6 @@ public class FenceItActivity extends Activity {
 	 * Initializes the application environment.
 	 */
 	private void init() {
-		//DOMConfigurator.configure("log4j.xml");
-//		BasicConfigurator.configure();
 		new Log4jConfiguration();
 		log.info("Starting up...");
 	}
