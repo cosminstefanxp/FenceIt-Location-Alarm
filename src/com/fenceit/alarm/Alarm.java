@@ -17,6 +17,9 @@ import org.apache.log4j.Logger;
  */
 public class Alarm {
 
+	/** The name. */
+	private String name;
+	
 	/** The enabled. */
 	private boolean enabled;
 
@@ -127,13 +130,14 @@ public class Alarm {
 		return creationDate;
 	}
 
+
 	/**
-	 * Sets the triggers.
+	 * Gets the triggers.
 	 *
-	 * @param triggers the new triggers
+	 * @return the triggers
 	 */
-	public void setTriggers(List<AlarmTrigger> triggers) {
-		this.triggers = triggers;
+	public List<AlarmTrigger> getTriggers() {
+		return this.triggers;
 	}
 	
 	/**
@@ -160,6 +164,24 @@ public class Alarm {
 			this.setEnabled(false);
 		
 		return ret;
+	}
+
+	/**
+	 * Gets the name.
+	 *
+	 * @return the name
+	 */
+	public String getName() {
+		return name;
+	}
+
+	/**
+	 * Sets the name.
+	 *
+	 * @param name the name to set
+	 */
+	public void setName(String name) {
+		this.name = name;
 	}
 
 }
