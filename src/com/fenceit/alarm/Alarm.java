@@ -16,6 +16,9 @@ import org.apache.log4j.Logger;
  * The Class Alarm that defines an alarm.
  */
 public class Alarm {
+	
+	/** The id. */
+	private int id;
 
 	/** The name. */
 	private String name;
@@ -182,6 +185,24 @@ public class Alarm {
 	 */
 	public void setName(String name) {
 		this.name = name;
+	}
+
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public int getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the id.
+	 *
+	 * @param id the id to set
+	 */
+	public void setId(int id) {
+		this.id = id;
 	}
 
 }
