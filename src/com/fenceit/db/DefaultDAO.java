@@ -236,8 +236,6 @@ public class DefaultDAO<T> {
 	 */
 	public T fetch(long rowId) {
 
-		
-
 		// Get the cursor for the database entry
 		Cursor cursor =mDb.query(true, mTableName, mColumnNames, "_id" + "=" + rowId, null, null, null,
 				null, null);
@@ -262,6 +260,58 @@ public class DefaultDAO<T> {
 	}
 
 	/**
+	 * Fetches all the object in the database that match a given where clause.
+	 *
+	 * @param where the where
+	 * @return the array list
+	 */
+	public ArrayList<T> fetchAll(String where)
+	{
+		ArrayList<T> objects=new ArrayList<T>();
+		
+		// Get the cursor for the database entry
+		Cursor cursor = mDb.query(true, mTableName, mColumnNames, where, null, null, null,
+				null, null);
+		if (cursor == null || cursor.getCount()==0)
+			return objects;
+
+		// Build the objects from the cursor
+		cursor.moveToFirst();
+		try {
+			
+			//Build all objects from the cursor
+			while(!cursor.isAfterLast())
+			{
+				T object=buildObject(cursor);
+				objects.add(object);
+				cursor.moveToNext();
+			}
+			
+			cursor.close();
+			return objects;
+		} catch (Exception e) {
+			log.fatal("Error occured while building objects of type " + mClass + " from cursor: " + cursor
+					+ ".");
+			log.error("Error message: " + e.getMessage());
+			e.printStackTrace();
+			cursor.close();
+			return null;
+		}
+	}
+	
+	
+	/**
+	 * Gets the database reference that can be used to manually do queries.
+	 *
+	 * @return the database reference
+	 */
+	public SQLiteDatabase getDatabaseReference()
+	{
+		return mDb;
+	}
+	
+
+	/**
 	 * Builds the object.
 	 * 
 	 * @param cursor the cursor
@@ -274,7 +324,7 @@ public class DefaultDAO<T> {
 	 * @throws SecurityException 
 	 * @throws InvocationTargetException 
 	 */
-	protected T buildObject(Cursor cursor) throws IllegalAccessException, InstantiationException,
+	public T buildObject(Cursor cursor) throws IllegalAccessException, InstantiationException,
 			IllegalArgumentException, ParseException, SecurityException, NoSuchMethodException, InvocationTargetException {
 		// Create a new instance of the class, that will be populated with information
 		// Hack for private/inner classes
