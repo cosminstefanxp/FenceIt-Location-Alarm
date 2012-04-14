@@ -6,9 +6,10 @@
  */
 package com.fenceit.db;
 
+import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
@@ -30,10 +31,11 @@ import android.database.sqlite.SQLiteOpenHelper;
  * <ul>
  * <li>Only the direct fields of the object will be saved. This means, none of the fields in parent
  * classes are stored.</li>
- * <li>All of the object's fields are stored.</li>
- * <li>Every object should have an id field named {@code id}, which will be saved as {@literal _id}
+ * <li>All of the object's fields that are not marked as {@link Transient} are stored.</li>
+ * <li>Every object should have an id field named {@code id} of recommended type long, which will be saved as {@literal _id}
  * in the database. Otherwise the {@literal ID_FIELD} can be overwritten.</li>
  * <li>All other fields will be saved in the database with the same name as the object field.</li>
+ * <li>The class requires a constructor with no parameters, otherwise it will throw an exception.</li>
  * </ul>
  * 
  * @param <T> the generic type
@@ -56,9 +58,6 @@ public class DefaultDAO<T> {
 
 	/** The class. */
 	private final Class<T> mClass;
-
-	/** The Constant dateFormat. */
-	private static final SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
 
 	/** The logger. */
 	private static Logger log = Logger.getLogger(DefaultDAO.class);
@@ -92,12 +91,18 @@ public class DefaultDAO<T> {
 
 		// Create the column names
 		ArrayList<String> columnNames=new ArrayList<String>();
-		Field[] fields = c.getFields();
-		mColumnNames = new String[fields.length];
+		Field[] fields = c.getDeclaredFields();
 		for (int i = 0; i < fields.length; i++) {
 			if(!isTransient(fields[i]))
-				columnNames.add(fields[i].getName());
+			{
+				if(fields[i].getName().equals(ID_FIELD))
+					columnNames.add("_id");
+				else
+					columnNames.add(fields[i].getName());
+			}
 		}
+		
+		mColumnNames = (String[]) columnNames.toArray(new String[0]);
 
 	}
 
@@ -199,7 +204,7 @@ public class DefaultDAO<T> {
 
 			// Special type checks
 			if (field.getType().equals(Date.class))
-				value = dateFormat.format((Date) value);
+				value = ((Date) value).getTime();
 			if (field.getType().equals(boolean.class) || field.getType().equals(Boolean.class)) {
 				if ((Boolean) value)
 					value = "t";
@@ -265,11 +270,17 @@ public class DefaultDAO<T> {
 	 * @throws InstantiationException the instantiation exception
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
+	 * @throws NoSuchMethodException 
+	 * @throws SecurityException 
+	 * @throws InvocationTargetException 
 	 */
 	protected T buildObject(Cursor cursor) throws IllegalAccessException, InstantiationException,
-			IllegalArgumentException, ParseException {
+			IllegalArgumentException, ParseException, SecurityException, NoSuchMethodException, InvocationTargetException {
 		// Create a new instance of the class, that will be populated with information
-		T object = mClass.newInstance();
+		// Hack for private/inner classes
+		Constructor<T> c=mClass.getDeclaredConstructor();
+		c.setAccessible(true);
+		T object = c.newInstance();
 		Field[] fields = mClass.getDeclaredFields();
 
 		// For every field in the class, fill it with data from the cursor
@@ -286,29 +297,29 @@ public class DefaultDAO<T> {
 			// Check if it's the id field
 			if (field.getName().equals(ID_FIELD)) {
 				columnIndex = cursor.getColumnIndex("_id");
-				field.setInt(object, cursor.getInt(columnIndex));
+				field.set(object, cursor.getLong(columnIndex));
 				continue;
 			}
 
 			// Special type checks
 			if (field.getType() == int.class || field.getType() == Integer.class)
-				field.setInt(object, cursor.getInt(columnIndex));
+				field.set(object, cursor.getInt(columnIndex));
 			if (field.getType() == short.class || field.getType() == Short.class)
-				field.setShort(object, cursor.getShort(columnIndex));
+				field.set(object, cursor.getShort(columnIndex));
 			if (field.getType() == long.class || field.getType() == Long.class)
-				field.setLong(object, cursor.getLong(columnIndex));
+				field.set(object, cursor.getLong(columnIndex));
 			if (field.getType() == double.class || field.getType() == Double.class)
-				field.setDouble(object, cursor.getDouble(columnIndex));
+				field.set(object, cursor.getDouble(columnIndex));
 			if (field.getType() == float.class || field.getType() == Float.class)
-				field.setFloat(object, cursor.getFloat(columnIndex));
+				field.set(object, cursor.getFloat(columnIndex));
 			if (field.getType() == boolean.class || field.getType() == Boolean.class) {
 				if (cursor.getString(columnIndex).equals("t"))
-					field.setBoolean(object, true);
+					field.set(object, true);
 				else
-					field.setBoolean(object, false);
+					field.set(object, false);
 			}
 			if (field.getType() == Date.class)
-				field.set(object, dateFormat.parseObject(cursor.getString(columnIndex)));
+				field.set(object, new Date(cursor.getLong(columnIndex)));
 			if (field.getType() == String.class)
 				field.set(object, cursor.getString(columnIndex));
 		}

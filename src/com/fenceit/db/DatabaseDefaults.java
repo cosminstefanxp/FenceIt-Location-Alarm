@@ -15,5 +15,5 @@ public class DatabaseDefaults {
 	public static final String DATABASE_NAME = "fenceit.db";
 	
 	/** The DATABASE VERSION. */
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 1;
 }
