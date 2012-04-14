@@ -8,12 +8,12 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 public class AlarmDBHelper extends SQLiteOpenHelper {
 
-	private static final String TABLE_NAME = "alarms";
+	public static final String TABLE_NAME = "alarms";
 
 	public static final String COLUMN_ID = "_id";
 	public static final String COLUMN_NAME = "name";
 	public static final String COLUMN_ENABLED = "enabled";
-	public static final String COLUMN_CREATION_DATE = "creation_date";
+	public static final String COLUMN_CREATION_DATE = "creationDate";
 
 	public static final String[] ALL_COLUMNS = new String[] { COLUMN_ID, COLUMN_NAME, COLUMN_ENABLED,
 			COLUMN_CREATION_DATE };
@@ -27,6 +27,11 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
 
 	public AlarmDBHelper(Context context) {
 		super(context, DatabaseDefaults.DATABASE_NAME, null, DatabaseDefaults.DATABASE_VERSION);
+	}
+	
+	public String getTableName()
+	{
+		return TABLE_NAME;
 	}
 
 	@Override
@@ -43,5 +48,6 @@ public class AlarmDBHelper extends SQLiteOpenHelper {
 		db.execSQL("DROP TABLE IF EXISTS " + TABLE_NAME);
 		onCreate(db);
 	}
+	
 
 }

@@ -12,13 +12,15 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.fenceit.db.Transient;
+
 /**
  * The Class Alarm that defines an alarm.
  */
 public class Alarm {
 	
 	/** The id. */
-	private int id;
+	private long id;
 
 	/** The name. */
 	private String name;
@@ -27,15 +29,18 @@ public class Alarm {
 	private boolean enabled;
 
 	/** The triggers. */
+	@Transient
 	private List<AlarmTrigger> triggers;
 
 	/** The actions. */
+	@Transient
 	private List<AlarmAction> actions;
 
 	/** The creation date. */
-	private final Date creationDate=new Date();
+	private Date creationDate=new Date();
 	
 	/** The logger. */
+	@Transient
 	private static Logger log = Logger.getLogger(Alarm.class);
 
 	/** 
@@ -192,7 +197,7 @@ public class Alarm {
 	 *
 	 * @return the id
 	 */
-	public int getId() {
+	public long getId() {
 		return id;
 	}
 
@@ -201,8 +206,46 @@ public class Alarm {
 	 *
 	 * @param id the id to set
 	 */
-	public void setId(int id) {
+	public void setId(long id) {
 		this.id = id;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#hashCode()
+	 */
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result + (enabled ? 1231 : 1237);
+		result = prime * result + (int) (id ^ (id >>> 32));
+		result = prime * result + ((name == null) ? 0 : name.hashCode());
+		return result;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		Alarm other = (Alarm) obj;
+		if (enabled != other.enabled)
+			return false;
+		if (id != other.id)
+			return false;
+		if (name == null) {
+			if (other.name != null)
+				return false;
+		} else if (!name.equals(other.name))
+			return false;
+		return true;
 	}
 
 }

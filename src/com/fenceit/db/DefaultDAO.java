@@ -9,6 +9,7 @@ package com.fenceit.db;
 import java.lang.reflect.Field;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.apache.log4j.Logger;
@@ -39,6 +40,8 @@ import android.database.sqlite.SQLiteOpenHelper;
  */
 public class DefaultDAO<T> {
 
+	protected String mTableName;
+	
 	/** The name of the id field in the object. */
 	protected static final String ID_FIELD = "id";
 
@@ -59,6 +62,21 @@ public class DefaultDAO<T> {
 
 	/** The logger. */
 	private static Logger log = Logger.getLogger(DefaultDAO.class);
+	
+	/**
+	 * Checks if the field is transient.
+	 *
+	 * @param field the field
+	 * @return true, if is transient
+	 */
+	private boolean isTransient(Field field)
+	{
+		Transient annotation=field.getAnnotation(Transient.class);
+		if(annotation==null)
+			return false;
+		else
+			return true;
+	}
 
 	/**
 	 * Constructor - takes the context to allow the database to be opened/created.
@@ -66,16 +84,19 @@ public class DefaultDAO<T> {
 	 * @param c the class
 	 * @param dbHelper the db helper
 	 */
-	public DefaultDAO(Class<T> c, SQLiteOpenHelper dbHelper) {
+	public DefaultDAO(Class<T> c, SQLiteOpenHelper dbHelper, String tableName) {
 		super();
 		this.mClass = c;
 		this.mDbHelper = dbHelper;
+		this.mTableName = tableName;
 
 		// Create the column names
+		ArrayList<String> columnNames=new ArrayList<String>();
 		Field[] fields = c.getFields();
 		mColumnNames = new String[fields.length];
 		for (int i = 0; i < fields.length; i++) {
-			mColumnNames[i] = fields[i].getName();
+			if(!isTransient(fields[i]))
+				columnNames.add(fields[i].getName());
 		}
 
 	}
@@ -106,7 +127,7 @@ public class DefaultDAO<T> {
 	 * @param newObject the new object
 	 * @return rowId or -1 if failed
 	 */
-	public Long insertObject(T newObject) {
+	public long insert(T newObject) {
 
 		ContentValues initialValues;
 		try {
@@ -115,11 +136,11 @@ public class DefaultDAO<T> {
 			log.fatal("Error occured while parsing object for insertion: " + newObject 
 					+ ". Error message: " + e.getMessage());
 			e.printStackTrace();
-			return null;
+			return -1;
 		}
 
 		// Use the ContentValues to insert the entry in the database and return the row id.
-		return mDb.insert(DatabaseDefaults.DATABASE_NAME, null, initialValues);
+		return mDb.insert(mTableName, null, initialValues);
 	}
 
 	/**
@@ -130,7 +151,7 @@ public class DefaultDAO<T> {
 	 * @param rowId the row id
 	 * @return true if the object was successfully updated, false otherwise
 	 */
-	public boolean updateNote(T object, long rowId) {
+	public boolean update(T object, long rowId) {
 		ContentValues args;
 		try {
 			args = buildContentValues(object, true);
@@ -141,7 +162,7 @@ public class DefaultDAO<T> {
 			return false;
 		}
 
-		return mDb.update(DatabaseDefaults.DATABASE_NAME, args, "_id" + "=" + rowId, null) > 0;
+		return mDb.update(mTableName, args, "_id" + "=" + rowId, null) > 0;
 	}
 
 	/**
@@ -161,6 +182,11 @@ public class DefaultDAO<T> {
 
 		// Take every field in the object and insert it in the ContentValues entry
 		for (Field field : fields) {
+			field.setAccessible(true);
+			//if it's a transient field, skip it
+			if(isTransient(field))
+				continue;
+			
 			Object value = field.get(object);
 			String fieldName = field.getName();
 
@@ -193,8 +219,8 @@ public class DefaultDAO<T> {
 	 * @param rowId id of the object to delete
 	 * @return true if deleted, false otherwise
 	 */
-	public boolean deleteObject(long rowId) {
-		return mDb.delete(DatabaseDefaults.DATABASE_NAME, "_id" + "=" + rowId, null) > 0;
+	public boolean delete(long rowId) {
+		return mDb.delete(mTableName, "_id" + "=" + rowId, null) > 0;
 	}
 
 	/**
@@ -203,26 +229,29 @@ public class DefaultDAO<T> {
 	 * @param rowId id of object to retrieve
 	 * @return Cursor positioned to matching note, if found
 	 */
-	public T fetchObject(long rowId) {
+	public T fetch(long rowId) {
 
-		Cursor cursor =
+		
 
 		// Get the cursor for the database entry
-		mDb.query(true, DatabaseDefaults.DATABASE_NAME, mColumnNames, "_id" + "=" + rowId, null, null, null,
+		Cursor cursor =mDb.query(true, mTableName, mColumnNames, "_id" + "=" + rowId, null, null, null,
 				null, null);
 
-		if (cursor == null)
+		if (cursor == null || cursor.getCount()==0)
 			return null;
 
 		// Build the object from the cursor
 		cursor.moveToFirst();
 		try {
-			return buildObject(cursor);
+			T object=buildObject(cursor);
+			cursor.close();
+			return object;
 		} catch (Exception e) {
 			log.fatal("Error occured while building object of type " + mClass + " from cursor: " + cursor
 					+ ".");
 			log.error("Error message: " + e.getMessage());
 			e.printStackTrace();
+			cursor.close();
 			return null;
 		}
 	}
@@ -241,10 +270,16 @@ public class DefaultDAO<T> {
 			IllegalArgumentException, ParseException {
 		// Create a new instance of the class, that will be populated with information
 		T object = mClass.newInstance();
-		Field[] fields = mClass.getClass().getDeclaredFields();
+		Field[] fields = mClass.getDeclaredFields();
 
 		// For every field in the class, fill it with data from the cursor
 		for (Field field : fields) {
+			field.setAccessible(true);
+			//if it's a transient field, skip it
+			if(isTransient(field))
+				continue;
+			
+			
 			// Get the column index for the field
 			int columnIndex = cursor.getColumnIndex(field.getName());
 
