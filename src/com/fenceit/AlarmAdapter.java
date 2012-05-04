@@ -54,7 +54,7 @@ public class AlarmAdapter extends ArrayAdapter<Alarm> {
 	 *            the alarms
 	 */
 	public AlarmAdapter(Activity context, ArrayList<Alarm> alarms) {
-		super(context, R.layout.alarm_list_layout, alarms);
+		super(context, R.layout.main_list_alarm, alarms);
 		this.context = context;
 		this.alarms = alarms;
 	}
@@ -74,7 +74,7 @@ public class AlarmAdapter extends ArrayAdapter<Alarm> {
 		if (rowView == null) {
 			//Inflate a new view
 			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.alarm_list_layout, null);
+			rowView = inflater.inflate(R.layout.main_list_alarm, null);
 			//Save the fields in the view holder for quick reference
 			holder = new ViewHolder();
 			holder.enableButton = (ToggleButton) rowView

@@ -232,7 +232,7 @@ public class DefaultDAO<T> {
 	 * Return the object positioned at the entry that matches the given id.
 	 *
 	 * @param rowId id of object to retrieve
-	 * @return Cursor positioned to matching note, if found
+	 * @return the object fetched from the database
 	 */
 	public T fetch(long rowId) {
 

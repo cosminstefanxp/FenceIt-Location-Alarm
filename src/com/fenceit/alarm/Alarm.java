@@ -42,6 +42,10 @@ public class Alarm {
 	/** The logger. */
 	@Transient
 	private static Logger log = Logger.getLogger(Alarm.class);
+	
+	/** The Constant tableName. */
+	@Transient
+	public static final String tableName="alarm";
 
 	/** 
 	 * Checks if the alarm should be triggered.
