@@ -2,29 +2,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical" android:background="@color/background" android:padding="4dp">
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" >
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:background="@color/delimiter"
+        android:paddingBottom="2dp" >
 
-        <Button
-            android:id="@+id/main_addAlarmButton"
-            style="?android:attr/buttonStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="right"
-            android:text="Add Alarm" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center_vertical"
+            android:background="@color/background" >
+
+            <TextView
+                android:id="@+id/main.titleText"
+                android:layout_width="fill_parent"
+                android:layout_height="45dp"
+                android:layout_gravity="center_vertical"
+                android:background="@color/background"
+                android:padding="2dp"
+                android:text="Alarms:"
+                android:textAppearance="?android:attr/textAppearanceLarge" android:layout_weight="1"/>
+
+            <ImageButton
+                android:id="@+id/main.addAlarmButton"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:contentDescription="Add a new Alarm"
+                android:src="@android:drawable/ic_menu_add" />
+
+        </LinearLayout>
 
     </LinearLayout>
 
-    <TextView
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Existing Alarms:" />
-
     <ListView
-        android:id="@+id/alarmsListViews"
+        android:id="@+id/main.alarmList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1" android:scrollbars="vertical" android:scrollbarStyle="insideOverlay">

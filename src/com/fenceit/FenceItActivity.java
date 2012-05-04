@@ -6,14 +6,22 @@
  */
 package com.fenceit;
 
+import java.util.ArrayList;
+
 import org.apache.log4j.Logger;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ListView;
+
+import com.fenceit.alarm.Alarm;
+import com.fenceit.db.DatabaseDefaults;
+import com.fenceit.db.DefaultDAO;
 
 /**
  * The Class FenceItActivity.
@@ -22,6 +30,14 @@ public class FenceItActivity extends Activity implements OnClickListener {
 
 	/** The logger. */
 	private static Logger log = Logger.getRootLogger();
+	
+	ArrayList<Alarm> alarms;
+	
+	/** The db helper. */
+	private static SQLiteOpenHelper dbHelper=null;
+	
+	/** The dao. */
+	private DefaultDAO<Alarm> dao=null;
 	
 	private static final int REQ_CODE_ADD_ALARM=1;
 
@@ -34,8 +50,35 @@ public class FenceItActivity extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.main);
 		init();
+		
+		setContentView(R.layout.main);
+		
+		//Prepare database connection
+		if(dbHelper==null)
+			dbHelper=DatabaseDefaults.getDBHelper(getApplicationContext());
+		if(dao==null)
+			dao=new DefaultDAO<Alarm>(Alarm.class, dbHelper, Alarm.tableName);
+		
+		//Add listeners
+		ImageButton but=(ImageButton)findViewById(R.id.main_addAlarmButton);
+		but.setOnClickListener(this);
+		
+		//Get the alarms
+		fetchAlarms();
+		
+		ListView lv=(ListView) findViewById(R.id.main_alarmList);
+		lv.setAdapter(new AlarmAdapter(this, alarms));
+	}
+	
+	/**
+	 * Fetch alarms.
+	 */
+	private void fetchAlarms()
+	{
+		dao.open();
+		alarms=dao.fetchAll(null);
+		dao.close();
 	}
 
 	/**
@@ -45,9 +88,7 @@ public class FenceItActivity extends Activity implements OnClickListener {
 		new Log4jConfiguration();
 		log.info("Starting up...");
 		
-		//Add listeners
-		Button but=(Button)findViewById(R.id.main_addAlarmButton);
-		but.setOnClickListener(this);
+
 	}
 
 	/* (non-Javadoc)
@@ -56,7 +97,7 @@ public class FenceItActivity extends Activity implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 		if(v==findViewById(R.id.main_addAlarmButton))
-		{
+		{  
 			log.debug("Add alarm button clicked.");
 			Intent addAlarmActivityIntent=new Intent(this, AlarmActivity.class);
 			startActivityForResult(addAlarmActivityIntent, REQ_CODE_ADD_ALARM);

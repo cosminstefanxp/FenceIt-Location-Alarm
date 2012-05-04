@@ -11,10 +11,11 @@ import org.apache.log4j.Logger;
 import android.app.Activity;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.widget.EditText;
 
 import com.fenceit.alarm.Alarm;
+import com.fenceit.db.DatabaseDefaults;
 import com.fenceit.db.DefaultDAO;
-import com.fenceit.db.DefaultDatabaseHelper;
 
 public class AlarmActivity extends Activity {
 
@@ -24,6 +25,8 @@ public class AlarmActivity extends Activity {
 	/** The alarm. */
 	private Alarm alarm;
 
+	/** The alarm id. */
+	private Long alarmID;
 	
 	/** The new alarm. */
 	private boolean newAlarm=false;
@@ -32,7 +35,7 @@ public class AlarmActivity extends Activity {
 	private static SQLiteOpenHelper dbHelper=null;
 	
 	/** The dao. */
-	DefaultDAO<Alarm> dao=null;
+	private DefaultDAO<Alarm> dao=null;
 	/**
 	 * Called when the activity is first created.
 	 * 
@@ -45,7 +48,7 @@ public class AlarmActivity extends Activity {
 		
 		//Prepare database connection
 		if(dbHelper==null)
-			dbHelper=new DefaultDatabaseHelper<Alarm>(getBaseContext(), Alarm.class, Alarm.tableName);
+			dbHelper=DatabaseDefaults.getDBHelper(getApplicationContext());
 		if(dao==null)
 			dao=new DefaultDAO<Alarm>(Alarm.class, dbHelper, Alarm.tableName);
 
@@ -55,7 +58,16 @@ public class AlarmActivity extends Activity {
 			Bundle extras = getIntent().getExtras();
 			alarmID = extras != null ? extras.getLong("id") : null;
 		}
+	}
 
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onStart()
+	 */
+	@Override
+	protected void onStart() {
+		super.onStart();
+		log.debug("Alarm Activity onStart method running...");
+		
 		//Prepare the associated alarm
 		fetchAlarm(alarmID);
 	}
@@ -71,6 +83,7 @@ public class AlarmActivity extends Activity {
 			log.info("Fetching alarm from database with id: "+alarmID);
 			dao.open();
 			alarm=dao.fetch(alarmID);
+			dao.close();
 			log.debug("Fetched alarm: "+alarm);
 		}
 		if(alarm==null)
@@ -79,6 +92,54 @@ public class AlarmActivity extends Activity {
 			alarm=new Alarm();		
 			newAlarm=true;
 		}
+	}
+	
+	/* (non-Javadoc)
+	 * @see android.app.Activity#onStop()
+	 */
+	@Override
+	protected void onStop() {
+		super.onStop();
+		storeAlarm();
+	}
+
+	/**
+	 * Store alarm.
+	 *
+	 * @return true, if successful
+	 */
+	private boolean storeAlarm()
+	{
+		if(alarm==null)
+		{
+			log.error("No alarm to store in database.");
+			return false;
+		}
+		
+		//Get data from fields
+		alarm.setName(((EditText)findViewById(R.id.alarm_nameTextField)).getText().toString());
+		
+		if(!alarm.isComplete())
+		{
+			log.error("Not all required fields are filled in");
+			return false;
+		}
+		
+		log.info("Saving alarm in database...");
+		dao.open();
+		if(newAlarm)
+		{
+			long id=dao.insert(alarm);
+			if(id==-1)
+				return false;
+			log.info("Successfully saved new alarm with id: "+id);
+			alarm.setId(id);
+			newAlarm=false;
+		}
+		else
+			dao.update(alarm, alarm.getId());
+		dao.close();
+		return true;
 	}
 	
 	

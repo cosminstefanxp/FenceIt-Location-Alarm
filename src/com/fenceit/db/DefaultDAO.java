@@ -262,7 +262,7 @@ public class DefaultDAO<T> {
 	/**
 	 * Fetches all the object in the database that match a given where clause.
 	 *
-	 * @param where the where
+	 * @param where the where clause; null means it will return all rows
 	 * @return the array list
 	 */
 	public ArrayList<T> fetchAll(String where)

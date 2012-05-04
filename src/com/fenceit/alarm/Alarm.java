@@ -45,7 +45,7 @@ public class Alarm {
 	
 	/** The Constant tableName. */
 	@Transient
-	public static final String tableName="alarm";
+	public static final String tableName="alarms";
 
 	/** 
 	 * Checks if the alarm should be triggered.
@@ -64,6 +64,18 @@ public class Alarm {
 			}
 
 		return false;
+	}
+	
+	/**
+	 * Checks if the alarm is complete and has all the fields correctly filled in.
+	 *
+	 * @return true, if is complete
+	 */
+	public boolean isComplete()
+	{
+		if(name==null || name.trim().length()==0)
+			return false;
+		return true;
 	}
 	
 	/**

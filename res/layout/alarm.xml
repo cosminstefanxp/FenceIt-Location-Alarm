@@ -94,24 +94,4 @@
             android:background="@color/background" android:padding="1dp">
         </ListView>
     </TableRow>
-
-    <TableRow
-        android:id="@+id/tableRow5"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="5dp" >
-
-        <Button
-            android:id="@+id/alarm.saveButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Save" android:layout_weight="0.5"/>
-
-        <Button
-            android:id="@+id/alarm.cancelButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Cancel" android:layout_weight="0.5"/>
-    </TableRow>
-
 </TableLayout>
