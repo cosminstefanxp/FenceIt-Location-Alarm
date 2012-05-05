@@ -88,32 +88,105 @@
 
         <FrameLayout
             android:layout_width="match_parent"
+            android:layout_height="wrap_content"
             android:layout_span="2"
-            android:background="@color/background"
-            android:layout_height="wrap_content" android:layout_weight="1">
+            android:layout_weight="1"
+            android:background="@color/background" >
 
             <TextView
                 android:id="@+id/alarm.noTrigggersText"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:text="No triggers yet."
                 android:padding="3dp"
+                android:text="No triggers yet."
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <ListView
                 android:id="@+id/alarm.triggersListView"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"                
+                android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:padding="1dp" android:background="@color/background">
+                android:background="@color/background"
+                android:padding="1dp" >
             </ListView>
-
         </FrameLayout>
-
     </TableRow>
 
     <TableRow
         android:id="@+id/tableRow5"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:background="@color/delimiter"
+        android:layout_marginTop="10dp"
+        android:gravity="bottom"
+        android:paddingBottom="2dp" >
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_span="2"
+            android:layout_weight="1"
+            android:background="@color/background"
+            android:baselineAligned="true"
+            android:gravity="bottom"
+            android:orientation="horizontal" >
+
+            <TextView
+                android:id="@+id/alarm.actionsText"
+                android:layout_width="0dip"
+                android:layout_height="50dp"
+                android:layout_gravity="bottom"
+                android:layout_weight="1"
+                android:background="@color/background"
+                android:padding="4dp"
+                android:text="Actions"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <ImageButton
+                android:id="@+id/alarm.addActionButton"
+                android:layout_width="64dp"
+                android:layout_height="64dp"
+                android:contentDescription="Add a new Action"
+                android:src="@android:drawable/ic_menu_add" />
+        </LinearLayout>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow6"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/delimiter"
+        android:paddingBottom="2dp" >
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_span="2"
+            android:layout_weight="1"
+            android:background="@color/background" >
+
+            <TextView
+                android:id="@+id/alarm.noActionsText"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="3dp"
+                android:text="No actions yet."
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+
+            <ListView
+                android:id="@+id/alarm.actionsListView"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="@color/background"
+                android:padding="1dp" >
+            </ListView>
+        </FrameLayout>
+    </TableRow>
+
+    <TableRow
+        android:id="@+id/tableRow7"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="top"
@@ -128,4 +201,5 @@
             android:layout_weight="1"
             android:text="Save" />
     </TableRow>
+
 </TableLayout>

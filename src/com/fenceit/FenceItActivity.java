@@ -59,7 +59,7 @@ public class FenceItActivity extends Activity implements OnClickListener, OnItem
 	/** The Constant REQ_CODE_ADD_ALARM. */
 	private static final int REQ_CODE_ADD_ALARM = 1;
 	
-	private static final int REQ_CODE_EDIT_ALARM = 1;
+	private static final int REQ_CODE_EDIT_ALARM = 2;
 
 	/**
 	 * Called when the activity is first created.
@@ -184,7 +184,9 @@ public class FenceItActivity extends Activity implements OnClickListener, OnItem
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
-		if (requestCode == REQ_CODE_ADD_ALARM && resultCode == RESULT_OK) {
+		//if ((requestCode == REQ_CODE_ADD_ALARM || requestCode==REQ_CODE_EDIT_ALARM) && resultCode == RESULT_OK) {
+		if(resultCode==RESULT_OK){
+			//TODO: separate new alarm from edited alarm
 			log.debug("Refreshing alarms...");
 			fetchAlarms();
 			refreshAlarmsListView();
