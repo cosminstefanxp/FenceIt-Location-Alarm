@@ -7,17 +7,25 @@
 package com.fenceit;
 
 import org.apache.log4j.Logger;
+import org.apache.log4j.spi.TriggeringEventEvaluator;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
+import android.view.View;
+import android.view.View.OnClickListener;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ListView;
+import android.widget.TextView;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseDefaults;
 import com.fenceit.db.DefaultDAO;
 
-public class AlarmActivity extends Activity {
+public class AlarmActivity extends Activity implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(AlarmActivity.class);
@@ -36,6 +44,10 @@ public class AlarmActivity extends Activity {
 	
 	/** The dao. */
 	private DefaultDAO<Alarm> dao=null;
+	
+	/** The triggers list view. */
+	ListView triggersLV;
+	
 	/**
 	 * Called when the activity is first created.
 	 * 
@@ -53,11 +65,16 @@ public class AlarmActivity extends Activity {
 			dao=new DefaultDAO<Alarm>(Alarm.class, dbHelper, Alarm.tableName);
 
 		//Get the alarm id, if any
-		Long alarmID = (savedInstanceState == null) ? null : (Long) savedInstanceState.getSerializable("id");
+		alarmID = (savedInstanceState == null) ? null : (Long) savedInstanceState.getSerializable("id");
 		if (alarmID == null) {
 			Bundle extras = getIntent().getExtras();
 			alarmID = extras != null ? extras.getLong("id") : null;
 		}
+		
+		Button btn=(Button) findViewById(R.id.alarm_saveButton);
+		btn.setOnClickListener(this);
+		
+		triggersLV=(ListView) findViewById(R.id.alarm_triggersListView);
 	}
 
 	/* (non-Javadoc)
@@ -70,6 +87,26 @@ public class AlarmActivity extends Activity {
 		
 		//Prepare the associated alarm
 		fetchAlarm(alarmID);
+		fillFields();
+		
+		//Triggers parsing
+		triggersLV.setAdapter(new ArrayAdapter<Alarm>(this,android.R.layout.simple_list_item_1, new Alarm[] {} ));
+		
+	}
+	
+	/**
+	 * Fills the fields of the activity with the data from the alarm.
+	 */
+	private void fillFields()
+	{
+		if(alarm==null)
+		{
+			log.error("No alarm so not filling fields.");
+			return;
+		}
+		
+		((EditText)findViewById(R.id.alarm_nameTextField)).setText(alarm.getName());
+		((CheckBox)findViewById(R.id.alarm_enabledCheckbox)).setChecked(alarm.isEnabled());
 	}
 
 	/**
@@ -86,7 +123,7 @@ public class AlarmActivity extends Activity {
 			dao.close();
 			log.debug("Fetched alarm: "+alarm);
 		}
-		if(alarm==null)
+		else
 		{
 			log.info("Creating new alarm...");
 			alarm=new Alarm();		
@@ -100,7 +137,6 @@ public class AlarmActivity extends Activity {
 	@Override
 	protected void onStop() {
 		super.onStop();
-		storeAlarm();
 	}
 
 	/**
@@ -118,13 +154,16 @@ public class AlarmActivity extends Activity {
 		
 		//Get data from fields
 		alarm.setName(((EditText)findViewById(R.id.alarm_nameTextField)).getText().toString());
+		alarm.setEnabled(((CheckBox)findViewById(R.id.alarm_enabledCheckbox)).isChecked());
 		
+		//Check if all data is all right
 		if(!alarm.isComplete())
 		{
 			log.error("Not all required fields are filled in");
 			return false;
 		}
 		
+		//Save the alarm to the database
 		log.info("Saving alarm in database...");
 		dao.open();
 		if(newAlarm)
@@ -140,6 +179,16 @@ public class AlarmActivity extends Activity {
 			dao.update(alarm, alarm.getId());
 		dao.close();
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
+	@Override
+	public void onClick(View v) {
+		storeAlarm();
+		setResult(RESULT_OK);
+		finish();		
 	}
 	
 	
