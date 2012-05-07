@@ -4,10 +4,9 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit;
+package com.fenceit.ui;
 
 import org.apache.log4j.Logger;
-import org.apache.log4j.spi.TriggeringEventEvaluator;
 
 import android.app.Activity;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -19,8 +18,8 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ListView;
-import android.widget.TextView;
 
+import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseDefaults;
 import com.fenceit.db.DefaultDAO;

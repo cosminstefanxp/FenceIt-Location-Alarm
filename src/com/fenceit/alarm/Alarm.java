@@ -12,6 +12,8 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import com.fenceit.alarm.actions.AlarmAction;
+import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.db.Transient;
 
 /**
@@ -54,7 +56,7 @@ public class Alarm {
 	 *        it should be triggered.
 	 * @return true, if is triggered
 	 */
-	public boolean shouldTrigger(EnvironmentData data) {
+	public boolean shouldTrigger(ContextInfo data) {
 		for (AlarmTrigger t : triggers)
 			if (t.shouldTrigger(data)) {
 				log.info("Alarm " + this + " triggered by " + t);

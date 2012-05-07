@@ -4,7 +4,7 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit;
+package com.fenceit.ui.adapters;
 
 import java.util.ArrayList;
 
@@ -16,6 +16,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
+import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 
 /**

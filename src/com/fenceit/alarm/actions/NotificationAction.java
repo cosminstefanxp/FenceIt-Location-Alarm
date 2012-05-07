@@ -8,9 +8,9 @@ package com.fenceit.alarm.actions;
 
 import org.apache.log4j.Logger;
 
+import android.content.Context;
 import android.widget.Toast;
 
-import com.fenceit.alarm.AlarmAction;
 
 /**
  * The Class NotificationAction that implements an Alarm Action that displays a simple notification
@@ -25,9 +25,9 @@ public class NotificationAction implements AlarmAction {
 	 * @see com.fenceit.alarm.AlarmAction#execute()
 	 */
 	@Override
-	public void execute() {
+	public void execute(Context context) {
 		log.warn("Notification alarm triggered.");
-		Toast.makeText(null, "Alarm triggered.", Toast.LENGTH_SHORT);
+		Toast.makeText(context, "Alarm triggered.", Toast.LENGTH_SHORT);
 
 	}
 

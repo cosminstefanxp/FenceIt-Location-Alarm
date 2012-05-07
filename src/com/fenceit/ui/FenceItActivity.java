@@ -4,7 +4,7 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit;
+package com.fenceit.ui;
 
 import java.util.ArrayList;
 
@@ -20,15 +20,18 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView;
+import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
+import com.fenceit.Log4jConfiguration;
+import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseDefaults;
 import com.fenceit.db.DefaultDAO;
+import com.fenceit.ui.adapters.AlarmAdapter;
 
 /**
  * The Class FenceItActivity.

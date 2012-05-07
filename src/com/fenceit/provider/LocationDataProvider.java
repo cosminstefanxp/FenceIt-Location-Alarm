@@ -1,8 +1,6 @@
-package com.fenceit.location;
+package com.fenceit.provider;
 
 import org.apache.log4j.Logger;
-
-import com.fenceit.alarm.Alarm;
 
 import android.content.Context;
 import android.location.Location;

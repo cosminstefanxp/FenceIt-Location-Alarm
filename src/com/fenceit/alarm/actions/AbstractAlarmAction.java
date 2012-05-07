@@ -6,8 +6,9 @@
  */
 package com.fenceit.alarm.actions;
 
+import android.content.Context;
+
 import com.fenceit.alarm.Alarm;
-import com.fenceit.alarm.AlarmAction;
 
 /**
  * The Class AbstractAlarmAction that is a basic abstract implementation for an AlarmAction.
@@ -32,5 +33,5 @@ public abstract class AbstractAlarmAction implements AlarmAction {
 	 * @see com.fenceit.alarm.AlarmAction#execute()
 	 */
 	@Override
-	public abstract void execute();
+	public abstract void execute(Context context);
 }
