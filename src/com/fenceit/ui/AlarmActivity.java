@@ -38,10 +38,10 @@ public class AlarmActivity extends Activity implements OnClickListener {
 	/** The new alarm. */
 	private boolean newAlarm=false;
 
-	/** The db helper. */
+	/** The database helper. */
 	private static SQLiteOpenHelper dbHelper=null;
 	
-	/** The dao. */
+	/** The data access object. */
 	private DefaultDAO<Alarm> dao=null;
 	
 	/** The triggers list view. */

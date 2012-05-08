@@ -3,7 +3,7 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical"
-    style="@style/BasicActivity">
+   	style="@style/BasicActivity">
 
 	<!--     Title Bar	 -->
     <LinearLayout style="@style/TitleBar" >
@@ -13,23 +13,18 @@
             android:onClick="onClickHome"
             android:src="@drawable/title_home" />
         <ImageView style="@style/TitleBarSeparator" />
-        <TextView style="@style/TitleBarText" android:text="Alarms"/>
+        <TextView style="@style/TitleBarText" />
         <ImageButton
-            android:id="@+id/main.addAlarmButton"
             style="@style/TitleBarAction"
             android:contentDescription="@string/description_action"
-            android:src="@drawable/title_add" />
+            android:onClick="onClickAction"
+            android:src="@drawable/title_search" />
     </LinearLayout>
 	<!--     End of Title Bar -->
 
-
-    <ListView
-        android:id="@+id/main.alarmList"
-        android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:layout_weight="1"
-        android:scrollbarStyle="insideOverlay"
-        android:scrollbars="vertical" >
-    </ListView>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Testing text" />
 
 </LinearLayout>
