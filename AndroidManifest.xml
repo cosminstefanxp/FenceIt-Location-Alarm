@@ -24,8 +24,12 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.AlarmActivity" 
-            android:theme="@style/Theme"/>
+        <activity
+            android:name=".ui.AlarmActivity"
+            android:theme="@style/Theme" />
+        <activity
+            android:name=".ui.TriggerActivity"
+            android:theme="@style/Theme" />
     </application>
 
 </manifest>

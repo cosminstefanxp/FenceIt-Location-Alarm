@@ -9,6 +9,7 @@ package com.fenceit.ui;
 import org.apache.log4j.Logger;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
@@ -17,6 +18,7 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.fenceit.R;
@@ -28,6 +30,8 @@ public class AlarmActivity extends Activity implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(AlarmActivity.class);
+	
+	private static final int REQ_CODE_ADD_TRIGGER=1;
 
 	/** The alarm. */
 	private Alarm alarm;
@@ -46,6 +50,9 @@ public class AlarmActivity extends Activity implements OnClickListener {
 	
 	/** The triggers list view. */
 	ListView triggersLV;
+
+	private Button saveButton;
+	private ImageButton addTriggerButton;
 	
 	/**
 	 * Called when the activity is first created.
@@ -70,10 +77,18 @@ public class AlarmActivity extends Activity implements OnClickListener {
 			alarmID = extras != null ? extras.getLong("id") : null;
 		}
 		
-		Button btn=(Button) findViewById(R.id.alarm_saveButton);
-		btn.setOnClickListener(this);
+		saveButton = (Button) findViewById(R.id.alarm_saveButton);
+		saveButton.setOnClickListener(this);
+
+
+		addTriggerButton = (ImageButton) findViewById(R.id.alarm_addTriggerButton);
+		addTriggerButton.setOnClickListener(this);
 		
 		triggersLV=(ListView) findViewById(R.id.alarm_triggersListView);
+		
+		//Fill in the data
+		fetchAlarm(alarmID);
+		fillFields();
 	}
 
 	/* (non-Javadoc)
@@ -83,13 +98,6 @@ public class AlarmActivity extends Activity implements OnClickListener {
 	protected void onStart() {
 		super.onStart();
 		log.debug("Alarm Activity onStart method running...");
-		
-		//Prepare the associated alarm
-		fetchAlarm(alarmID);
-		fillFields();
-		
-		//Triggers parsing
-		triggersLV.setAdapter(new ArrayAdapter<Alarm>(this,android.R.layout.simple_list_item_1, new Alarm[] {} ));
 		
 	}
 	
@@ -185,9 +193,18 @@ public class AlarmActivity extends Activity implements OnClickListener {
 	 */
 	@Override
 	public void onClick(View v) {
-		storeAlarm();
-		setResult(RESULT_OK);
-		finish();		
+		if (v == saveButton) {
+			log.info("Save button clicked. Storing alarm...");
+			storeAlarm();
+			setResult(RESULT_OK);
+			finish();
+			return;
+		}
+		if (v == addTriggerButton) {
+			log.info("Add trigger button clicked.");
+			Intent addTriggerActivityIntent = new Intent(this, TriggerActivity.class);
+			startActivityForResult(addTriggerActivityIntent, REQ_CODE_ADD_TRIGGER);
+		}
 	}
 	
 	

@@ -8,6 +8,8 @@ package com.fenceit.alarm.triggers;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.ContextInfo;
+import com.fenceit.db.ParentField;
+import com.fenceit.db.Transient;
 
 /**
  * The Class AbstractAlarmTrigger that is a basic abstract implementation for an AlarmTrigger.
@@ -15,8 +17,8 @@ import com.fenceit.alarm.ContextInfo;
 public abstract class AbstractAlarmTrigger implements AlarmTrigger {
 	
 	/** The alarm. */
-	@SuppressWarnings("unused")
-	private Alarm alarm;
+	@ParentField
+	protected Alarm alarm;
 
 	/**
 	 * Instantiates a new alarm trigger.

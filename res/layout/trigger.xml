@@ -22,11 +22,27 @@
             style="@style/TitleBarAction.Text"
             android:text="@string/button_save" />
     </LinearLayout>
-	<!--     End of Title Bar --> 
-	
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Testing text" />
+	<!--     End of Title Bar -->
+
+    <LinearLayout
+        style="@style/SettingItem"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Triggered when..."
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/trigger.whenText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Entering Fence"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    </LinearLayout>
 
 </LinearLayout>

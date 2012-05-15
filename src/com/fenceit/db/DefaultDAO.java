@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -29,13 +30,17 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Uses Java Reflection for creating the database entries. This has some implications and
  * restrictions:
  * <ul>
- * <li>Only the direct fields of the object will be saved. This means, none of the fields in parent
- * classes are stored.</li>
- * <li>All of the object's fields that are not marked as {@link Transient} are stored.</li>
- * <li>Every object should have an id field named {@code id} of recommended type long, which will be saved as {@literal _id}
- * in the database. Otherwise the {@literal ID_FIELD} can be overwritten.</li>
+ * <li>Only the direct fields of the object and fields of first level parent will be saved.</li>
+ * <li>All fields of the object and the parent (besides the one marked with {@link Transient} or
+ * {@link ParentField}</li>
+ * <li>Every object MUST have an id field named {@code id} of recommended type long, which will be
+ * saved as {@literal _id} in the database. Otherwise the {@literal ID_FIELD} can be overwritten.</li>
  * <li>All other fields will be saved in the database with the same name as the object field.</li>
  * <li>The class requires a constructor with no parameters, otherwise it will throw an exception.</li>
+ * <li>The class or the parent class can have a field marked with {@link ParentField} which will not
+ * be stored in the database, but it MUST have a field with the name {@code id} which will be stored
+ * in the database as {@code _parent_id}. This field can be used for queries and for making
+ * one-to-many relationships.</li>
  * </ul>
  * 
  * @param <T> the generic type
@@ -43,7 +48,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DefaultDAO<T> {
 
 	protected String mTableName;
-	
+
 	/** The name of the id field in the object. */
 	protected static final String ID_FIELD = "id";
 
@@ -61,20 +66,54 @@ public class DefaultDAO<T> {
 
 	/** The logger. */
 	private static Logger log = Logger.getLogger(DefaultDAO.class);
-	
+
 	/**
 	 * Checks if the field is transient.
-	 *
+	 * 
 	 * @param field the field
 	 * @return true, if is transient
 	 */
-	private boolean isTransient(Field field)
-	{
-		Transient annotation=field.getAnnotation(Transient.class);
-		if(annotation==null)
+	private boolean isTransient(Field field) {
+		Transient annotation = field.getAnnotation(Transient.class);
+		if (annotation == null)
 			return false;
 		else
 			return true;
+	}
+
+	/**
+	 * Checks if is parent field.
+	 * 
+	 * @param field the field
+	 * @return true, if is parent field
+	 */
+	private boolean isParentField(Field field) {
+		ParentField annotationParentField = field.getAnnotation(ParentField.class);
+		if (annotationParentField == null)
+			return false;
+		else
+			return true;
+	}
+
+	/**
+	 * Gets the fields of a given class
+	 * 
+	 * @param cls the cls
+	 * @return the fields
+	 */
+	@SuppressWarnings("rawtypes")
+	private ArrayList<Field> getFields(Class cls) {
+		// Get the fields
+		Field[] fieldsT = cls.getDeclaredFields();
+		ArrayList<Field> fields = new ArrayList<Field>();
+		for (Field field : fieldsT)
+			fields.add(field);
+		// Get Parent fields
+		fieldsT = cls.getSuperclass().getDeclaredFields();
+		for (Field field : fieldsT)
+			fields.add(field);
+
+		return fields;
 	}
 
 	/**
@@ -90,18 +129,17 @@ public class DefaultDAO<T> {
 		this.mTableName = tableName;
 
 		// Create the column names
-		ArrayList<String> columnNames=new ArrayList<String>();
-		Field[] fields = c.getDeclaredFields();
-		for (int i = 0; i < fields.length; i++) {
-			if(!isTransient(fields[i]))
-			{
-				if(fields[i].getName().equals(ID_FIELD))
+		ArrayList<String> columnNames = new ArrayList<String>();
+		ArrayList<Field> fields = getFields(c);
+		for (int i = 0; i < fields.size(); i++) {
+			if (!isTransient(fields.get(i)) && !isParentField(fields.get(i))) {
+				if (fields.get(i).getName().equals(ID_FIELD))
 					columnNames.add("_id");
 				else
-					columnNames.add(fields[i].getName());
+					columnNames.add(fields.get(i).getName());
 			}
 		}
-		
+
 		mColumnNames = (String[]) columnNames.toArray(new String[0]);
 
 	}
@@ -128,7 +166,7 @@ public class DefaultDAO<T> {
 	/**
 	 * Inserts a new entry in the database for the object provided. If the entry is successfully
 	 * created return the new rowId for that entry, otherwise return a -1 to indicate failure.
-	 *
+	 * 
 	 * @param newObject the new object
 	 * @return rowId or -1 if failed
 	 */
@@ -138,20 +176,21 @@ public class DefaultDAO<T> {
 		try {
 			initialValues = buildContentValues(newObject, false);
 		} catch (Exception e) {
-			log.fatal("Error occured while parsing object for insertion: " + newObject 
-					+ ". Error message: " + e.getMessage());
+			log.fatal("Error occured while parsing object for insertion: " + newObject + ". Error message: "
+					+ e.getMessage());
 			e.printStackTrace();
 			return -1;
 		}
 
 		// Use the ContentValues to insert the entry in the database and return the row id.
+		log.debug("Inserting: " + initialValues);
 		return mDb.insert(mTableName, null, initialValues);
 	}
 
 	/**
 	 * Update the entry in the database corresponding to the provided object. The row id is given
 	 * separately.
-	 *
+	 * 
 	 * @param object the object
 	 * @param rowId the row id
 	 * @return true if the object was successfully updated, false otherwise
@@ -161,8 +200,8 @@ public class DefaultDAO<T> {
 		try {
 			args = buildContentValues(object, true);
 		} catch (Exception e) {
-			log.fatal("Error occured while parsing object for update: " + object 
-					+ ". Error message: " + e.getMessage());
+			log.fatal("Error occured while parsing object for update: " + object + ". Error message: "
+					+ e.getMessage());
 			e.printStackTrace();
 			return false;
 		}
@@ -179,19 +218,34 @@ public class DefaultDAO<T> {
 	 * @return the content values
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws IllegalAccessException the illegal access exception {@literal autoincrement}
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchFieldException the no such field exception
 	 */
 	protected ContentValues buildContentValues(T object, boolean setID) throws IllegalArgumentException,
-			IllegalAccessException {
+			IllegalAccessException, SecurityException, NoSuchFieldException {
 		ContentValues contentValues = new ContentValues();
-		Field[] fields = object.getClass().getDeclaredFields();
+		List<Field> fields = getFields(object.getClass());
 
 		// Take every field in the object and insert it in the ContentValues entry
 		for (Field field : fields) {
 			field.setAccessible(true);
-			//if it's a transient field, skip it
-			if(isTransient(field))
+
+			// if it's a parent field, get the id and put it in "_parent_id"
+			if (isParentField(field)) {
+				Object parent = field.get(object);
+				if (parent == null)
+					contentValues.put("_parent_id", "null");
+				Field parentIdField = parent.getClass().getDeclaredField(ID_FIELD);
+				parentIdField.setAccessible(true);
+				Long parentId = parentIdField.getLong(parent);
+				contentValues.put("_parent_id", parentId.toString());
 				continue;
-			
+			}
+
+			// if it's a transient field, skip it
+			if (isTransient(field))
+				continue;
+
 			Object value = field.get(object);
 			String fieldName = field.getName();
 
@@ -230,23 +284,23 @@ public class DefaultDAO<T> {
 
 	/**
 	 * Return the object positioned at the entry that matches the given id.
-	 *
+	 * 
 	 * @param rowId id of object to retrieve
 	 * @return the object fetched from the database
 	 */
 	public T fetch(long rowId) {
 
 		// Get the cursor for the database entry
-		Cursor cursor =mDb.query(true, mTableName, mColumnNames, "_id" + "=" + rowId, null, null, null,
+		Cursor cursor = mDb.query(true, mTableName, mColumnNames, "_id" + "=" + rowId, null, null, null,
 				null, null);
 
-		if (cursor == null || cursor.getCount()==0)
+		if (cursor == null || cursor.getCount() == 0)
 			return null;
 
 		// Build the object from the cursor
 		cursor.moveToFirst();
 		try {
-			T object=buildObject(cursor);
+			T object = buildObject(cursor);
 			cursor.close();
 			return object;
 		} catch (Exception e) {
@@ -261,32 +315,29 @@ public class DefaultDAO<T> {
 
 	/**
 	 * Fetches all the object in the database that match a given where clause.
-	 *
+	 * 
 	 * @param where the where clause; null means it will return all rows
 	 * @return the array list
 	 */
-	public ArrayList<T> fetchAll(String where)
-	{
-		ArrayList<T> objects=new ArrayList<T>();
-		
+	public ArrayList<T> fetchAll(String where) {
+		ArrayList<T> objects = new ArrayList<T>();
+
 		// Get the cursor for the database entry
-		Cursor cursor = mDb.query(true, mTableName, mColumnNames, where, null, null, null,
-				null, null);
-		if (cursor == null || cursor.getCount()==0)
+		Cursor cursor = mDb.query(true, mTableName, mColumnNames, where, null, null, null, null, null);
+		if (cursor == null || cursor.getCount() == 0)
 			return objects;
 
 		// Build the objects from the cursor
 		cursor.moveToFirst();
 		try {
-			
-			//Build all objects from the cursor
-			while(!cursor.isAfterLast())
-			{
-				T object=buildObject(cursor);
+
+			// Build all objects from the cursor
+			while (!cursor.isAfterLast()) {
+				T object = buildObject(cursor);
 				objects.add(object);
 				cursor.moveToNext();
 			}
-			
+
 			cursor.close();
 			return objects;
 		} catch (Exception e) {
@@ -298,18 +349,15 @@ public class DefaultDAO<T> {
 			return null;
 		}
 	}
-	
-	
+
 	/**
 	 * Gets the database reference that can be used to manually do queries.
-	 *
+	 * 
 	 * @return the database reference
 	 */
-	public SQLiteDatabase getDatabaseReference()
-	{
+	public SQLiteDatabase getDatabaseReference() {
 		return mDb;
 	}
-	
 
 	/**
 	 * Builds the object.
@@ -320,27 +368,28 @@ public class DefaultDAO<T> {
 	 * @throws InstantiationException the instantiation exception
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
-	 * @throws NoSuchMethodException 
-	 * @throws SecurityException 
-	 * @throws InvocationTargetException 
+	 * @throws NoSuchMethodException
+	 * @throws SecurityException
+	 * @throws InvocationTargetException
 	 */
 	public T buildObject(Cursor cursor) throws IllegalAccessException, InstantiationException,
-			IllegalArgumentException, ParseException, SecurityException, NoSuchMethodException, InvocationTargetException {
+			IllegalArgumentException, ParseException, SecurityException, NoSuchMethodException,
+			InvocationTargetException {
 		// Create a new instance of the class, that will be populated with information
 		// Hack for private/inner classes
-		Constructor<T> c=mClass.getDeclaredConstructor();
+		Constructor<T> c = mClass.getDeclaredConstructor();
 		c.setAccessible(true);
 		T object = c.newInstance();
-		Field[] fields = mClass.getDeclaredFields();
+		List<Field> fields = getFields(mClass);
 
 		// For every field in the class, fill it with data from the cursor
 		for (Field field : fields) {
 			field.setAccessible(true);
-			//if it's a transient field, skip it
-			if(isTransient(field))
+
+			// if it's a transient or parent field, skip it
+			if (isTransient(field) || isParentField(field))
 				continue;
-			
-			
+
 			// Get the column index for the field
 			int columnIndex = cursor.getColumnIndex(field.getName());
 

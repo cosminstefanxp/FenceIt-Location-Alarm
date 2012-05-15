@@ -7,6 +7,8 @@
 package com.fenceit.db;
 
 import java.lang.reflect.Field;
+import java.util.LinkedList;
+import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -41,11 +43,46 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 	 * @return true, if is transient
 	 */
 	private boolean isTransient(Field field) {
-		Transient annotation = field.getAnnotation(Transient.class);
-		if (annotation == null)
+		Transient annotationTransient = field.getAnnotation(Transient.class);
+		if (annotationTransient == null)
 			return false;
 		else
 			return true;
+	}
+
+	/**
+	 * Checks if is parent field.
+	 *
+	 * @param field the field
+	 * @return true, if is parent field
+	 */
+	private boolean isParentField(Field field) {
+		ParentField annotationParentField = field.getAnnotation(ParentField.class);
+		if (annotationParentField == null)
+			return false;
+		else
+			return true;
+	}
+
+	/**
+	 * Gets the fields of a given class
+	 * 
+	 * @param cls the cls
+	 * @return the fields
+	 */
+	@SuppressWarnings("rawtypes")
+	private List<Field> getFields(Class cls) {
+		// Get the fields
+		Field[] fieldsT = cls.getDeclaredFields();
+		LinkedList<Field> fields = new LinkedList<Field>();
+		for(Field field:fieldsT)
+			fields.add(field);
+		// Get Parent fields
+		fieldsT = cls.getSuperclass().getDeclaredFields();
+		for(Field field:fieldsT)
+			fields.add(field);
+
+		return fields;
 	}
 
 	/**
@@ -74,16 +111,25 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 		for (int i = 0; i < mClasses.length; i++) {
 			Class cls = mClasses[i];
 			String tableName = mTableNames[i];
-			
+
 			// Build the Create Table Statement
-			Field[] fields = cls.getDeclaredFields();
+			List<Field> fields = getFields(cls);
+
 			String createQuery = "CREATE TABLE " + tableName + "  ( ";
-			assert (fields.length > 0);
-			
+			assert (fields.size() > 0);
+
 			for (Field field : fields) {
 				{
 					field.setAccessible(true);
-					// if it's a transient field, skip it
+
+					//if it's a parent field, create the query accordingly
+					if(isParentField(field))
+					{
+						createQuery += "_parent_id integer, ";
+						continue;
+					}
+					
+					// if it's a transient field, skip it 
 					if (isTransient(field))
 						continue;
 
@@ -110,6 +156,7 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 			createQuery += ");";
 
 			// Create the table
+			log.warn("Creating database with query: "+createQuery);
 			database.execSQL(createQuery);
 		}
 	}
@@ -124,7 +171,7 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 		// Delete all existing data and re-create the table
 		log.warn("Upgrading database from version " + oldVersion + " to " + newVersion
 				+ ", which will destroy all existing data.");
-		for(int i=0;i<mTableNames.length;i++)
+		for (int i = 0; i < mTableNames.length; i++)
 			db.execSQL("DROP TABLE IF EXISTS " + mTableNames[i]);
 		onCreate(db);
 	}
