@@ -40,10 +40,10 @@ public class ReflectionManager {
 	 * Instantiates a new reflection manager.
 	 * 
 	 * @param c the c
-	 * @throws DatabaseClassStructureException the database class structure exception
+	 * @throws IllegalClassStructureException the database class structure exception
 	 */
 	@SuppressWarnings("rawtypes")
-	public ReflectionManager(Class c) throws DatabaseClassStructureException {
+	public ReflectionManager(Class c) throws IllegalClassStructureException {
 		super();
 		this.c = c;
 		parentReferenceFields = new LinkedList<Field>();
@@ -120,17 +120,17 @@ public class ReflectionManager {
 	/**
 	 * Prepare the fields.
 	 * 
-	 * @throws DatabaseClassStructureException the database class structure exception
+	 * @throws IllegalClassStructureException the database class structure exception
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	private void prepareFields() throws DatabaseClassStructureException {
+	private void prepareFields() throws IllegalClassStructureException {
 
 		Annotation annotation;
 
 		// Process the main class
 		annotation = c.getAnnotation(DatabaseClass.class);
 		if (annotation == null)
-			throw new DatabaseClassStructureException("Class " + c.getName()
+			throw new IllegalClassStructureException("Class " + c.getName()
 					+ " is not a DatabaseClass. Check for the required annotation: "
 					+ DatabaseClass.class.getSimpleName());
 		processFields(c);
@@ -144,7 +144,13 @@ public class ReflectionManager {
 			processFields(cls);
 			cls = cls.getSuperclass();
 		}
-
+		
+		// Check if id was found
+		if (idField == null)
+			throw new IllegalClassStructureException("Class " + c.getName()
+					+ " does not have an id field. Check for the required annotation: "
+					+ IdField.class.getSimpleName());
+		
 	}
 
 	/**

@@ -24,6 +24,8 @@ import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseDefaults;
 import com.fenceit.db.DefaultDAO;
+import com.fenceit.db.IllegalClassStructureException;
+import com.fenceit.db.ReflectionManager;
 
 public class TriggerActivity extends Activity implements OnClickListener {
 
@@ -55,7 +57,12 @@ public class TriggerActivity extends Activity implements OnClickListener {
 		if(dbHelper==null)
 			dbHelper=DatabaseDefaults.getDBHelper(getApplicationContext());
 		if(dao==null)
-			dao=new DefaultDAO<BasicTrigger>(BasicTrigger.class, dbHelper, BasicTrigger.tableName);
+			try {
+				dao=new DefaultDAO<BasicTrigger>(BasicTrigger.class, dbHelper, new ReflectionManager(BasicTrigger.class), BasicTrigger.tableName);
+			} catch (IllegalClassStructureException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 	}
 

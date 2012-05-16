@@ -33,7 +33,7 @@ public class DatabaseDefaults {
 	public static SQLiteOpenHelper getDBHelper(Context context)
 	{
 		if(dbHelper==null)
-			dbHelper=new DefaultDatabaseHelper(context, 
+			dbHelper=new DefaultDatabaseHelper(context, DATABASE_NAME, DATABASE_VERSION, 
 					new Class[] { Alarm.class, BasicTrigger.class }, 
 					new String[] { Alarm.tableName, BasicTrigger.tableName });
 		return dbHelper;

@@ -7,8 +7,6 @@
 package com.fenceit.db;
 
 import java.lang.reflect.Field;
-import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.log4j.Logger;
 
@@ -37,55 +35,6 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 	private static Logger log = Logger.getLogger(DefaultDatabaseHelper.class);
 
 	/**
-	 * Checks if the field is transient.
-	 * 
-	 * @param field the field
-	 * @return true, if is transient
-	 */
-	private boolean isTransient(Field field) {
-		Transient annotationTransient = field.getAnnotation(Transient.class);
-		if (annotationTransient == null)
-			return false;
-		else
-			return true;
-	}
-
-	/**
-	 * Checks if is parent field.
-	 *
-	 * @param field the field
-	 * @return true, if is parent field
-	 */
-	private boolean isParentField(Field field) {
-		ParentField annotationParentField = field.getAnnotation(ParentField.class);
-		if (annotationParentField == null)
-			return false;
-		else
-			return true;
-	}
-
-	/**
-	 * Gets the fields of a given class
-	 * 
-	 * @param cls the cls
-	 * @return the fields
-	 */
-	@SuppressWarnings("rawtypes")
-	private List<Field> getFields(Class cls) {
-		// Get the fields
-		Field[] fieldsT = cls.getDeclaredFields();
-		LinkedList<Field> fields = new LinkedList<Field>();
-		for(Field field:fieldsT)
-			fields.add(field);
-		// Get Parent fields
-		fieldsT = cls.getSuperclass().getDeclaredFields();
-		for(Field field:fieldsT)
-			fields.add(field);
-
-		return fields;
-	}
-
-	/**
 	 * Instantiates a new default database helper.
 	 * 
 	 * @param context the context
@@ -93,8 +42,9 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 	 * @param tableName the table name
 	 */
 	@SuppressWarnings("rawtypes")
-	public DefaultDatabaseHelper(Context context, Class c[], String tableNames[]) {
-		super(context, DatabaseDefaults.DATABASE_NAME, null, DatabaseDefaults.DATABASE_VERSION);
+	public DefaultDatabaseHelper(Context context, String databaseName, int databaseVersion, Class c[],
+			String tableNames[]) {
+		super(context, databaseName, null, databaseVersion);
 		this.mTableNames = tableNames;
 		this.mClasses = c;
 	}
@@ -112,51 +62,48 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 			Class cls = mClasses[i];
 			String tableName = mTableNames[i];
 
+			// Build the reflection manager for the current class
+			ReflectionManager rm;
+			try {
+				rm = new ReflectionManager(cls);
+			} catch (IllegalClassStructureException e) {
+				e.printStackTrace();
+				log.fatal("IllegalClassStructure Exception for class " + cls + ": " + e.getMessage());
+				continue;
+			}
+
 			// Build the Create Table Statement
-			List<Field> fields = getFields(cls);
-
 			String createQuery = "CREATE TABLE " + tableName + "  ( ";
-			assert (fields.size() > 0);
 
-			for (Field field : fields) {
+			// Build the query for the id field
+			createQuery += DefaultDAO.ID_PREPENDER + rm.getIdField().getName() + " integer primary key autoincrement, ";
+
+			// Build the query for database fields
+			for (Field field : rm.getDatabaseFields()) {
 				{
-					field.setAccessible(true);
-
-					//if it's a parent field, create the query accordingly
-					if(isParentField(field))
-					{
-						createQuery += "_parent_id integer, ";
-						continue;
-					}
-					
-					// if it's a transient field, skip it 
-					if (isTransient(field))
-						continue;
-
-					// Check if it's the id field
-					if (field.getName().equals(ID_FIELD)) {
-						createQuery += "_id integer primary key autoincrement, ";
-						continue;
-					}
-
 					// Special type checks
-					if (field.getClass().equals(Double.class) || field.getClass().equals(double.class)
-							|| field.getClass().equals(Float.class) || field.getClass().equals(float.class))
+					if (field.getType().equals(Double.class) || field.getType().equals(double.class)
+							|| field.getType().equals(Float.class) || field.getType().equals(float.class))
 						createQuery += field.getName() + " real, ";
-					else if (field.getClass().equals(Integer.class) || field.getClass().equals(int.class)
-							|| field.getClass().equals(Short.class) || field.getClass().equals(short.class)
-							|| field.getClass().equals(Byte.class) || field.getClass().equals(byte.class))
+					else if (field.getType().equals(Integer.class) || field.getType().equals(int.class)
+							|| field.getType().equals(Short.class) || field.getType().equals(short.class)
+							|| field.getType().equals(Byte.class) || field.getType().equals(byte.class))
 						createQuery += field.getName() + " integer, ";
 					else
 						createQuery += field.getName() + " text not null, ";
 				}
 			}
 
+			// Build the query for parent reference fields
+			for (Field field : rm.getParentReferenceFields()) {
+				createQuery += DefaultDAO.PARENT_PREPENDER + field.getName() + " integer, ";
+			}
+
 			createQuery = createQuery.substring(0, createQuery.length() - 2);
 			createQuery += ");";
 
 			// Create the table
-			log.warn("Creating database with query: "+createQuery);
+			log.warn("Creating database with query: " + createQuery);
 			database.execSQL(createQuery);
 		}
 	}

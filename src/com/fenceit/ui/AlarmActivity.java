@@ -25,6 +25,8 @@ import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseDefaults;
 import com.fenceit.db.DefaultDAO;
+import com.fenceit.db.IllegalClassStructureException;
+import com.fenceit.db.ReflectionManager;
 
 public class AlarmActivity extends Activity implements OnClickListener {
 
@@ -68,7 +70,12 @@ public class AlarmActivity extends Activity implements OnClickListener {
 		if(dbHelper==null)
 			dbHelper=DatabaseDefaults.getDBHelper(getApplicationContext());
 		if(dao==null)
-			dao=new DefaultDAO<Alarm>(Alarm.class, dbHelper, Alarm.tableName);
+			try {
+				dao=new DefaultDAO<Alarm>(Alarm.class, dbHelper, new ReflectionManager(Alarm.class), Alarm.tableName);
+			} catch (IllegalClassStructureException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 
 		//Get the alarm id, if any
 		alarmID = (savedInstanceState == null) ? null : (Long) savedInstanceState.getSerializable("id");
