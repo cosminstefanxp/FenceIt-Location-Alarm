@@ -4,7 +4,7 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit.db;
+package org.androwrapee;
 
 /**
  * The DatabaseClassStructureException is thrown when the structure of a class that has to be stored

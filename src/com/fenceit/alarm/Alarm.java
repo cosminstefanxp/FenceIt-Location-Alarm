@@ -10,11 +10,12 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.androwrapee.DatabaseField;
+import org.androwrapee.IdField;
 import org.apache.log4j.Logger;
 
 import com.fenceit.alarm.actions.AlarmAction;
 import com.fenceit.alarm.triggers.AlarmTrigger;
-import com.fenceit.db.Transient;
 
 /**
  * The Class Alarm that defines an alarm.
@@ -22,31 +23,31 @@ import com.fenceit.db.Transient;
 public class Alarm {
 
 	/** The id. */
+	@IdField
 	private long id;
 
 	/** The name. */
+	@DatabaseField
 	private String name;
 
 	/** The enabled. */
+	@DatabaseField
 	private boolean enabled;
 
 	/** The triggers. */
-	@Transient
 	private List<AlarmTrigger> triggers;
 
 	/** The actions. */
-	@Transient
 	private List<AlarmAction> actions;
 
 	/** The creation date. */
+	@DatabaseField
 	private Date creationDate = new Date();
 
 	/** The logger. */
-	@Transient
 	private static Logger log = Logger.getLogger(Alarm.class);
 
 	/** The Constant tableName. */
-	@Transient
 	public static final String tableName = "alarms";
 
 	/**

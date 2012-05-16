@@ -6,28 +6,27 @@
  */
 package com.fenceit.alarm.triggers;
 
+import org.androwrapee.DatabaseClass;
+import org.androwrapee.DatabaseField;
+
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.ContextInfo;
 import com.fenceit.alarm.fence.Fence;
-import com.fenceit.db.Transient;
 
 /**
  * A basic implementation of the trigger.
  */
+@DatabaseClass
 public class BasicTrigger extends AbstractAlarmTrigger {
 
 	/** The Constant tableName. */
-	@Transient
 	public static final String tableName = "triggers";
 	
-	/** The id. */
-	private long id;
-
 	/** The location. */
-	@Transient
 	private Fence fence;
 
 	/** The type of the triggering. */
+	@DatabaseField
 	private TriggerType type;
 
 	/**

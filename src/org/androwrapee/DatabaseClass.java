@@ -4,16 +4,15 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit.db;
+package org.androwrapee;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * The Transient annotation that can be used to annotate fields that shouldn't be stored in the
- * database.
+ * The Annotation that marks a class as corresponding to a Database Table. 
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface Transient {
+public @interface DatabaseClass {
 
 }

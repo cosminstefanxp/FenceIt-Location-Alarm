@@ -6,6 +6,8 @@
  */
 package com.fenceit.db;
 
+import org.androwrapee.DefaultDatabaseHelper;
+
 import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 

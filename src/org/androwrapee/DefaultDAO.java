@@ -4,7 +4,7 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit.db;
+package org.androwrapee;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
@@ -29,20 +29,23 @@ import android.database.sqlite.SQLiteOpenHelper;
  * Uses Java Reflection for creating the database entries. This has some implications and
  * restrictions:
  * <ul>
- * <li>Only the direct fields of the object and fields of first level parent will be saved.</li>
- * <li>All fields of the object and the parent (besides the one marked with {@link Transient} or
- * {@link ParentField}</li>
- * <li>Every object MUST have an id field named {@code id} of recommended type long, which will be
- * saved as {@literal _id} in the database. Otherwise the {@literal ID_FIELD} can be overwritten.</li>
+ * <li>The Classes that should be saved in the database have to have the {@link DatabaseClass}
+ * annotation.</li>
+ * <li>The Classes can have super classes which will be saved recursively in the database, as long
+ * as they are marked with the {@link DatabaseClass} annotation.</li>
+ * <li>All the fields that need to be stored in the database must be marked with the
+ * {@link DatabaseField} or {@link IdField} annotations.</li>
+ * <li>Every object MUST have an id field annotated with {@link IdField} of recommended type long
+ * (but must be numerical), which will be saved as {@literal _id_}+field name in the database.</li>
  * <li>All other fields will be saved in the database with the same name as the object field.</li>
  * <li>The class requires a constructor with no parameters, otherwise it will throw an exception.</li>
- * <li>The class or the parent class can have a field marked with {@link ParentField} which will not
- * be stored in the database, but it MUST have a field with the name {@code id} which will be stored
- * in the database as {@code _parent_id}. This field can be used for queries and for making
- * one-to-many relationships.</li>
+ * <li>The class or any of the super classes can have a field marked with {@link ParentField} which
+ * will not be stored in the database as it is, but it MUST have a field with the name {@code id}
+ * which will be stored in the database as {@code _pid_}+field name. This field can be used for
+ * queries and for making one-to-many relationships.</li>
  * </ul>
  * 
- * @param <T> the generic type
+ * @param <T> the type of the classes manipulated by the DefaultDAO.
  */
 public class DefaultDAO<T> {
 
@@ -306,21 +309,23 @@ public class DefaultDAO<T> {
 	}
 
 	/**
-	 * Builds the object.
+	 * Builds the object based on a given cursor.
 	 * 
 	 * @param cursor the cursor
-	 * @return the t
+	 * @return the object
 	 * @throws IllegalAccessException the illegal access exception
 	 * @throws InstantiationException the instantiation exception
 	 * @throws IllegalArgumentException the illegal argument exception
 	 * @throws ParseException the parse exception
-	 * @throws NoSuchMethodException
-	 * @throws SecurityException
-	 * @throws InvocationTargetException
+	 * @throws SecurityException the security exception
+	 * @throws NoSuchMethodException the no such method exception
+	 * @throws InvocationTargetException the invocation target exception
+	 * @throws IllegalClassStructureException the illegal class structure exception
 	 */
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public T buildObject(Cursor cursor) throws IllegalAccessException, InstantiationException,
 			IllegalArgumentException, ParseException, SecurityException, NoSuchMethodException,
-			InvocationTargetException {
+			InvocationTargetException, IllegalClassStructureException {
 		// Create a new instance of the class, that will be populated with information
 		// Hack for private/inner classes
 		Constructor<T> c = mClass.getDeclaredConstructor();
@@ -336,28 +341,34 @@ public class DefaultDAO<T> {
 		for (Field field : mReflectionManager.getDatabaseFields()) {
 
 			columnIndex = cursor.getColumnIndex(field.getName());
-			
+
 			// Special type checks
 			if (field.getType() == int.class || field.getType() == Integer.class)
 				field.set(object, cursor.getInt(columnIndex));
-			if (field.getType() == short.class || field.getType() == Short.class)
+			else if (field.getType() == short.class || field.getType() == Short.class)
 				field.set(object, cursor.getShort(columnIndex));
-			if (field.getType() == long.class || field.getType() == Long.class)
+			else if (field.getType() == long.class || field.getType() == Long.class)
 				field.set(object, cursor.getLong(columnIndex));
-			if (field.getType() == double.class || field.getType() == Double.class)
+			else if (field.getType() == double.class || field.getType() == Double.class)
 				field.set(object, cursor.getDouble(columnIndex));
-			if (field.getType() == float.class || field.getType() == Float.class)
+			else if (field.getType() == float.class || field.getType() == Float.class)
 				field.set(object, cursor.getFloat(columnIndex));
-			if (field.getType() == boolean.class || field.getType() == Boolean.class) {
+			else if (field.getType() == boolean.class || field.getType() == Boolean.class) {
 				if (cursor.getString(columnIndex).equals("t"))
 					field.set(object, true);
 				else
 					field.set(object, false);
-			}
-			if (field.getType() == Date.class)
+			} else if (field.getType() == Date.class)
 				field.set(object, new Date(cursor.getLong(columnIndex)));
-			if (field.getType() == String.class)
+			else if (field.getType() == String.class)
 				field.set(object, cursor.getString(columnIndex));
+			else if (field.getType().isEnum()) {
+				String enumValue = (String) cursor.getString(columnIndex);
+				if (enumValue == null)
+					continue;
+				field.set(object, Enum.valueOf((Class<Enum>) field.getType(), enumValue));
+			} else
+				throw new IllegalClassStructureException("Unknown field type in Database Class.");
 		}
 
 		return object;

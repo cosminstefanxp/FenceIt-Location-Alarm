@@ -6,6 +6,9 @@
  */
 package com.fenceit.ui;
 
+import org.androwrapee.DefaultDAO;
+import org.androwrapee.IllegalClassStructureException;
+import org.androwrapee.ReflectionManager;
 import org.apache.log4j.Logger;
 
 import android.app.Activity;
@@ -23,9 +26,6 @@ import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseDefaults;
-import com.fenceit.db.DefaultDAO;
-import com.fenceit.db.IllegalClassStructureException;
-import com.fenceit.db.ReflectionManager;
 
 public class TriggerActivity extends Activity implements OnClickListener {
 

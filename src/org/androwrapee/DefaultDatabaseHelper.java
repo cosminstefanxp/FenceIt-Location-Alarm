@@ -4,7 +4,7 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit.db;
+package org.androwrapee;
 
 import java.lang.reflect.Field;
 
@@ -16,7 +16,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 
 /**
  * The Class DefaultDatabaseHelper that acts like a SQLiteOpenHelper, creating the database when
- * needed.
+ * needed. Please check the documentation of {@link DefaultDAO} for full specifications and
+ * requirements.
  * 
  */
 public class DefaultDatabaseHelper extends SQLiteOpenHelper {
@@ -76,7 +77,8 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 			String createQuery = "CREATE TABLE " + tableName + "  ( ";
 
 			// Build the query for the id field
-			createQuery += DefaultDAO.ID_PREPENDER + rm.getIdField().getName() + " integer primary key autoincrement, ";
+			createQuery += DefaultDAO.ID_PREPENDER + rm.getIdField().getName()
+					+ " integer primary key autoincrement, ";
 
 			// Build the query for database fields
 			for (Field field : rm.getDatabaseFields()) {

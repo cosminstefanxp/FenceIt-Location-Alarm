@@ -1,10 +1,10 @@
 /*
- * Fence It
+ * Andro Wrapee
  *
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit.db;
+package org.androwrapee;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
@@ -13,7 +13,8 @@ import java.util.List;
 
 /**
  * The ReflectionManager manages and gets the required field of a given class, to be used in the
- * rest of the Database Provider Classes.<br/>
+ * rest of the Database Provider Classes. Please check the documentation for {@link DefaultDAO} for
+ * full specifications and requirements. <br/>
  * <br/>
  * Each field should be annotated with one Annotation maximum and each class (including
  * superclasses) that needs to be stored to the database has to have the {@link DatabaseClass}
@@ -144,13 +145,23 @@ public class ReflectionManager {
 			processFields(cls);
 			cls = cls.getSuperclass();
 		}
-		
+
 		// Check if id was found
 		if (idField == null)
 			throw new IllegalClassStructureException("Class " + c.getName()
 					+ " does not have an id field. Check for the required annotation: "
 					+ IdField.class.getSimpleName());
-		
+
+		// Check if the parent fields have a valid "id" field
+		for (Field field : parentReferenceFields) {
+			try {
+				field.getType().getDeclaredField("id");
+			} catch (NoSuchFieldException e) {
+				throw new IllegalClassStructureException("The field marked as Parent Field has a type ("
+						+ field.getType() + ")that does not have the required 'id' field.", e);
+			}
+		}
+
 	}
 
 	/**
