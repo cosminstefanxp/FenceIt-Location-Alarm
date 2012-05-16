@@ -4,7 +4,7 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package org.androwrapee;
+package org.androwrapee.db;
 
 /**
  * The DatabaseClassStructureException is thrown when the structure of a class that has to be stored

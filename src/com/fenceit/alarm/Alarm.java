@@ -10,8 +10,8 @@ import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
-import org.androwrapee.DatabaseField;
-import org.androwrapee.IdField;
+import org.androwrapee.db.DatabaseField;
+import org.androwrapee.db.IdField;
 import org.apache.log4j.Logger;
 
 import com.fenceit.alarm.actions.AlarmAction;

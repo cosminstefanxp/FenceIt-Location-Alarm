@@ -6,9 +6,9 @@
  */
 package com.fenceit.alarm.triggers;
 
-import org.androwrapee.DatabaseClass;
-import org.androwrapee.IdField;
-import org.androwrapee.ParentField;
+import org.androwrapee.db.DatabaseClass;
+import org.androwrapee.db.IdField;
+import org.androwrapee.db.ParentField;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.ContextInfo;

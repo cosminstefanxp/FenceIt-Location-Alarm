@@ -4,15 +4,15 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package org.androwrapee;
+package org.androwrapee.db;
 
 import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 /**
- * The Annotation that marks a class as corresponding to a Database Table. 
+ * The Annotation that marks the ID field in a Database Class that is being stored.
  */
 @Retention(RetentionPolicy.RUNTIME)
-public @interface DatabaseClass {
+public @interface IdField {
 
 }

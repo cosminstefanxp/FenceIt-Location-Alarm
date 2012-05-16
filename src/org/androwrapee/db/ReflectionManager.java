@@ -4,7 +4,7 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package org.androwrapee;
+package org.androwrapee.db;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;

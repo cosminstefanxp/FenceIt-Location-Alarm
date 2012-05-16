@@ -8,9 +8,9 @@ package com.fenceit.ui;
 
 import java.util.ArrayList;
 
-import org.androwrapee.DefaultDAO;
-import org.androwrapee.IllegalClassStructureException;
-import org.androwrapee.ReflectionManager;
+import org.androwrapee.db.DefaultDAO;
+import org.androwrapee.db.IllegalClassStructureException;
+import org.androwrapee.db.ReflectionManager;
 import org.apache.log4j.Logger;
 
 import android.app.Activity;
