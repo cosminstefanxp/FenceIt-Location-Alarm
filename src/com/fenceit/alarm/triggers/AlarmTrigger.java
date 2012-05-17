@@ -21,4 +21,11 @@ public interface AlarmTrigger {
 	 * @return true, if is triggered
 	 */
 	public boolean shouldTrigger(ContextInfo data);
+	
+	/**
+	 * Checks if the entry is complete and can be saved in the database.
+	 *
+	 * @return true, if is complete
+	 */
+	public boolean isComplete();
 }

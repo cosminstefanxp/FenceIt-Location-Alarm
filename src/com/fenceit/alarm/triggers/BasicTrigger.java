@@ -6,6 +6,8 @@
  */
 package com.fenceit.alarm.triggers;
 
+import java.io.Serializable;
+
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
@@ -19,9 +21,12 @@ import com.fenceit.alarm.fence.Fence;
 @DatabaseClass
 public class BasicTrigger extends AbstractAlarmTrigger {
 
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 1858903324908003651L;
+
 	/** The Constant tableName. */
 	public static final String tableName = "triggers";
-	
+
 	/** The location. */
 	private Fence fence;
 
@@ -95,6 +100,22 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 */
 	public void setType(TriggerType type) {
 		this.type = type;
+	}
+
+	/* (non-Javadoc)
+	 * @see com.fenceit.alarm.triggers.AlarmTrigger#isComplete()
+	 */
+	@Override
+	public boolean isComplete() {
+		return true;
+	}
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", fence=" + fence + "]";
 	}
 
 }

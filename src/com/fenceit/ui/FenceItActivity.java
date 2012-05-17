@@ -9,8 +9,6 @@ package com.fenceit.ui;
 import java.util.ArrayList;
 
 import org.androwrapee.db.DefaultDAO;
-import org.androwrapee.db.IllegalClassStructureException;
-import org.androwrapee.db.ReflectionManager;
 import org.apache.log4j.Logger;
 
 import android.app.Activity;
@@ -32,7 +30,7 @@ import android.widget.ListView;
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
-import com.fenceit.db.DatabaseDefaults;
+import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.AlarmAdapter;
 
 /**
@@ -80,14 +78,10 @@ public class FenceItActivity extends Activity implements OnClickListener, OnItem
 
 		// Prepare database connection
 		if (dbHelper == null)
-			dbHelper = DatabaseDefaults.getDBHelper(getApplicationContext());
+			dbHelper = DatabaseManager.getDBHelper(getApplicationContext());
 		if (dao == null)
-			try {
-				dao = new DefaultDAO<Alarm>(Alarm.class, dbHelper, new ReflectionManager(Alarm.class), Alarm.tableName);
-			} catch (IllegalClassStructureException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			dao = new DefaultDAO<Alarm>(Alarm.class, dbHelper,
+					DatabaseManager.getReflectionManagerInstance(Alarm.class), Alarm.tableName);
 
 		// Add listeners
 		ImageButton but = (ImageButton) findViewById(R.id.main_addAlarmButton);

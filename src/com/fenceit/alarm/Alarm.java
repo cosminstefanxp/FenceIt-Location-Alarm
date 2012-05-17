@@ -6,10 +6,12 @@
  */
 package com.fenceit.alarm;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 import org.androwrapee.db.IdField;
 import org.apache.log4j.Logger;
@@ -20,9 +22,13 @@ import com.fenceit.alarm.triggers.AlarmTrigger;
 /**
  * The Class Alarm that defines an alarm.
  */
-public class Alarm {
+@DatabaseClass
+public class Alarm implements Serializable {
 
-	/** The id. */
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -2191764559986512813L;
+
+	/** The id.*/
 	@IdField
 	private long id;
 
@@ -35,10 +41,10 @@ public class Alarm {
 	private boolean enabled;
 
 	/** The triggers. */
-	private List<AlarmTrigger> triggers;
+	transient private List<AlarmTrigger> triggers;
 
 	/** The actions. */
-	private List<AlarmAction> actions;
+	transient private List<AlarmAction> actions;
 
 	/** The creation date. */
 	@DatabaseField
@@ -89,7 +95,15 @@ public class Alarm {
 		this.name = "New Alarm";
 	}
 
-
+	/**
+	 * Instantiates a new alarm only with the id.
+	 *
+	 * @param id the id
+	 */
+	public Alarm(long id) {
+		this();
+		this.id = id;
+	}
 
 	/* (non-Javadoc)
 	 * @see java.lang.Object#toString()

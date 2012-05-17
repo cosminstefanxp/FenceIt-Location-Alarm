@@ -18,7 +18,7 @@
             android:text="Alarm Edit" />
         <ImageView style="@style/TitleBarSeparator" />
         <Button
-            android:id="@+id/alarm.saveButton"
+            android:id="@+id/trigger.saveButton"
             style="@style/TitleBarAction.Text"
             android:text="@string/button_save" />
     </LinearLayout>
