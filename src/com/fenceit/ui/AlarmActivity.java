@@ -89,9 +89,9 @@ public class AlarmActivity extends Activity implements OnClickListener {
 		// Fill in the data
 		fetchAlarm(alarmID);
 		fillFields();
-		this.alarmID=99l;
+		this.alarmID=99l; 
 	}
-
+ 
 	/* (non-Javadoc)
 	 * 
 	 * @see android.app.Activity#onStart() */

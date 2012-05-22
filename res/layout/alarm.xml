@@ -20,13 +20,13 @@
         <Button
             android:id="@+id/alarm.saveButton"
             style="@style/TitleBarAction.Text"
-            android:text="@string/button_save" />
+            android:text="@string/button_save" /> 
     </LinearLayout>
     <!-- End of Title Bar -->
 
     <TableRow
-        android:id="@+id/tableRow1"
-        android:layout_width="match_parent"
+        android:id="@+id/tableRow1" 
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
@@ -41,7 +41,7 @@
 
         <EditText
             android:id="@+id/alarm.nameTextField"
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
             android:ems="10" />
@@ -93,10 +93,10 @@
                 android:padding="4dp"
                 android:text="Triggers"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-
+ 
             <ImageButton
                 android:id="@+id/alarm.addTriggerButton"
-                android:layout_width="64dp"
+                android:layout_width="64dp" 
                 android:layout_height="64dp"
                 android:contentDescription="Add a new Trigger"
                 android:src="@android:drawable/ic_menu_add" />
@@ -113,7 +113,7 @@
         android:paddingBottom="2dp" >
 
         <FrameLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_span="2"
             android:layout_weight="1"
@@ -121,15 +121,15 @@
 
             <TextView
                 android:id="@+id/alarm.noTrigggersText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:padding="3dp"
                 android:text="No triggers yet."
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <ListView
                 android:id="@+id/alarm.triggersListView"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/background"
@@ -190,7 +190,7 @@
         android:paddingBottom="2dp" >
 
         <FrameLayout
-            android:layout_width="match_parent"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_span="2"
             android:layout_weight="1"
@@ -198,15 +198,15 @@
 
             <TextView
                 android:id="@+id/alarm.noActionsText"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
                 android:padding="3dp"
                 android:text="No actions yet."
                 android:textAppearance="?android:attr/textAppearanceSmall" />
 
             <ListView
                 android:id="@+id/alarm.actionsListView"
-                android:layout_width="match_parent"
+                android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
                 android:background="@color/background"
