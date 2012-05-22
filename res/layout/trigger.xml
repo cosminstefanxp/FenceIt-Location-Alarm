@@ -25,6 +25,7 @@
 	<!--     End of Title Bar -->
 
     <LinearLayout
+        android:id="@+id/trigger.whenSection"
         style="@style/SettingItem"
         android:clickable="true"
         android:focusable="true"
