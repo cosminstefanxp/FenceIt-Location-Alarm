@@ -6,8 +6,6 @@
  */
 package com.fenceit.alarm.triggers;
 
-import java.io.Serializable;
-
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
@@ -45,9 +43,10 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	};
 
 	/**
-	 * Instantiates a new coordinates trigger.
+	 * Instantiates a new basic trigger.
 	 * 
-	 * @param alarm the alarm
+	 * @param alarm
+	 *            the alarm
 	 */
 	public BasicTrigger(Alarm alarm) {
 		super(alarm);
@@ -55,11 +54,20 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		this.type = TriggerType.ON_ENTER;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Instantiates a new basic trigger.
+	 */
+	public BasicTrigger() {
+		super(null);
+	}
+
+	/*
+	 * (non-Javadoc)
 	 * 
 	 * @see
-	 * com.fenceit.alarm.triggers.AbstractAlarmTrigger#shouldTrigger(com.fenceit.alarm.EnvironmentData
-	 * ) */
+	 * com.fenceit.alarm.triggers.AbstractAlarmTrigger#shouldTrigger(com.fenceit
+	 * .alarm.EnvironmentData )
+	 */
 	@Override
 	public boolean shouldTrigger(ContextInfo data) {
 		// TODO Auto-generated method stub
@@ -78,7 +86,8 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	/**
 	 * Sets the fence.
 	 * 
-	 * @param fence the fence to set
+	 * @param fence
+	 *            the fence to set
 	 */
 	public void setFence(Fence fence) {
 		this.fence = fence;
@@ -96,13 +105,16 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	/**
 	 * Sets the type.
 	 * 
-	 * @param type the type to set
+	 * @param type
+	 *            the type to set
 	 */
 	public void setType(TriggerType type) {
 		this.type = type;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.fenceit.alarm.triggers.AlarmTrigger#isComplete()
 	 */
 	@Override
@@ -110,12 +122,43 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see java.lang.Object#toString()
 	 */
 	@Override
 	public String toString() {
-		return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", fence=" + fence + "]";
+		return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type
+				+ ", fence=" + fence + "]";
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getMainDescription()
+	 */
+	@Override
+	public String getMainDescription() {
+		switch (this.type) {
+		case ON_ENTER:
+			return "When entering";
+		case ON_EXIT:
+			return "When leaving";
+		default:
+			return "Unset";
+		}
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getSecondaryDescription()
+	 */
+	@Override
+	public String getSecondaryDescription() {
+		// TODO Auto-generated method stub
+		return "Home";
 	}
 
 }

@@ -51,8 +51,8 @@ public class DefaultDAO<T> {
 
 	protected String mTableName;
 
-	protected static final String ID_PREPENDER = "_id_";
-	protected static final String PARENT_PREPENDER = "_pid_";
+	public static final String ID_PREPENDER = "_id_";
+	public static final String PARENT_PREPENDER = "_pid_";
 
 	/** The column names. */
 	protected String mColumnNames[];
@@ -69,7 +69,7 @@ public class DefaultDAO<T> {
 	private final Class<T> mClass;
 
 	/** The logger. */
-	private static Logger log = Logger.getLogger(DefaultDAO.class);
+	private  Logger log = Logger.getLogger(this.getClass());
 
 	/**
 	 * Constructor - takes the context to allow the database to be opened/created.
@@ -290,7 +290,7 @@ public class DefaultDAO<T> {
 			cursor.close();
 			return objects;
 		} catch (Exception e) {
-			log.fatal("Error occured while building objects of type " + mClass + " from cursor: " + cursor
+			log.error("Error occured while building objects of type " + mClass + " from cursor: " + cursor
 					+ ".");
 			log.error("Error message: " + e.getMessage());
 			e.printStackTrace();

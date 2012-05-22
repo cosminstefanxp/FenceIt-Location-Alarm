@@ -28,4 +28,25 @@ public interface AlarmTrigger {
 	 * @return true, if is complete
 	 */
 	public boolean isComplete();
+	
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public long getId();
+	
+	/**
+	 * Gets the main description.
+	 *
+	 * @return the main description
+	 */
+	public String getMainDescription();
+	
+	/**
+	 * Gets the secondary description.
+	 *
+	 * @return the secondary description
+	 */
+	public String getSecondaryDescription();
 }
