@@ -95,6 +95,7 @@
                 android:textAppearance="?android:attr/textAppearanceLarge" />
  
             <ImageButton
+                style=""
                 android:id="@+id/alarm.addTriggerButton"
                 android:layout_width="64dp" 
                 android:layout_height="64dp"

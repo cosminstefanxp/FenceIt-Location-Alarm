@@ -8,10 +8,11 @@ package com.fenceit.alarm.triggers;
 
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
+import org.androwrapee.db.ReferenceField;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.ContextInfo;
-import com.fenceit.alarm.fence.Fence;
+import com.fenceit.alarm.locations.AlarmLocation;
 
 /**
  * A basic implementation of the trigger.
@@ -26,7 +27,8 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	public static final String tableName = "triggers";
 
 	/** The location. */
-	private Fence fence;
+	@ReferenceField
+	private AlarmLocation fence;
 
 	/** The type of the triggering. */
 	@DatabaseField
@@ -79,7 +81,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * 
 	 * @return the fence
 	 */
-	public Fence getFence() {
+	public AlarmLocation getFence() {
 		return fence;
 	}
 
@@ -89,7 +91,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * @param fence
 	 *            the fence to set
 	 */
-	public void setFence(Fence fence) {
+	public void setFence(AlarmLocation fence) {
 		this.fence = fence;
 	}
 

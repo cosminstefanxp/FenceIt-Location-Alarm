@@ -170,7 +170,7 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 	private void fetchTriggers() {
 		// Get the associated triggers
 		daoTriggers.open();
-		ArrayList<BasicTrigger> triggers = daoTriggers.fetchAll(DefaultDAO.PARENT_PREPENDER + "alarm=" + alarm.getId());
+		ArrayList<BasicTrigger> triggers = daoTriggers.fetchAll(DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarm.getId());
 		daoTriggers.close();
 		alarm.getTriggers().clear();
 		if (triggers != null)

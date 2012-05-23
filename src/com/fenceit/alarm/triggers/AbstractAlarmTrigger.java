@@ -10,7 +10,7 @@ import java.io.Serializable;
 
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.IdField;
-import org.androwrapee.db.ParentField;
+import org.androwrapee.db.ReferenceField;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.ContextInfo;
@@ -25,7 +25,7 @@ public abstract class AbstractAlarmTrigger implements AlarmTrigger, Serializable
 	private static final long serialVersionUID = 8405685119043497423L;
 
 	/** The alarm. */
-	@ParentField
+	@ReferenceField
 	protected Alarm alarm;
 
 	/** The id. */

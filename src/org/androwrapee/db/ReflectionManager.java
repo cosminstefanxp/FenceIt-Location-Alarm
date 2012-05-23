@@ -28,8 +28,8 @@ public class ReflectionManager {
 	@SuppressWarnings("rawtypes")
 	private Class c;
 
-	/** The parent reference fields. */
-	private List<Field> parentReferenceFields;
+	/** The reference fields. */
+	private List<Field> referenceFields;
 
 	/** The database fields. */
 	private List<Field> databaseFields;
@@ -47,7 +47,7 @@ public class ReflectionManager {
 	public ReflectionManager(Class c) throws IllegalClassStructureException {
 		super();
 		this.c = c;
-		parentReferenceFields = new LinkedList<Field>();
+		referenceFields = new LinkedList<Field>();
 		databaseFields = new LinkedList<Field>();
 
 		prepareFields();
@@ -67,13 +67,13 @@ public class ReflectionManager {
 	}
 
 	/**
-	 * Checks if is parent reference field.
+	 * Checks if is the field references another object.
 	 * 
 	 * @param f the field
-	 * @return true, if is parent reference field
+	 * @return true, if is reference field
 	 */
-	private boolean isParentReferenceField(Field f) {
-		ParentField annotation = f.getAnnotation(ParentField.class);
+	private boolean isReferenceField(Field f) {
+		ReferenceField annotation = f.getAnnotation(ReferenceField.class);
 		if (annotation == null)
 			return false;
 		return true;
@@ -113,8 +113,8 @@ public class ReflectionManager {
 				this.databaseFields.add(field);
 				continue;
 			}
-			if (isParentReferenceField(field))
-				this.parentReferenceFields.add(field);
+			if (isReferenceField(field))
+				this.referenceFields.add(field);
 		}
 	}
 
@@ -136,7 +136,7 @@ public class ReflectionManager {
 					+ DatabaseClass.class.getSimpleName());
 		processFields(c);
 
-		// Process any parent class that is a DatabaseClass
+		// Process any base class that is a DatabaseClass
 		Class cls = c.getSuperclass();
 		while (cls != null) {
 			annotation = cls.getAnnotation(DatabaseClass.class);
@@ -153,14 +153,15 @@ public class ReflectionManager {
 					+ IdField.class.getSimpleName());
 
 		// Check if the parent fields have a valid "id" field
-		for (Field field : parentReferenceFields) {
-			try {
-				field.getType().getDeclaredField("id");
-			} catch (NoSuchFieldException e) {
-				throw new IllegalClassStructureException("The field marked as Parent Field has a type ("
-						+ field.getType() + ")that does not have the required 'id' field.", e);
-			}
-		}
+		// LE: No more checking for id, as maybe the implementation subclass has that field
+		// for (Field field : parentReferenceFields) {
+		// try {
+		// field.getType().getDeclaredField("id");
+		// } catch (NoSuchFieldException e) {
+		// throw new IllegalClassStructureException("The field marked as Parent Field has a type ("
+		// + field.getType() + ")that does not have the required 'id' field.", e);
+		// }
+		// }
 
 	}
 
@@ -170,7 +171,7 @@ public class ReflectionManager {
 	 * @return the parentReferenceFields
 	 */
 	final List<Field> getParentReferenceFields() {
-		return parentReferenceFields;
+		return referenceFields;
 	}
 
 	/**

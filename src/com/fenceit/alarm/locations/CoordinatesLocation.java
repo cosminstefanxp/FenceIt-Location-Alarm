@@ -4,14 +4,15 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit.alarm.fence;
+package com.fenceit.alarm.locations;
 
 import com.fenceit.alarm.ContextInfo;
 
 /**
- * A Fence implementation that is defined using the geographical coordinates of a point on earth.
+ * An AlarmLocation implementation that is defined using the geographical coordinates of a point on
+ * earth.
  */
-public class SimpleCoordinatesFence implements Fence {
+public class CoordinatesLocation extends AbstractAlarmLocation {
 
 	/** The longitude. */
 	double longitude;
@@ -30,5 +31,16 @@ public class SimpleCoordinatesFence implements Fence {
 		// TODO Auto-generated method stub
 		return false;
 	}
+
+	@Override
+	public String getDescription() {
+		return String.format("Lat: %.4f, Long: %.4f", latitude, longitude);
+	}
+
+	@Override
+	public String getTypeDescription() {
+		return "Coordinates";
+	}
+	
 
 }

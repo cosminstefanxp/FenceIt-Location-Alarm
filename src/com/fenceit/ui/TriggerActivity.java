@@ -26,6 +26,7 @@ import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.alarm.triggers.BasicTrigger.TriggerType;
 import com.fenceit.db.DatabaseManager;
+import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
 public class TriggerActivity extends Activity implements OnClickListener {
 
@@ -46,6 +47,8 @@ public class TriggerActivity extends Activity implements OnClickListener {
 	private boolean newEntity;
 
 	private Button saveButton;
+
+	private SingleChoiceAdapter<TriggerType> typesAdapter;
 
 	/**
 	 * Called when the activity is first created.
@@ -85,6 +88,9 @@ public class TriggerActivity extends Activity implements OnClickListener {
 
 		findViewById(R.id.trigger_whenSection).setOnClickListener(this);
 
+		// Fill data
+		typesAdapter = new SingleChoiceAdapter<BasicTrigger.TriggerType>(new TriggerType[] { TriggerType.ON_ENTER,
+				TriggerType.ON_EXIT }, new CharSequence[] { "Arriving at location", "Leaving the location" });
 		fillFields();
 	}
 
@@ -98,7 +104,7 @@ public class TriggerActivity extends Activity implements OnClickListener {
 	 * Fills the fields of the activity.
 	 */
 	private void fillFields() {
-		((TextView) findViewById(R.id.trigger_whenText)).setText(trigger.getType().toString());
+		((TextView) findViewById(R.id.trigger_whenText)).setText(typesAdapter.getName(trigger.getType()));
 	}
 
 	/**
@@ -182,27 +188,19 @@ public class TriggerActivity extends Activity implements OnClickListener {
 		switch (id) {
 		case DIALOG_TRIGGER_TYPE:
 			// Create the dialog associated with the Type of the Trigger
-			final CharSequence[] names = { "Arriving at location", "Leaving the location" };
-			final TriggerType[] values = { TriggerType.ON_ENTER, TriggerType.ON_EXIT };
-			int selectedV = -1;
-			for (int i = 0; i < values.length; i++)
-				if (trigger.getType().equals(values[i])) {
-					selectedV = i;
-					break;
-				}
-
 			AlertDialog.Builder builder = new AlertDialog.Builder(this);
 			builder.setTitle("It is triggered on");
-			builder.setSingleChoiceItems(names, selectedV, new DialogInterface.OnClickListener() {
+			builder.setSingleChoiceItems(typesAdapter.getNames(), typesAdapter.getIndex(trigger.getType()),
+					new DialogInterface.OnClickListener() {
 
-				// Process the selection
-				public void onClick(DialogInterface dialog, int item) {
-					log.debug("Selected new trigger type: " + values[item]);
-					trigger.setType(values[item]);
-					fillFields();
-					dialog.dismiss();
-				}
-			});
+						// Process the selection
+						public void onClick(DialogInterface dialog, int item) {
+							log.debug("Selected new trigger type: " + typesAdapter.getValues()[item]);
+							trigger.setType(typesAdapter.getValues()[item]);
+							fillFields();
+							dialog.dismiss();
+						}
+					});
 			// Build the dialog
 			dialog = builder.create();
 			break;

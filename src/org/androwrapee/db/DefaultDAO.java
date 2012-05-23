@@ -39,7 +39,7 @@ import android.database.sqlite.SQLiteOpenHelper;
  * (but must be numerical), which will be saved as {@literal _id_}+field name in the database.</li>
  * <li>All other fields will be saved in the database with the same name as the object field.</li>
  * <li>The class requires a constructor with no parameters, otherwise it will throw an exception.</li>
- * <li>The class or any of the super classes can have a field marked with {@link ParentField} which
+ * <li>The class or any of the super classes can have a field marked with {@link ReferenceField} which
  * will not be stored in the database as it is, but it MUST have a field with the name {@code id}
  * which will be stored in the database as {@code _pid_}+field name. This field can be used for
  * queries and for making one-to-many relationships.</li>
@@ -52,7 +52,7 @@ public class DefaultDAO<T> {
 	protected String mTableName;
 
 	public static final String ID_PREPENDER = "_id_";
-	public static final String PARENT_PREPENDER = "_pid_";
+	public static final String REFERENCE_PREPENDER = "_rid_";
 
 	/** The column names. */
 	protected String mColumnNames[];
@@ -90,7 +90,7 @@ public class DefaultDAO<T> {
 		for (Field f : mReflectionManager.getDatabaseFields())
 			columnNames.add(f.getName());
 		for (Field f : mReflectionManager.getParentReferenceFields())
-			columnNames.add(PARENT_PREPENDER + f.getName());
+			columnNames.add(REFERENCE_PREPENDER + f.getName());
 
 		mColumnNames = (String[]) columnNames.toArray(new String[columnNames.size()]);
 
@@ -206,15 +206,15 @@ public class DefaultDAO<T> {
 			contentValues.put(fieldName, value.toString());
 		}
 
-		// if it's a parent field, get the id and put it in the database
+		// if it's a reference field, get the id and put it in the database
 		for (Field field : mReflectionManager.getParentReferenceFields()) {
-			Object parent = field.get(object);
-			if (parent == null)
+			Object reference = field.get(object);
+			if (reference == null)
 				continue; // don't add
-			Field parentIdField = parent.getClass().getDeclaredField("id");
-			parentIdField.setAccessible(true);
-			Long parentId = parentIdField.getLong(parent);
-			contentValues.put(PARENT_PREPENDER + field.getName(), parentId.toString());
+			Field referenceIdField = reference.getClass().getDeclaredField("id");
+			referenceIdField.setAccessible(true);
+			Long referenceId = referenceIdField.getLong(reference);
+			contentValues.put(REFERENCE_PREPENDER + field.getName(), referenceId.toString());
 		}
 
 		return contentValues;

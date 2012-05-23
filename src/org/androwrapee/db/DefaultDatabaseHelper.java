@@ -98,7 +98,7 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 
 			// Build the query for parent reference fields
 			for (Field field : rm.getParentReferenceFields()) {
-				createQuery += DefaultDAO.PARENT_PREPENDER + field.getName() + " integer, ";
+				createQuery += DefaultDAO.REFERENCE_PREPENDER + field.getName() + " integer, ";
 			}
 
 			createQuery = createQuery.substring(0, createQuery.length() - 2);

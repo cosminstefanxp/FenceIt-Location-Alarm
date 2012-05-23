@@ -137,5 +137,10 @@
 	<style name="BasicActivity">
         <item name="android:background">@color/background</item>     
     </style>
+    
+	<style name="Button">
+        <!--- <item name="android:background">@null</item> -->
+        <item name="android:background">@drawable/title_button</item>
+    </style>
 
 </resources>

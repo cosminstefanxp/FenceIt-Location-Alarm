@@ -24,6 +24,7 @@
     </LinearLayout>
 	<!--     End of Title Bar -->
 
+	<!-- Trigger Type Section -->
     <LinearLayout
         android:id="@+id/trigger.whenSection"
         style="@style/SettingItem"
@@ -44,6 +45,34 @@
             android:text="Entering Fence"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
+    </LinearLayout>
+    
+    <!-- Location Section -->
+    <LinearLayout
+        android:id="@+id/trigger.locationSection"
+        style="@style/SettingItem"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical" ><TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/trigger.locationType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Type"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:visibility="gone" />
+
+        <TextView
+            android:id="@+id/trigger.locationText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Click to set a new location..."
+            android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
 </LinearLayout>
