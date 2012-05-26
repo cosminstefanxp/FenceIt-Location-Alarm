@@ -28,7 +28,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 
 	/** The location. */
 	@ReferenceField
-	private AlarmLocation fence;
+	private AlarmLocation location;
 
 	/** The type of the triggering. */
 	@DatabaseField
@@ -47,12 +47,11 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	/**
 	 * Instantiates a new basic trigger.
 	 * 
-	 * @param alarm
-	 *            the alarm
+	 * @param alarm the alarm
 	 */
 	public BasicTrigger(Alarm alarm) {
 		super(alarm);
-		this.fence = null;
+		this.location = null;
 		this.type = TriggerType.ON_ENTER;
 	}
 
@@ -63,13 +62,10 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		super(null);
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see
-	 * com.fenceit.alarm.triggers.AbstractAlarmTrigger#shouldTrigger(com.fenceit
-	 * .alarm.EnvironmentData )
-	 */
+	 * @see com.fenceit.alarm.triggers.AbstractAlarmTrigger#shouldTrigger(com.fenceit
+	 * .alarm.EnvironmentData ) */
 	@Override
 	public boolean shouldTrigger(ContextInfo data) {
 		// TODO Auto-generated method stub
@@ -77,22 +73,21 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	}
 
 	/**
-	 * Gets the fence.
+	 * Gets the associated location.
 	 * 
-	 * @return the fence
+	 * @return the location
 	 */
-	public AlarmLocation getFence() {
-		return fence;
+	public AlarmLocation getLocation() {
+		return location;
 	}
 
 	/**
-	 * Sets the fence.
+	 * Sets the location.
 	 * 
-	 * @param fence
-	 *            the fence to set
+	 * @param fence the location to set
 	 */
-	public void setFence(AlarmLocation fence) {
-		this.fence = fence;
+	public void setLocation(AlarmLocation fence) {
+		this.location = fence;
 	}
 
 	/**
@@ -107,39 +102,31 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	/**
 	 * Sets the type.
 	 * 
-	 * @param type
-	 *            the type to set
+	 * @param type the type to set
 	 */
 	public void setType(TriggerType type) {
 		this.type = type;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.triggers.AlarmTrigger#isComplete()
-	 */
+	 * @see com.fenceit.alarm.triggers.AlarmTrigger#isComplete() */
 	@Override
 	public boolean isComplete() {
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#toString()
-	 */
+	 * @see java.lang.Object#toString() */
 	@Override
 	public String toString() {
-		return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type
-				+ ", fence=" + fence + "]";
+		return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", location=" + location + "]";
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getMainDescription()
-	 */
+	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getMainDescription() */
 	@Override
 	public String getMainDescription() {
 		switch (this.type) {
@@ -152,11 +139,9 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getSecondaryDescription()
-	 */
+	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getSecondaryDescription() */
 	@Override
 	public String getSecondaryDescription() {
 		// TODO Auto-generated method stub

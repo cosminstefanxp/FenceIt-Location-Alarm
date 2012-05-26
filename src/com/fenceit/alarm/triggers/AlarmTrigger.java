@@ -6,12 +6,14 @@
  */
 package com.fenceit.alarm.triggers;
 
+import org.androwrapee.db.DatabaseReferenceClass;
+
 import com.fenceit.alarm.ContextInfo;
 
 /**
  * The Interface AlarmTrigger that defines a trigger that will make an alarm go off.
  */
-public interface AlarmTrigger {
+public interface AlarmTrigger extends DatabaseReferenceClass{
 
 	/**
 	 * Checks if it should be triggered.

@@ -13,6 +13,7 @@ import java.util.List;
 
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
+import org.androwrapee.db.DatabaseReferenceClass;
 import org.androwrapee.db.IdField;
 import org.apache.log4j.Logger;
 
@@ -23,7 +24,7 @@ import com.fenceit.alarm.triggers.AlarmTrigger;
  * The Class Alarm that defines an alarm.
  */
 @DatabaseClass
-public class Alarm implements Serializable {
+public class Alarm implements Serializable, DatabaseReferenceClass {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2191764559986512813L;

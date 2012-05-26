@@ -69,7 +69,7 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 				rm = new ReflectionManager(cls);
 			} catch (IllegalClassStructureException e) {
 				e.printStackTrace();
-				log.fatal("IllegalClassStructure Exception for class " + cls + ": " + e.getMessage());
+				log.error("IllegalClassStructure Exception for class " + cls + ": " + e.getMessage());
 				continue;
 			}
 
@@ -97,7 +97,7 @@ public class DefaultDatabaseHelper extends SQLiteOpenHelper {
 			}
 
 			// Build the query for parent reference fields
-			for (Field field : rm.getParentReferenceFields()) {
+			for (Field field : rm.getReferenceFields()) {
 				createQuery += DefaultDAO.REFERENCE_PREPENDER + field.getName() + " integer, ";
 			}
 

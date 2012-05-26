@@ -149,28 +149,27 @@ public class ReflectionManager {
 		// Check if id was found
 		if (idField == null)
 			throw new IllegalClassStructureException("Class " + c.getName()
-					+ " does not have an id field. Check for the required annotation: "
-					+ IdField.class.getSimpleName());
+					+ " does not have an id field. Check for the required annotation: " + IdField.class.getSimpleName());
 
-		// Check if the parent fields have a valid "id" field
-		// LE: No more checking for id, as maybe the implementation subclass has that field
-		// for (Field field : parentReferenceFields) {
-		// try {
-		// field.getType().getDeclaredField("id");
-		// } catch (NoSuchFieldException e) {
-		// throw new IllegalClassStructureException("The field marked as Parent Field has a type ("
-		// + field.getType() + ")that does not have the required 'id' field.", e);
-		// }
-		// }
+		// Check if the reference fields implements the required interface (only for classes, not interfaces)
+		// NOT Checked
+		// for (Field field : referenceFields) {
+		// if (!field.getType().isInterface() &&
+		// !field.getType().isAssignableFrom(DatabaseReferenceClass.class))
+		// throw new
+		// IllegalClassStructureException("The field marked as Reference Field has a type ("
+		// + field.getType() + ") that does not implement the required interface "
+		//		+ DatabaseReferenceClass.class.getName());
+		//		}
 
 	}
 
 	/**
-	 * Gets the parent reference fields.
+	 * Gets the reference fields.
 	 * 
-	 * @return the parentReferenceFields
+	 * @return the Reference Fields
 	 */
-	final List<Field> getParentReferenceFields() {
+	final List<Field> getReferenceFields() {
 		return referenceFields;
 	}
 
