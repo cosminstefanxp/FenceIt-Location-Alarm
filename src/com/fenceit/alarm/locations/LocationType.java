@@ -12,11 +12,33 @@ package com.fenceit.alarm.locations;
 public enum LocationType {
 
 	/** The Coordinates location, based on geographical coordinates. */
-	CoordinatesLocation,
+	CoordinatesLocation(0),
 	/** A location based on the connected Wifi. */
-	WifiConnectedLocation,
+	WifiConnectedLocation(1),
 	/** A location based on the visible Wifi(s). */
-	WifiVisibleLocation,
+	WifiVisibleLocation(2),
 	/** A location based on the visible Phone Tower Cells. */
-	TowerCellLocation
+	TowerCellLocation(3);
+
+	/** The id. */
+	private int id;
+
+	/**
+	 * Instantiates a new location type.
+	 *
+	 * @param id the id
+	 */
+	private LocationType(int id) {
+		this.id = id;
+	}
+
+	/**
+	 * Gets the id of the enum.
+	 *
+	 * @return the id
+	 */
+	public int getId() {
+		return this.id;
+	}
+
 }

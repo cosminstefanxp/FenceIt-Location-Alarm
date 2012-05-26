@@ -23,6 +23,7 @@ import android.widget.Toast;
 
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.alarm.triggers.BasicTrigger.TriggerType;
 import com.fenceit.db.DatabaseManager;
@@ -35,6 +36,12 @@ public class TriggerActivity extends Activity implements OnClickListener {
 
 	/** The Constant DIALOG_TYPE. */
 	private static final int DIALOG_TRIGGER_TYPE = 1;
+
+	/** The Constant DIALOG_LOCATION. */
+	private static final int DIALOG_LOCATION = 2;
+
+	/** The Constant DIALOG_NEW_LOCATION. */
+	private static final int DIALOG_NEW_LOCATION = 3;
 
 	/** The database helper. */
 	private static SQLiteOpenHelper dbHelper = null;
@@ -49,6 +56,7 @@ public class TriggerActivity extends Activity implements OnClickListener {
 	private Button saveButton;
 
 	private SingleChoiceAdapter<TriggerType> typesAdapter;
+	private SingleChoiceAdapter<LocationType> locationsAdapter;
 
 	/**
 	 * Called when the activity is first created.
@@ -87,10 +95,13 @@ public class TriggerActivity extends Activity implements OnClickListener {
 		saveButton.setOnClickListener(this);
 
 		findViewById(R.id.trigger_whenSection).setOnClickListener(this);
+		findViewById(R.id.trigger_locationSection).setOnClickListener(this);
 
 		// Fill data
 		typesAdapter = new SingleChoiceAdapter<BasicTrigger.TriggerType>(new TriggerType[] { TriggerType.ON_ENTER,
 				TriggerType.ON_EXIT }, new CharSequence[] { "Arriving at location", "Leaving the location" });
+		locationsAdapter = new SingleChoiceAdapter<LocationType>(
+				new LocationType[] { LocationType.CoordinatesLocation }, new CharSequence[] { "Based on coordinates" });
 		fillFields();
 	}
 
@@ -178,6 +189,8 @@ public class TriggerActivity extends Activity implements OnClickListener {
 			return;
 		} else if (v == (findViewById(R.id.trigger_whenSection))) {
 			showDialog(DIALOG_TRIGGER_TYPE);
+		} else if (v == (findViewById(R.id.trigger_locationSection))) {
+			showDialog(DIALOG_LOCATION);
 		}
 
 	}
@@ -185,10 +198,64 @@ public class TriggerActivity extends Activity implements OnClickListener {
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch (id) {
+		case DIALOG_LOCATION:
+			// Create the dialog associated with the Location associated with the trigger
+			final CharSequence options[];
+			if (trigger.getLocation() != null)
+				options = new CharSequence[] { "Create new location", "Use a defined location", "Edit current location" };
+			else
+				options = new CharSequence[] { "Create new location", "Use a defined location" };
+
+			builder.setTitle("Select your requested operation");
+			builder.setItems(options, new DialogInterface.OnClickListener() {
+
+				// Process the selection
+				public void onClick(DialogInterface dialog, int item) {
+					log.debug("Selected location operation: " + options[item]);
+					switch (item) {
+					case 0:
+						// Create a new location
+						showDialog(DIALOG_NEW_LOCATION);
+						break;
+					case 1:
+						// Using a pre-existing location
+						log.debug("Using a pre-defined location");
+						// TODO: ...
+						break;
+					case 2:
+						// Editing the existing location
+						log.debug("Editing the existing location");
+						// TODO: ...
+						break;
+					}
+					dialog.dismiss();
+				}
+			});
+			// Build the dialog
+			dialog = builder.create();
+			break;
+
+		case DIALOG_NEW_LOCATION:
+			// Create the dialog associated with creating a new type of location
+			builder.setTitle("New location of type");
+			builder.setItems(locationsAdapter.getNames(), new DialogInterface.OnClickListener() {
+
+				// Process the selection
+				public void onClick(DialogInterface dialog, int item) {
+					log.debug("Selected new location of type: " + locationsAdapter.getValues()[item]);
+					// TODO: fill in
+					dialog.dismiss();
+				}
+			});
+			// Build the dialog
+			dialog = builder.create();
+			break;
+
 		case DIALOG_TRIGGER_TYPE:
 			// Create the dialog associated with the Type of the Trigger
-			AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
 			builder.setTitle("It is triggered on");
 			builder.setSingleChoiceItems(typesAdapter.getNames(), typesAdapter.getIndex(trigger.getType()),
 					new DialogInterface.OnClickListener() {
@@ -209,5 +276,4 @@ public class TriggerActivity extends Activity implements OnClickListener {
 		}
 		return dialog;
 	}
-
 }

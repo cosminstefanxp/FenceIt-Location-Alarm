@@ -41,6 +41,10 @@ public class CoordinatesLocation extends AbstractAlarmLocation {
 	public String getTypeDescription() {
 		return "Coordinates";
 	}
-	
+
+	@Override
+	public LocationType getType() {
+		return LocationType.CoordinatesLocation;
+	}
 
 }

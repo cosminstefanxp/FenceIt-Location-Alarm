@@ -2,10 +2,14 @@
 <classpath>
 	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.16.jar"/>
 	<classpathentry exported="true" kind="lib" path="lib/android-logging-log4j-1.0.2.jar"/>
+	<classpathentry exported="true" kind="lib" path="lib/androwrapee.jar" sourcepath="/home/cosmin/licenta/androwrapee/src">
+		<attributes>
+			<attribute name="javadoc_location" value="file:/home/cosmin/licenta/androwrapee/doc/"/>
+		</attributes>
+	</classpathentry>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="src" path="gen"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
-	<classpathentry kind="lib" path="lib/AndroWrapee.jar"/>
 	<classpathentry kind="output" path="bin/classes"/>
 </classpath>

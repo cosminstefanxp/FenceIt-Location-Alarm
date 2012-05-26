@@ -44,4 +44,11 @@ public interface AlarmLocation {
 	 * @return the type description
 	 */
 	public String getTypeDescription();
+
+	/**
+	 * Gets the type.
+	 * 
+	 * @return the type
+	 */
+	public LocationType getType();
 }
