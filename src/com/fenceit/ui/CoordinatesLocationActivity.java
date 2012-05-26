@@ -31,10 +31,10 @@ import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.AlarmLocationBroker;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
-public class TriggerActivity extends Activity implements OnClickListener {
+public class CoordinatesLocationActivity extends Activity implements OnClickListener {
 
 	/** The logger. */
-	private static final Logger log = Logger.getLogger(TriggerActivity.class);
+	private static final Logger log = Logger.getLogger(CoordinatesLocationActivity.class);
 
 	/** The Constant DIALOG_TYPE. */
 	private static final int DIALOG_TRIGGER_TYPE = 1;

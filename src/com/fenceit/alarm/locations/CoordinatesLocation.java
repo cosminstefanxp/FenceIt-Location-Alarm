@@ -47,4 +47,10 @@ public class CoordinatesLocation extends AbstractAlarmLocation {
 		return LocationType.CoordinatesLocation;
 	}
 
+	@Override
+	public String getName() {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
 }

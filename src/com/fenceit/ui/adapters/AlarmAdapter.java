@@ -43,7 +43,7 @@ public class AlarmAdapter extends BaseAdapter {
 		public TextView titleTextV;
 
 		/** The type. */
-		public TextView typeTextV;
+		public TextView descTextV;
 	}
 
 	/**
@@ -82,7 +82,7 @@ public class AlarmAdapter extends BaseAdapter {
 			holder = new ViewHolder();
 			holder.enableButton = (ToggleButton) rowView.findViewById(R.id.alarmListEnableToggle);
 			holder.titleTextV = (TextView) rowView.findViewById(R.id.alarmListTitleText);
-			holder.typeTextV = (TextView) rowView.findViewById(R.id.alarmListTypeText);
+			holder.descTextV = (TextView) rowView.findViewById(R.id.alarmListDescText);
 			// Save the view holder as a tag
 			rowView.setTag(holder);
 		} else {
@@ -94,7 +94,7 @@ public class AlarmAdapter extends BaseAdapter {
 		Alarm a = alarms.get(position);
 		holder.enableButton.setChecked(a.isEnabled());
 		holder.titleTextV.setText(a.getName());
-		holder.typeTextV.setText(a.getTriggers().toString());
+		holder.descTextV.setText(a.getTriggers().size()+" triggers / "+a.getActions().size()+" actions");
 
 		return rowView;
 	}
