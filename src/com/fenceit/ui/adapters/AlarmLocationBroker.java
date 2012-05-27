@@ -25,8 +25,8 @@ public class AlarmLocationBroker {
 	 * @return the location types adapter
 	 */
 	public static SingleChoiceAdapter<LocationType> getLocationTypesAdapter() {
-		return new SingleChoiceAdapter<LocationType>(new LocationType[] { LocationType.CoordinatesLocation },
-				new CharSequence[] { "Based on coordinates" });
+		return new SingleChoiceAdapter<LocationType>(new LocationType[] { LocationType.WifiConnectedLocation },
+				new CharSequence[] { "Based on the connected Wifi" });
 	}
 
 	/**
@@ -40,7 +40,7 @@ public class AlarmLocationBroker {
 
 		Intent intent = null;
 		switch (type) {
-		case CoordinatesLocation:
+		case WifiConnectedLocation:
 			intent = new Intent(context, WifiConnectedActivity.class);
 			break;
 		}

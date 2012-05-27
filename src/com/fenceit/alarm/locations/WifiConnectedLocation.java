@@ -6,6 +6,8 @@
  */
 package com.fenceit.alarm.locations;
 
+import java.io.Serializable;
+
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
@@ -15,11 +17,21 @@ import com.fenceit.alarm.ContextInfo;
  * The Class WifiConnectedLocation.
  */
 @DatabaseClass
-public class WifiConnectedLocation extends AbstractAlarmLocation {
+public class WifiConnectedLocation extends AbstractAlarmLocation implements Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -4132473462124763216L;
 
 	/** The bssid. */
 	@DatabaseField
 	private String bssid;
+
+	/** The ssid. */
+	@DatabaseField
+	private String ssid;
+
+	/** The Constant tableName. */
+	public static final String tableName = "wificonn_locations";
 
 	/**
 	 * Instantiates a new wifi connected location.
@@ -44,6 +56,24 @@ public class WifiConnectedLocation extends AbstractAlarmLocation {
 	 */
 	public void setBssid(String bssid) {
 		this.bssid = bssid;
+	}
+
+	/**
+	 * Gets the ssid.
+	 * 
+	 * @return the ssid
+	 */
+	public String getSsid() {
+		return ssid;
+	}
+
+	/**
+	 * Sets the ssid.
+	 * 
+	 * @param ssid the new ssid
+	 */
+	public void setSsid(String ssid) {
+		this.ssid = ssid;
 	}
 
 	/* (non-Javadoc)
@@ -77,6 +107,16 @@ public class WifiConnectedLocation extends AbstractAlarmLocation {
 	@Override
 	public LocationType getType() {
 		return LocationType.WifiConnectedLocation;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete() */
+	@Override
+	public boolean isComplete() {
+		if (bssid == null)
+			return false;
+		return true;
 	}
 
 }

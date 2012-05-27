@@ -50,4 +50,10 @@ public class CoordinatesLocation extends AbstractAlarmLocation {
 		return null;
 	}
 
+	@Override
+	public boolean isComplete() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
 }

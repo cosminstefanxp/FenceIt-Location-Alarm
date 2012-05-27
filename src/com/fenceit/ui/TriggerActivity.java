@@ -13,6 +13,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.View;
@@ -41,6 +42,12 @@ public class TriggerActivity extends Activity implements OnClickListener {
 
 	/** The Constant DIALOG_NEW_LOCATION. */
 	private static final int DIALOG_NEW_LOCATION = 3;
+
+	/** The Constant REQ_CODE_EDIT_LOCATION. */
+	private static final int REQ_CODE_EDIT_LOCATION = 4;
+	
+	/** The Constant REQ_CODE_NEW_LOCATION. */
+	private static final int REQ_CODE_NEW_LOCATION = 5;
 
 	/** The database helper. */
 	private static SQLiteOpenHelper dbHelper = null;
@@ -198,7 +205,7 @@ public class TriggerActivity extends Activity implements OnClickListener {
 			log.info("Save button clicked. Storing entity...");
 			if (!storeTrigger()) {
 				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
-						Toast.LENGTH_SHORT);
+						Toast.LENGTH_SHORT).show();
 				return;
 			}
 			setResult(RESULT_OK);
@@ -207,9 +214,13 @@ public class TriggerActivity extends Activity implements OnClickListener {
 		} else if (v == (findViewById(R.id.trigger_whenSection))) {
 			// Change location type
 			showDialog(DIALOG_TRIGGER_TYPE);
+			
 		} else if (v == (findViewById(R.id.trigger_locationSection))) {
-			// TODO: Edit existing location
 			log.debug("Editing the existing location");
+			Intent intent=AlarmLocationBroker.getActivityIntent(this, trigger.getLocation().getType());
+			intent.putExtra("id", trigger.getLocation().getId());
+			startActivityForResult(intent, REQ_CODE_EDIT_LOCATION);
+			
 		} else if (v == findViewById(R.id.trigger_locationAddSection)) {
 			// Create a new location
 			showDialog(DIALOG_NEW_LOCATION);
@@ -232,8 +243,8 @@ public class TriggerActivity extends Activity implements OnClickListener {
 
 				// Process the selection
 				public void onClick(DialogInterface dialog, int item) {
-					log.debug("Selected new location of type: " + locationsAdapter.getValues()[item]);
-					// TODO: fill in
+					log.debug("Creating new location of type: " + locationsAdapter.getValues()[item]);
+					startActivityForNewLocation(locationsAdapter.getValues()[item]);
 					dialog.dismiss();
 				}
 			});
@@ -263,5 +274,14 @@ public class TriggerActivity extends Activity implements OnClickListener {
 			dialog = null;
 		}
 		return dialog;
+	}
+	
+	/**
+	 * Start activity for new location.
+	 */
+	private void startActivityForNewLocation(LocationType type)
+	{
+		Intent intent=AlarmLocationBroker.getActivityIntent(this, type);
+		startActivityForResult(intent, REQ_CODE_NEW_LOCATION);	
 	}
 }

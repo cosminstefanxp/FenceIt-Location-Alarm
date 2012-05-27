@@ -46,6 +46,15 @@ public abstract class AbstractAlarmLocation implements AlarmLocation {
 		return id;
 	}
 
+	/**
+	 * Sets the id.
+	 * 
+	 * @param id the new id
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
 	/* (non-Javadoc)
 	 * 
 	 * @see com.fenceit.alarm.locations.AlarmLocation#getName() */

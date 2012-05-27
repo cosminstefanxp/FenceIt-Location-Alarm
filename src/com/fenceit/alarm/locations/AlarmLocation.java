@@ -60,4 +60,12 @@ public interface AlarmLocation extends DatabaseReferenceClass {
 	 * @return the name
 	 */
 	public String getName();
+	
+	/**
+	 * Checks if is complete and all required fields are valid.
+	 *
+	 * @return true, if is complete
+	 */
+	public boolean isComplete();
+	
 }

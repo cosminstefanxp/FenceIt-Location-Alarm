@@ -24,7 +24,7 @@
         <ImageView style="@style/TitleBarSeparator" />
 
         <Button
-            android:id="@+id/alarm.saveButton"
+            android:id="@+id/wificonn.saveButton"
             style="@style/TitleBarAction.Text"
             android:text="@string/button_save" />
     </LinearLayout>
@@ -36,22 +36,36 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" >
+
+            <ImageButton
+                android:id="@+id/wificonn.refreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@null"
+                android:contentDescription="Click to gather new info"
+                android:src="@android:drawable/ic_popup_sync" />
+
+            <ProgressBar
+                android:id="@+id/wificonn.progressBar"
+                android:layout_width="30dp"
+                android:layout_height="30dp"
+                android:visibility="invisible" />
+
+        </FrameLayout>
+
         <TextView
             android:id="@+id/TextView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:text="Connected Wifi"
             android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <ProgressBar
-            android:id="@+id/wificonn.refreshProgress"
-            style="?android:attr/progressBarStyleSmall"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true" />
 
     </RelativeLayout>
 
@@ -137,26 +151,29 @@
         android:layout_height="wrap_content"
         android:text="Settings"
         android:textAppearance="?android:attr/textAppearanceLarge" />
-    
-    <LinearLayout
-        android:id="@+id/wificonn.distanceSection"
+
+    <RelativeLayout
+        android:id="@+id/wificonn.favoriteSection"
         style="@style/SettingItem"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical" >
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <ImageView
+            android:id="@+id/wificonn.favoriteImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@android:drawable/btn_star_big_on" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Triggering distance"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/wificonn.favoriteImage"
+            android:text="Save as favorite"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/wificonn.distanceText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="300m"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
+    </RelativeLayout>
 
 </LinearLayout>

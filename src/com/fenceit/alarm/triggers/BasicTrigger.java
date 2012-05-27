@@ -113,6 +113,8 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * @see com.fenceit.alarm.triggers.AlarmTrigger#isComplete() */
 	@Override
 	public boolean isComplete() {
+		if (location == null || type == null)
+			return false;
 		return true;
 	}
 

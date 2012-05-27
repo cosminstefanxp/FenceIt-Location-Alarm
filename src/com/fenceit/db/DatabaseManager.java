@@ -17,6 +17,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.triggers.BasicTrigger;
 
 /**
@@ -28,7 +29,7 @@ public class DatabaseManager {
 	public static final String DATABASE_NAME = "fenceit.db";
 
 	/** The DATABASE VERSION. */
-	public static final int DATABASE_VERSION = 7;
+	public static final int DATABASE_VERSION = 1;
 
 	/** The db helper. */
 	private static SQLiteOpenHelper dbHelper = null;
@@ -45,8 +46,8 @@ public class DatabaseManager {
 	public static SQLiteOpenHelper getDBHelper(Context context) {
 		if (dbHelper == null)
 			dbHelper = new DefaultDatabaseHelper(context, DATABASE_NAME, DATABASE_VERSION, new Class[] {
-					Alarm.class, BasicTrigger.class },
-					new String[] { Alarm.tableName, BasicTrigger.tableName });
+					Alarm.class, BasicTrigger.class, WifiConnectedLocation.class },
+					new String[] { Alarm.tableName, BasicTrigger.tableName, WifiConnectedLocation.tableName });
 		return dbHelper;
 	}
 

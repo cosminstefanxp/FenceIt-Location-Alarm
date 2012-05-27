@@ -29,6 +29,7 @@ import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
@@ -153,7 +154,7 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 			dao.open();
 			alarm = dao.fetch(alarmID);
 			dao.close();
-			
+
 			fetchTriggers();
 
 			log.debug("Fetched alarm: " + alarm);
@@ -170,7 +171,8 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 	private void fetchTriggers() {
 		// Get the associated triggers
 		daoTriggers.open();
-		ArrayList<BasicTrigger> triggers = daoTriggers.fetchAll(DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarm.getId());
+		ArrayList<BasicTrigger> triggers = daoTriggers.fetchAll(DefaultDAO.REFERENCE_PREPENDER + "alarm="
+				+ alarm.getId());
 		daoTriggers.close();
 		alarm.getTriggers().clear();
 		if (triggers != null)
@@ -258,7 +260,11 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 	public void onClick(View v) {
 		if (v == saveButton) {
 			log.info("Save button clicked. Storing alarm...");
-			storeAlarm();
+			if (!storeAlarm()) {
+				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
+						Toast.LENGTH_SHORT).show();
+				return;
+			}
 			setResult(RESULT_OK);
 			finish();
 			return;
