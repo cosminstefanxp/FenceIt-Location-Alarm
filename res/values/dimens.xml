@@ -21,4 +21,5 @@
     <dimen name="text_size_large">22sp</dimen>
     <dimen name="border_size">3dp</dimen>
     <dimen name="border_size_neg">-4dp</dimen>
+    <dimen name="margin_size">5dp</dimen>
 </resources>

@@ -30,4 +30,133 @@
     </LinearLayout>
     <!-- End of Title Bar -->
 
+    <RelativeLayout
+        android:id="@+id/RelativeLayout1"
+        style="@style/SectionHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content" >
+
+        <TextView
+            android:id="@+id/TextView1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Connected Wifi"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <ProgressBar
+            android:id="@+id/wificonn.refreshProgress"
+            style="?android:attr/progressBarStyleSmall"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true" />
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="@dimen/margin_size" >
+
+        <TextView
+            android:id="@+id/wificonn.ssidLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:text="Name/SSID:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/wificonn.bssidLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/wificonn.ssidLabel"
+            android:text="BSSID:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/wificonn.maxLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/wificonn.bssidLabel"
+            android:text="MAC Addr:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/wificonn.statusLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/wificonn.maxLabel"
+            android:text="Status:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/wificonn.ssidText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/wificonn.ssidLabel"
+            android:layout_alignBottom="@+id/wificonn.ssidLabel"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/wificonn.ssidLabel"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/wificonn.bssidText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/wificonn.maxLabel"
+            android:layout_alignLeft="@+id/wificonn.ssidText"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/wificonn.macText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_above="@+id/wificonn.statusLabel"
+            android:layout_alignLeft="@+id/wificonn.bssidText"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/wificonn.statusText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBottom="@+id/wificonn.statusLabel"
+            android:layout_alignLeft="@+id/wificonn.macText"
+            android:text="TextView" />
+    </RelativeLayout>
+
+    <TextView
+        style="@style/SectionHeader"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:text="Settings"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <LinearLayout
+        android:id="@+id/wificonn.distanceSection"
+        style="@style/SettingItem"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Triggering distance"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/wificonn.distanceText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="300m"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
 </LinearLayout>
