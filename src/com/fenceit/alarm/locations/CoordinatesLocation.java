@@ -23,9 +23,6 @@ public class CoordinatesLocation extends AbstractAlarmLocation {
 	/** The activation distance. */
 	double activationDistance;
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.Location#isInside(com.fenceit.alarm.ContextInfo) */
 	@Override
 	public boolean isInside(ContextInfo info) {
 		// TODO Auto-generated method stub

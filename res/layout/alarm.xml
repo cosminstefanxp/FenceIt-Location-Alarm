@@ -6,26 +6,31 @@
     android:orientation="vertical" >
 
     <!-- Title Bar -->
+
     <LinearLayout style="@style/TitleBar" >
+
         <ImageButton
             style="@style/TitleBarAction"
             android:contentDescription="@string/description_home"
             android:onClick="onClickHome"
             android:src="@drawable/title_home" />
+
         <ImageView style="@style/TitleBarSeparator" />
+
         <TextView
             style="@style/TitleBarText"
             android:text="Alarm Edit" />
+
         <ImageView style="@style/TitleBarSeparator" />
+
         <Button
             android:id="@+id/alarm.saveButton"
             style="@style/TitleBarAction.Text"
-            android:text="@string/button_save" /> 
+            android:text="@string/button_save" />
     </LinearLayout>
     <!-- End of Title Bar -->
 
     <TableRow
-        android:id="@+id/tableRow1" 
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -48,7 +53,6 @@
     </TableRow>
 
     <TableRow
-        android:id="@+id/tableRow2"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
@@ -63,55 +67,44 @@
     </TableRow>
 
     <TableRow
-        android:id="@+id/tableRow3"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:background="@color/delimiter"
-        android:gravity="bottom"
-        android:paddingBottom="2dp" >
+        android:layout_height="wrap_content">
 
-        <LinearLayout
+        <RelativeLayout
+            style="@style/SectionHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_span="2"
             android:layout_weight="1"
-            android:background="@color/background"
-            android:baselineAligned="true"
-            android:gravity="bottom"
-            android:orientation="horizontal" >
+            android:baselineAligned="true">
+
+            <ImageButton
+                android:id="@+id/alarm.addTriggerButton"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:contentDescription="Add a new Trigger"
+                android:src="@android:drawable/ic_menu_add" />
 
             <TextView
                 android:id="@+id/alarm.triggersText"
-                android:layout_width="0dip"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:background="@color/background"
-                android:padding="4dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
                 android:text="Triggers"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
- 
-            <ImageButton
-                style=""
-                android:id="@+id/alarm.addTriggerButton"
-                android:layout_width="64dp" 
-                android:layout_height="64dp"
-                android:contentDescription="Add a new Trigger"
-                android:src="@android:drawable/ic_menu_add" />
-        </LinearLayout>
+        </RelativeLayout>
     </TableRow>
 
     <TableRow
-        android:id="@+id/tableRow4"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:background="@color/delimiter"
-        android:paddingBottom="2dp" >
+        android:paddingBottom="2dp">
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -140,49 +133,40 @@
     </TableRow>
 
     <TableRow
-        android:id="@+id/tableRow5"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|right"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:layout_marginTop="15dp"
-        android:background="@color/delimiter"
-        android:gravity="bottom"
-        android:paddingBottom="2dp" >
+        android:layout_marginTop="15dp" >
 
-        <LinearLayout
+        <RelativeLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_span="2"
             android:layout_weight="1"
-            android:background="@color/background"
             android:baselineAligned="true"
-            android:gravity="bottom"
-            android:orientation="horizontal" >
-
-            <TextView
-                android:id="@+id/alarm.actionsText"
-                android:layout_width="0dip"
-                android:layout_height="50dp"
-                android:layout_gravity="bottom"
-                android:layout_weight="1"
-                android:background="@color/background"
-                android:padding="4dp"
-                android:text="Actions"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+			style="@style/SectionHeader">
 
             <ImageButton
                 android:id="@+id/alarm.addActionButton"
-                android:layout_width="64dp"
-                android:layout_height="64dp"
+                android:layout_width="52dp"
+                android:layout_height="52dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
                 android:contentDescription="Add a new Action"
                 android:src="@android:drawable/ic_menu_add" />
-        </LinearLayout>
+
+            <TextView
+                android:id="@+id/alarm.actionsText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="Actions"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        </RelativeLayout>
     </TableRow>
 
     <TableRow
-        android:id="@+id/tableRow6"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="5dp"

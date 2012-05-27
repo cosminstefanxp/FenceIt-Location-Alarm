@@ -10,7 +10,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.fenceit.alarm.locations.LocationType;
-import com.fenceit.ui.CoordinatesLocationActivity;
+import com.fenceit.ui.WifiConnectedActivity;
 
 /**
  * The AlarmLocationBroker is a class that is aware of the implemented activities corresponding to
@@ -41,7 +41,7 @@ public class AlarmLocationBroker {
 		Intent intent = null;
 		switch (type) {
 		case CoordinatesLocation:
-			intent = new Intent(context, CoordinatesLocationActivity.class);
+			intent = new Intent(context, WifiConnectedActivity.class);
 			break;
 		}
 		return intent;

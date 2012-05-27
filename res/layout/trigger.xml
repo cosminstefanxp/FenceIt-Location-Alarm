@@ -56,20 +56,15 @@
 
     <!-- Location Section -->
 
-    <LinearLayout
+    <TextView
+        android:id="@+id/textView1"
+        style="@style/SectionHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical" android:background="@color/delimiter" android:layout_margin="5dp">
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:background="@color/background"
-            android:text="Location"
-            android:textAppearance="?android:attr/textAppearanceLarge" android:padding="5dp" android:layout_marginBottom="2dp"/>
-
-    </LinearLayout>
+        android:layout_marginBottom="2dp"
+        android:padding="5dp"
+        android:text="Location"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <RelativeLayout
         android:id="@+id/trigger.locationSection"

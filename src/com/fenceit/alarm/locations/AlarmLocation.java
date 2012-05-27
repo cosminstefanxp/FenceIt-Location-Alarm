@@ -6,6 +6,8 @@
  */
 package com.fenceit.alarm.locations;
 
+import org.androwrapee.db.DatabaseReferenceClass;
+
 import com.fenceit.alarm.ContextInfo;
 
 /**
@@ -13,7 +15,7 @@ import com.fenceit.alarm.ContextInfo;
  * details so that, using the provided contextual information, it should be determined if the device
  * is or is not inside the fence/location.
  */
-public interface AlarmLocation {
+public interface AlarmLocation extends DatabaseReferenceClass {
 
 	/**
 	 * Checks if the is inside of the fence.
@@ -54,7 +56,7 @@ public interface AlarmLocation {
 
 	/**
 	 * Gets the name.
-	 *
+	 * 
 	 * @return the name
 	 */
 	public String getName();
