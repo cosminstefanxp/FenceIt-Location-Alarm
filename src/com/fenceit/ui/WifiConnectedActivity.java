@@ -10,8 +10,14 @@ import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
+import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.net.wifi.WifiInfo;
 import android.os.Bundle;
+import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
@@ -24,11 +30,14 @@ import android.widget.Toast;
 import com.fenceit.R;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.db.DatabaseManager;
+import com.fenceit.provider.WifiDataProvider;
 
 public class WifiConnectedActivity extends Activity implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(WifiConnectedActivity.class);
+
+	private static final int DIALOG_ENABLE_WIFI = 0;
 
 	/** The database helper. */
 	private static SQLiteOpenHelper dbHelper = null;
@@ -44,6 +53,10 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 
 	/** The save button. */
 	private Button saveButton;
+
+	private ImageButton refreshButton;
+
+	private ProgressBar progressBar;
 
 	/**
 	 * Called when the activity is first created.
@@ -80,9 +93,9 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 		// Buttons and others
 		saveButton = (Button) findViewById(R.id.wificonn_saveButton);
 		saveButton.setOnClickListener(this);
-		ImageButton refreshButton = (ImageButton) findViewById(R.id.wificonn_refreshButton);
+		refreshButton = (ImageButton) findViewById(R.id.wificonn_refreshButton);
 		refreshButton.setOnClickListener(this);
-		ProgressBar progressBar = (ProgressBar) findViewById(R.id.wificonn_progressBar);
+		progressBar = (ProgressBar) findViewById(R.id.wificonn_progressBar);
 
 		findViewById(R.id.wificonn_favoriteSection).setOnClickListener(this);
 
@@ -111,8 +124,7 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 		if (location.getBssid() == null) {
 			((TextView) findViewById(R.id.wificonn_bssidText)).setText(location.getBssid());
 			((TextView) findViewById(R.id.wificonn_ssidText)).setText(location.getSsid());
-		} else
-		{
+		} else {
 			((TextView) findViewById(R.id.wificonn_bssidText)).setText("Click on the refresh button.");
 			((TextView) findViewById(R.id.wificonn_ssidText)).setText("-");
 		}
@@ -202,11 +214,60 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 			else
 				((ImageView) findViewById(R.id.wificonn_favoriteImage))
 						.setImageResource(android.R.drawable.btn_star_big_off);
-		} else if (v==(findViewById(R.id.wificonn_refreshButton)))
-		{
+		} else if (v == refreshButton) {
 			log.info("Refreshing details regarding Wifi currently connected to.");
+			gatherContextInfo();
+		}
+	}
+
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		switch (id) {
+		//Create a dialog asking the user if he wants to go to the Wifi Settings
+		case DIALOG_ENABLE_WIFI:
+			builder.setMessage("The Wifi interface doesn't seem to be enabled. Would you like to enable it now?")
+					.setCancelable(false)
+					.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+						}
+					}).setNegativeButton("No", new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+			dialog = builder.create();
+			break;
+		default:
+			dialog = null;
+		}
+		return dialog;
+	}
+
+	/**
+	 * Gather context info from the environment and fill in the location and the views.
+	 */
+	private void gatherContextInfo() {
+		// Check for availability;
+		if (!WifiDataProvider.isWifiAvailable(this)) {
+			Toast.makeText(this, "Wifi network is not available", Toast.LENGTH_SHORT);
+			showDialog(DIALOG_ENABLE_WIFI);
+			return;
 		}
 
+		WifiInfo wifiInfo = WifiDataProvider.getConnectionWifiInfo(this);
+		log.info("Wifi Connection info: " + wifiInfo);
+		// Update the view
+		((TextView) findViewById(R.id.wificonn_bssidText)).setText(wifiInfo.getBSSID());
+		((TextView) findViewById(R.id.wificonn_ssidText)).setText(wifiInfo.getSSID());
+		((TextView) findViewById(R.id.wificonn_macText)).setText(wifiInfo.getMacAddress());
+		((TextView) findViewById(R.id.wificonn_statusText)).setText(WifiInfo.getDetailedStateOf(
+				wifiInfo.getSupplicantState()).toString());
+		// Update the location
+		location.setBssid(wifiInfo.getBSSID());
+		location.setSsid(wifiInfo.getSSID());
 	}
 
 }

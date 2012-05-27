@@ -8,7 +8,7 @@ package com.fenceit.alarm.locations;
 
 import org.androwrapee.db.DatabaseReferenceClass;
 
-import com.fenceit.alarm.ContextInfo;
+import com.fenceit.provider.ContextData;
 
 /**
  * A location defined by the user. It can be of various types and should contain the defining
@@ -24,7 +24,7 @@ public interface AlarmLocation extends DatabaseReferenceClass {
 	 *            inside the fence/location
 	 * @return true, if is inside
 	 */
-	public boolean isInside(ContextInfo info);
+	public boolean isInside(ContextData info);
 
 	/**
 	 * Gets the id.

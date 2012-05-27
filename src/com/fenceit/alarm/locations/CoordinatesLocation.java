@@ -6,7 +6,7 @@
  */
 package com.fenceit.alarm.locations;
 
-import com.fenceit.alarm.ContextInfo;
+import com.fenceit.provider.ContextData;
 
 /**
  * An AlarmLocation implementation that is defined using the geographical coordinates of a point on
@@ -24,7 +24,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation {
 	double activationDistance;
 
 	@Override
-	public boolean isInside(ContextInfo info) {
+	public boolean isInside(ContextData info) {
 		// TODO Auto-generated method stub
 		return false;
 	}

@@ -11,8 +11,8 @@ import org.androwrapee.db.DatabaseField;
 import org.androwrapee.db.ReferenceField;
 
 import com.fenceit.alarm.Alarm;
-import com.fenceit.alarm.ContextInfo;
 import com.fenceit.alarm.locations.AlarmLocation;
+import com.fenceit.provider.ContextData;
 
 /**
  * A basic implementation of the trigger.
@@ -67,7 +67,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * @see com.fenceit.alarm.triggers.AbstractAlarmTrigger#shouldTrigger(com.fenceit
 	 * .alarm.EnvironmentData ) */
 	@Override
-	public boolean shouldTrigger(ContextInfo data) {
+	public boolean shouldTrigger(ContextData data) {
 		// TODO Auto-generated method stub
 		return false;
 	}

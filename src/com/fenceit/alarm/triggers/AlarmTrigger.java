@@ -8,7 +8,7 @@ package com.fenceit.alarm.triggers;
 
 import org.androwrapee.db.DatabaseReferenceClass;
 
-import com.fenceit.alarm.ContextInfo;
+import com.fenceit.provider.ContextData;
 
 /**
  * The Interface AlarmTrigger that defines a trigger that will make an alarm go off.
@@ -22,7 +22,7 @@ public interface AlarmTrigger extends DatabaseReferenceClass{
 	 *        it should be triggered.
 	 * @return true, if is triggered
 	 */
-	public boolean shouldTrigger(ContextInfo data);
+	public boolean shouldTrigger(ContextData data);
 	
 	/**
 	 * Checks if the entry is complete and can be saved in the database.

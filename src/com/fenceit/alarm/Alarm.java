@@ -19,6 +19,7 @@ import org.apache.log4j.Logger;
 
 import com.fenceit.alarm.actions.AlarmAction;
 import com.fenceit.alarm.triggers.AlarmTrigger;
+import com.fenceit.provider.ContextData;
 
 /**
  * The Class Alarm that defines an alarm.
@@ -65,7 +66,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	 *            alarm to check if it should be triggered.
 	 * @return true, if is triggered
 	 */
-	public boolean shouldTrigger(ContextInfo data) {
+	public boolean shouldTrigger(ContextData data) {
 		for (AlarmTrigger t : triggers)
 			if (t.shouldTrigger(data)) {
 				log.info("Alarm " + this + " triggered by " + t);

@@ -13,7 +13,7 @@ import org.androwrapee.db.IdField;
 import org.androwrapee.db.ReferenceField;
 
 import com.fenceit.alarm.Alarm;
-import com.fenceit.alarm.ContextInfo;
+import com.fenceit.provider.ContextData;
 
 /**
  * The Class AbstractAlarmTrigger that is a basic abstract implementation for an AlarmTrigger.
@@ -63,7 +63,7 @@ public abstract class AbstractAlarmTrigger implements AlarmTrigger, Serializable
 	 * 
 	 * @see com.fenceit.alarm.AlarmTrigger#shouldTrigger(com.fenceit.alarm.EnvironmentData) */
 	@Override
-	public abstract boolean shouldTrigger(ContextInfo info);
+	public abstract boolean shouldTrigger(ContextData info);
 	
 
 	/**
