@@ -8,6 +8,7 @@ package com.fenceit.db;
 
 import java.util.HashMap;
 
+import org.androwrapee.db.DefaultDAO;
 import org.androwrapee.db.DefaultDatabaseHelper;
 import org.androwrapee.db.IllegalClassStructureException;
 import org.androwrapee.db.ReflectionManager;
@@ -38,6 +39,9 @@ public class DatabaseManager {
 	@SuppressWarnings("rawtypes")
 	private static HashMap<Class, ReflectionManager> rmMap = new HashMap<Class, ReflectionManager>();
 
+	@SuppressWarnings("rawtypes")
+	private static HashMap<Class, DefaultDAO> daoMap = new HashMap<Class, DefaultDAO>();
+
 	/**
 	 * Gets the Singleton database helper.
 	 * 
@@ -45,9 +49,9 @@ public class DatabaseManager {
 	 */
 	public static SQLiteOpenHelper getDBHelper(Context context) {
 		if (dbHelper == null)
-			dbHelper = new DefaultDatabaseHelper(context, DATABASE_NAME, DATABASE_VERSION, new Class[] {
-					Alarm.class, BasicTrigger.class, WifiConnectedLocation.class },
-					new String[] { Alarm.tableName, BasicTrigger.tableName, WifiConnectedLocation.tableName });
+			dbHelper = new DefaultDatabaseHelper(context, DATABASE_NAME, DATABASE_VERSION, new Class[] { Alarm.class,
+					BasicTrigger.class, WifiConnectedLocation.class }, new String[] { Alarm.tableName,
+					BasicTrigger.tableName, WifiConnectedLocation.tableName });
 		return dbHelper;
 	}
 
@@ -57,8 +61,7 @@ public class DatabaseManager {
 	 * @param cls the class
 	 * @return the reflection manager instance
 	 */
-	@SuppressWarnings("rawtypes")
-	public static ReflectionManager getReflectionManagerInstance(Class cls) {
+	public static <T> ReflectionManager getReflectionManagerInstance(Class<T> cls) {
 		if (rmMap.containsKey(cls))
 			return rmMap.get(cls);
 		try {
@@ -70,5 +73,23 @@ public class DatabaseManager {
 			Logger.getRootLogger().fatal("Illegal Class Structure for class " + cls + ": " + ex.getMessage());
 			return null;
 		}
+	}
+
+	/**
+	 * Gets a singleton instance of a DefaultDAO object corresponding to a class.
+	 * 
+	 * @param <T> the generic type
+	 * @param cls the class
+	 * @param tableName the table name
+	 * @return the DAO instance
+	 */
+	@SuppressWarnings("unchecked")
+	public static <T> DefaultDAO<T> getDAOInstance(Context context, Class<T> cls, String tableName) {
+		if (daoMap.containsKey(cls))
+			return daoMap.get(cls);
+		DefaultDAO<T> dao = new DefaultDAO<T>(cls, DatabaseManager.getDBHelper(context),
+				DatabaseManager.getReflectionManagerInstance(cls), tableName);
+		daoMap.put(cls, dao);
+		return dao;
 	}
 }

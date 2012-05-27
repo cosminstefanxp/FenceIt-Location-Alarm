@@ -31,11 +31,11 @@ public class WifiDataProvider {
 	public static WifiInfo getConnectionWifiInfo(Context context) {
 		WifiManager m = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		return m.getConnectionInfo();
-	}
+	} 
 
 	/**
 	 * Gets the network info.
-	 *
+	 * 
 	 * @param context the context
 	 * @return the network info
 	 */
@@ -49,12 +49,13 @@ public class WifiDataProvider {
 
 	/**
 	 * Checks if is wifi available.
-	 *
+	 * 
 	 * @param context the context
 	 * @return true, if is wifi available
 	 */
-	public static boolean isWifiAvailable(Context context)
-	{
-		return getNetworkInfo(context).isAvailable();
+	public static boolean isWifiAvailable(Context context) {
+		NetworkInfo ni = getNetworkInfo(context);
+		log.debug("Network info: " + ni);
+		return ni.isAvailable();
 	}
 }

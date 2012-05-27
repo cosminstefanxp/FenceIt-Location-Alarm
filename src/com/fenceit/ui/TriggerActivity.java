@@ -14,7 +14,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteOpenHelper;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -45,12 +45,9 @@ public class TriggerActivity extends Activity implements OnClickListener {
 
 	/** The Constant REQ_CODE_EDIT_LOCATION. */
 	private static final int REQ_CODE_EDIT_LOCATION = 4;
-	
+
 	/** The Constant REQ_CODE_NEW_LOCATION. */
 	private static final int REQ_CODE_NEW_LOCATION = 5;
-
-	/** The database helper. */
-	private static SQLiteOpenHelper dbHelper = null;
 
 	/** The data access object. */
 	private DefaultDAO<BasicTrigger> dao = null;
@@ -75,11 +72,8 @@ public class TriggerActivity extends Activity implements OnClickListener {
 		setContentView(R.layout.trigger);
 
 		// Prepare database connection
-		if (dbHelper == null)
-			dbHelper = DatabaseManager.getDBHelper(getApplicationContext());
 		if (dao == null)
-			dao = new DefaultDAO<BasicTrigger>(BasicTrigger.class, dbHelper,
-					DatabaseManager.getReflectionManagerInstance(BasicTrigger.class), BasicTrigger.tableName);
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), BasicTrigger.class, BasicTrigger.tableName);
 
 		// If it's a new activity
 		if (savedInstanceState == null) {
@@ -149,10 +143,24 @@ public class TriggerActivity extends Activity implements OnClickListener {
 	 */
 	private void fetchTrigger(Long triggerID, Alarm alarm) {
 		if (triggerID != null) {
+			// Trigger
 			log.info("Fetching trigger from database with id: " + triggerID);
 			dao.open();
-			trigger = dao.fetch(triggerID);
+			Cursor cursor = dao.fetchCursor(triggerID);
+			try {
+				trigger = dao.buildObject(cursor);
+			} catch (Exception e) {
+				e.printStackTrace();
+				log.error(e);
+			}
+			// Location
+			long locID = dao.getReferenceId(cursor, "location");
+			log.info("Fetching associated location with id: " + locID);
+			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), locID));
+
+			cursor.close();
 			dao.close();
+			// Alarm
 			trigger.setAlarm(alarm);
 			log.debug("Fetched trigger: " + trigger);
 		} else {
@@ -214,17 +222,17 @@ public class TriggerActivity extends Activity implements OnClickListener {
 		} else if (v == (findViewById(R.id.trigger_whenSection))) {
 			// Change location type
 			showDialog(DIALOG_TRIGGER_TYPE);
-			
+
 		} else if (v == (findViewById(R.id.trigger_locationSection))) {
 			log.debug("Editing the existing location");
-			Intent intent=AlarmLocationBroker.getActivityIntent(this, trigger.getLocation().getType());
+			Intent intent = AlarmLocationBroker.getActivityIntent(this, trigger.getLocation().getType());
 			intent.putExtra("id", trigger.getLocation().getId());
 			startActivityForResult(intent, REQ_CODE_EDIT_LOCATION);
-			
+
 		} else if (v == findViewById(R.id.trigger_locationAddSection)) {
 			// Create a new location
 			showDialog(DIALOG_NEW_LOCATION);
-		} else if(v==findViewById(R.id.trigger_locationFavoriteSection)){
+		} else if (v == findViewById(R.id.trigger_locationFavoriteSection)) {
 			// TODO: Select a favorite location
 			log.debug("Using a pre-defined location");
 		}
@@ -275,13 +283,26 @@ public class TriggerActivity extends Activity implements OnClickListener {
 		}
 		return dialog;
 	}
-	
+
 	/**
 	 * Start activity for new location.
 	 */
-	private void startActivityForNewLocation(LocationType type)
-	{
-		Intent intent=AlarmLocationBroker.getActivityIntent(this, type);
-		startActivityForResult(intent, REQ_CODE_NEW_LOCATION);	
+	private void startActivityForNewLocation(LocationType type) {
+		Intent intent = AlarmLocationBroker.getActivityIntent(this, type);
+		startActivityForResult(intent, REQ_CODE_NEW_LOCATION);
+	}
+
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
+		if (resultCode == RESULT_OK && (requestCode == REQ_CODE_EDIT_LOCATION || requestCode == REQ_CODE_NEW_LOCATION)) {
+			log.debug("Refreshing location...");
+			long id = data.getLongExtra("id", -1);
+			log.debug("The updated location has id: " + id);
+			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), id));
+
+			refreshActivity();
+		}
 	}
 }

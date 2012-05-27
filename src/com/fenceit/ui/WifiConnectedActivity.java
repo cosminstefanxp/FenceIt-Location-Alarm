@@ -121,7 +121,7 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 			((ImageView) findViewById(R.id.wificonn_favoriteImage))
 					.setImageResource(android.R.drawable.btn_star_big_off);
 		// Location Section
-		if (location.getBssid() == null) {
+		if (location.getBssid() != null) {
 			((TextView) findViewById(R.id.wificonn_bssidText)).setText(location.getBssid());
 			((TextView) findViewById(R.id.wificonn_ssidText)).setText(location.getSsid());
 		} else {
@@ -201,7 +201,9 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			setResult(RESULT_OK);
+			Intent intent=new Intent();
+			intent.putExtra("id", location.getId());
+			setResult(RESULT_OK,intent);
 			finish();
 			return;
 		} else if (v == (findViewById(R.id.wificonn_favoriteSection))) {
@@ -225,11 +227,10 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 		Dialog dialog;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch (id) {
-		//Create a dialog asking the user if he wants to go to the Wifi Settings
+		// Create a dialog asking the user if he wants to go to the Wifi Settings
 		case DIALOG_ENABLE_WIFI:
 			builder.setMessage("The Wifi interface doesn't seem to be enabled. Would you like to enable it now?")
-					.setCancelable(false)
-					.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+					.setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
 						}
@@ -263,8 +264,7 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 		((TextView) findViewById(R.id.wificonn_bssidText)).setText(wifiInfo.getBSSID());
 		((TextView) findViewById(R.id.wificonn_ssidText)).setText(wifiInfo.getSSID());
 		((TextView) findViewById(R.id.wificonn_macText)).setText(wifiInfo.getMacAddress());
-		((TextView) findViewById(R.id.wificonn_statusText)).setText(WifiInfo.getDetailedStateOf(
-				wifiInfo.getSupplicantState()).toString());
+		((TextView) findViewById(R.id.wificonn_statusText)).setText(wifiInfo.getSupplicantState().toString());
 		// Update the location
 		location.setBssid(wifiInfo.getBSSID());
 		location.setSsid(wifiInfo.getSSID());

@@ -286,7 +286,6 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 			fetchTriggers();
 			refreshTriggersListView();
 		}
-
 	}
 
 	@Override

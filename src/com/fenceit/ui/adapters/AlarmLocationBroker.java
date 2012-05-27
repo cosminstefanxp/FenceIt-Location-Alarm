@@ -6,10 +6,15 @@
  */
 package com.fenceit.ui.adapters;
 
+import org.androwrapee.db.DefaultDAO;
+
 import android.content.Context;
 import android.content.Intent;
 
+import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.LocationType;
+import com.fenceit.alarm.locations.WifiConnectedLocation;
+import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.WifiConnectedActivity;
 
 /**
@@ -45,5 +50,28 @@ public class AlarmLocationBroker {
 			break;
 		}
 		return intent;
+	}
+
+	/**
+	 * Fetches a location from the database, given the location id.
+	 *
+	 * @param context the context
+	 * @param id the id
+	 * @return the alarm location, or null if no location found
+	 */
+	public static AlarmLocation fetchLocation(Context context, long id) {
+
+		AlarmLocation location = null;
+		// Fetch WifiConnectedLocation
+		DefaultDAO<WifiConnectedLocation> daoWC = DatabaseManager.getDAOInstance(context, WifiConnectedLocation.class,
+				WifiConnectedLocation.tableName);
+		daoWC.open();
+		location = daoWC.fetch(id);
+		daoWC.close();
+		if (location != null)
+			return location;
+
+		return location;
+
 	}
 }
