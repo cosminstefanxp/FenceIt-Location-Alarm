@@ -36,7 +36,7 @@ import com.fenceit.ui.adapters.AlarmAdapter;
 /**
  * The Class FenceItActivity.
  */
-public class FenceItActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class FenceItActivity extends DefaultActivity implements OnClickListener, OnItemClickListener {
 
 	/** The logger. */
 	private static Logger log = Logger.getRootLogger();
@@ -62,6 +62,7 @@ public class FenceItActivity extends Activity implements OnClickListener, OnItem
 	/** The Constant REQ_CODE_ADD_ALARM. */
 	private static final int REQ_CODE_ADD_ALARM = 1;
 	
+	/** The Constant REQ_CODE_EDIT_ALARM. */
 	private static final int REQ_CODE_EDIT_ALARM = 2;
 
 	/**
@@ -86,7 +87,7 @@ public class FenceItActivity extends Activity implements OnClickListener, OnItem
 		// Add listeners
 		ImageButton but = (ImageButton) findViewById(R.id.main_addAlarmButton);
 		but.setOnClickListener(this);
-
+ 
 		// Get the alarms
 		fetchAlarms();
 

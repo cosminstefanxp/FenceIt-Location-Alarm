@@ -133,7 +133,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	public String getMainDescription() {
 		switch (this.type) {
 		case ON_ENTER:
-			return "When entering";
+			return "When arriving at";
 		case ON_EXIT:
 			return "When leaving";
 		default:
@@ -146,8 +146,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getSecondaryDescription() */
 	@Override
 	public String getSecondaryDescription() {
-		// TODO Auto-generated method stub
-		return "Home";
+		return location.getDescription();
 	}
 
 }
