@@ -38,6 +38,10 @@
         <activity
             android:name=".ui.SettingsActivity"
             android:theme="@style/Theme" />
+
+        <service
+            android:name=".service.BackgroundService"
+            android:exported="false" />
     </application>
 
 </manifest>
