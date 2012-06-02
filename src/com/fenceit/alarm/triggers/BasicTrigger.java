@@ -123,7 +123,10 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * @see java.lang.Object#toString() */
 	@Override
 	public String toString() {
-		return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", location=" + location + "]";
+		if(alarm!=null)
+			return "BasicTrigger [id=" + id + ", alarm=" + alarm.getId() + ", type=" + type + ", location=" + location + "]";
+		else
+			return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", location=" + location + "]";
 	}
 
 	/* (non-Javadoc)

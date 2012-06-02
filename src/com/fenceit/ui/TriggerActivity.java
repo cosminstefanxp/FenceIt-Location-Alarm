@@ -28,8 +28,8 @@ import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.alarm.triggers.BasicTrigger.TriggerType;
+import com.fenceit.db.AlarmLocationBroker;
 import com.fenceit.db.DatabaseManager;
-import com.fenceit.ui.adapters.AlarmLocationBroker;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
 public class TriggerActivity extends Activity implements OnClickListener {

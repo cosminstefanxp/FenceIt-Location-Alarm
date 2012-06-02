@@ -61,9 +61,8 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Checks if the alarm should be triggered.
 	 * 
-	 * @param data
-	 *            the environment data which provides enough information for the
-	 *            alarm to check if it should be triggered.
+	 * @param data the environment data which provides enough information for the alarm to check if
+	 *            it should be triggered.
 	 * @return true, if is triggered
 	 */
 	public boolean shouldTrigger(ContextData data) {
@@ -77,8 +76,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	}
 
 	/**
-	 * Checks if the alarm is complete and has all the fields correctly filled
-	 * in.
+	 * Checks if the alarm is complete and has all the fields correctly filled in.
 	 * 
 	 * @return true, if is complete
 	 */
@@ -102,23 +100,28 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Instantiates a new alarm only with the id.
 	 * 
-	 * @param id
-	 *            the id
+	 * @param id the id
 	 */
 	public Alarm(long id) {
 		this();
 		this.id = id;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#toString()
-	 */
+	 * @see java.lang.Object#toString() */
 	@Override
 	public String toString() {
-		return "Alarm [id=" + id + ", name=" + name + ", enabled=" + enabled
-				+ ", triggers=" + triggers + ", actions=" + actions + "]";
+		return "Alarm [id=" + id + ", name=" + name + ", enabled=" + enabled + ", triggers=" + triggers + ", actions="
+				+ actions + "]";
+		// String out = "Alarm [id=" + id + ", name=" + name + ", enabled=" + enabled + "]";
+		// out += "\n\tTriggers:";
+		// for (AlarmTrigger t : triggers)
+		// out += "\n\t" + t.toString();
+		// out += "\n\tActions:";
+		// for (AlarmAction a : actions)
+		// out += "\n\t" + a.toString();
+		// return out;
 	}
 
 	/**
@@ -133,8 +136,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Sets the enabled.
 	 * 
-	 * @param enabled
-	 *            the new enabled
+	 * @param enabled the new enabled
 	 */
 	public void setEnabled(boolean enabled) {
 		this.enabled = enabled;
@@ -154,8 +156,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Adds the action.
 	 * 
-	 * @param action
-	 *            the action
+	 * @param action the action
 	 */
 	public void addAction(AlarmAction action) {
 		if (action != null)
@@ -165,8 +166,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Removes the action.
 	 * 
-	 * @param action
-	 *            the action
+	 * @param action the action
 	 * @return true, if successful
 	 */
 	public boolean removeAction(AlarmAction action) {
@@ -196,8 +196,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Adds a new trigger.
 	 * 
-	 * @param trigger
-	 *            the trigger
+	 * @param trigger the trigger
 	 */
 	public void addTrigger(AlarmTrigger trigger) {
 		if (trigger != null)
@@ -207,8 +206,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Removes the trigger.
 	 * 
-	 * @param trigger
-	 *            the trigger
+	 * @param trigger the trigger
 	 * @return true, if successful
 	 */
 	public boolean removeTrigger(AlarmTrigger trigger) {
@@ -231,8 +229,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Sets the name.
 	 * 
-	 * @param name
-	 *            the name to set
+	 * @param name the name to set
 	 */
 	public void setName(String name) {
 		this.name = name;
@@ -250,35 +247,29 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Sets the id.
 	 * 
-	 * @param id
-	 *            the id to set
+	 * @param id the id to set
 	 */
 	public void setId(long id) {
 		this.id = id;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#hashCode()
-	 */
+	 * @see java.lang.Object#hashCode() */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result
-				+ ((creationDate == null) ? 0 : creationDate.hashCode());
+		result = prime * result + ((creationDate == null) ? 0 : creationDate.hashCode());
 		result = prime * result + (enabled ? 1231 : 1237);
 		result = prime * result + (int) (id ^ (id >>> 32));
 		result = prime * result + ((name == null) ? 0 : name.hashCode());
 		return result;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/* (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#equals(java.lang.Object)
-	 */
+	 * @see java.lang.Object#equals(java.lang.Object) */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

@@ -119,4 +119,9 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 		return true;
 	}
 
+	@Override
+	public String toString() {
+		return "WifiConnectedLocation [bssid=" + bssid + ", ssid=" + ssid + "]";
+	}
+
 }

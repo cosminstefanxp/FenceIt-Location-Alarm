@@ -61,7 +61,7 @@ public class FenceItActivity extends DefaultActivity implements OnClickListener,
 
 	/** The Constant REQ_CODE_ADD_ALARM. */
 	private static final int REQ_CODE_ADD_ALARM = 1;
-	
+
 	/** The Constant REQ_CODE_EDIT_ALARM. */
 	private static final int REQ_CODE_EDIT_ALARM = 2;
 
@@ -87,7 +87,7 @@ public class FenceItActivity extends DefaultActivity implements OnClickListener,
 		// Add listeners
 		ImageButton but = (ImageButton) findViewById(R.id.main_addAlarmButton);
 		but.setOnClickListener(this);
- 
+
 		// Get the alarms
 		fetchAlarms();
 
@@ -189,9 +189,10 @@ public class FenceItActivity extends DefaultActivity implements OnClickListener,
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
-		//if ((requestCode == REQ_CODE_ADD_ALARM || requestCode==REQ_CODE_EDIT_ALARM) && resultCode == RESULT_OK) {
-		if(resultCode==RESULT_OK){
-			//TODO: separate new alarm from edited alarm
+		// if ((requestCode == REQ_CODE_ADD_ALARM || requestCode==REQ_CODE_EDIT_ALARM) && resultCode
+		// == RESULT_OK) {
+		if (resultCode == RESULT_OK) {
+			// TODO: separate new alarm from edited alarm
 			log.debug("Refreshing alarms...");
 			fetchAlarms();
 			refreshAlarmsListView();
@@ -212,7 +213,7 @@ public class FenceItActivity extends DefaultActivity implements OnClickListener,
 	 * android.view.View, int, long) */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-		log.info("ListView item click for editing alarm with id "+id);
+		log.info("ListView item click for editing alarm with id " + id);
 		Intent editAlarmActivityIntent = new Intent(this, AlarmActivity.class);
 		editAlarmActivityIntent.putExtra("id", id);
 		startActivityForResult(editAlarmActivityIntent, REQ_CODE_EDIT_ALARM);

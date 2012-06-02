@@ -4,7 +4,7 @@
  * Stefan-Dobrin Cosmin
  * Copyright 2012
  */
-package com.fenceit.ui.adapters;
+package com.fenceit.db;
 
 import org.androwrapee.db.DefaultDAO;
 
@@ -14,8 +14,8 @@ import android.content.Intent;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
-import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.WifiConnectedActivity;
+import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
 /**
  * The AlarmLocationBroker is a class that is aware of the implemented activities corresponding to
