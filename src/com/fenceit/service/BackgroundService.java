@@ -10,20 +10,18 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
+import android.app.Notification;
+import android.app.PendingIntent;
+import android.app.Service;
+import android.content.Intent;
+import android.os.IBinder;
+import android.widget.Toast;
+
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.ui.FenceItActivity;
-
-import android.app.AlarmManager;
-import android.app.Notification;
-import android.app.PendingIntent;
-import android.app.Service;
-import android.content.Context;
-import android.content.Intent;
-import android.os.IBinder;
-import android.widget.Toast;
 
 /**
  * The Class BackgroundService is the background service that is indefinitely runnning in the
@@ -46,9 +44,14 @@ public class BackgroundService extends Service {
 		new Log4jConfiguration();
 		log.warn("The Background Service is created.");
 
-		// Fetch the alarms (complete)
-		alarms = DatabaseAccessor.buildFullAlarms(this, null);
-		log.info("Fetched alarms from database: " + alarms);
+		// Fetch the complete alarms (using a separate thread)
+		new Thread(new Runnable() {
+			@Override
+			public void run() {
+				alarms = DatabaseAccessor.buildFullAlarms(getApplicationContext(), null);
+				log.info("Fetched alarms from database: " + alarms);
+			}
+		}).start();
 
 		// Setup the notification and start the service as foreground service
 		Notification notification = prepareOngoingNotification();
@@ -61,7 +64,7 @@ public class BackgroundService extends Service {
 		log.warn("The Background Service is started with the start id: " + startId);
 		Toast.makeText(this, "Background Service Started...", Toast.LENGTH_SHORT).show();
 
-		AlarmDispatcher ad = new AlarmDispatcher(this);
+		SystemAlarmDispatcher ad = new SystemAlarmDispatcher(this);
 		ad.dispatchAlarm(Utils.getTimeAfterInSecs(15));
 
 		return START_STICKY;
@@ -70,7 +73,12 @@ public class BackgroundService extends Service {
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
+
 		Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
+
+		SystemAlarmDispatcher ad = new SystemAlarmDispatcher(this);
+		ad.cancelAlarm();
+
 		log.warn("The Background service is stopped.");
 	}
 

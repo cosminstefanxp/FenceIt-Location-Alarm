@@ -24,7 +24,7 @@ public class Log4jConfiguration {
 		
 		//Log cat configuration
 		logConfigurator.setUseLogCatAppender(true);
-		logConfigurator.setLogCatPattern("[%-5p] %c - %m%n");
+		logConfigurator.setLogCatPattern("* %m%n");
 
 		//Basic configuration
 		logConfigurator.setRootLevel(Level.DEBUG);

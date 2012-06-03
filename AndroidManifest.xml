@@ -43,7 +43,7 @@
             android:name=".service.BackgroundService"
             android:exported="false" />
 
-        <receiver android:name=".service.AlarmReceiver" />
+        <receiver android:name=".service.SystemAlarmReceiver" />
     </application>
 
 </manifest>
