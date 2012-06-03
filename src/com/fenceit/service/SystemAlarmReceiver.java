@@ -1,23 +1,45 @@
+/*
+ * Fence It
+ *
+ * Stefan-Dobrin Cosmin
+ * Copyright 2012
+ */
 package com.fenceit.service;
 
+import org.apache.log4j.Logger;
+
+import android.app.AlarmManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
-import android.util.Log;
-import android.widget.Toast;
 
+/**
+ * The Class SystemAlarmReceiver handles broadcasts that arrive from the System {@link AlarmManager}
+ * and sends them accordingly to the service.
+ */
 public class SystemAlarmReceiver extends BroadcastReceiver {
-	private static final String tag = "TestReceiver";
 
+	/** The Constant logger. */
+	private static final Logger log = Logger.getLogger(BroadcastReceiver.class);
+
+	/* (non-Javadoc)
+	 * 
+	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
+	 * android.content.Intent) */
 	@Override
 	public void onReceive(Context context, Intent intent) {
-		Log.d(tag, "intent=" + intent);
-		String message = intent.getStringExtra("message");
+		// Processs the event type
+		int message = intent.getIntExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
+				BackgroundService.SERVICE_EVENT_NONE);
+		log.debug("Received alarm broadcast for event type: " + message);
+		if (message == BackgroundService.SERVICE_EVENT_NONE)
+			return;
 
-		Toast.makeText(context, "Tada", Toast.LENGTH_SHORT);
-		Log.d(tag, message);
-
+		// Build the intent for the service
 		Intent serviceIntent = new Intent(context, BackgroundService.class);
+		serviceIntent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, message);
+
+		// Start the service
 		context.startService(serviceIntent);
 
 	}

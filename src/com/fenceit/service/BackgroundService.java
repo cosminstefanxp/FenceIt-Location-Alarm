@@ -32,18 +32,66 @@ public class BackgroundService extends Service {
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(BackgroundService.class);
 
+	/** The Constant ONGOING_NOTIFICATION used for identifying notifications. */
 	private static final int ONGOING_NOTIFICATION = 2;
+
+	/** The Constant ALARM_TRIGGERED_NOTIFICATION used for identifying notifications. */
+	private static final int ALARM_TRIGGERED_NOTIFICATION = 1;
+
+	public static final int SERVICE_EVENT_WIFI = 3;
+
+	public static final int SERVICE_EVENT_NONE = 2;
+
+	public static final String SERVICE_EVENT_FIELD_NAME = "event";
 
 	/** The alarms in the database. */
 	List<Alarm> alarms;
 
+	/** The alarm dispatcher. */
+	private SystemAlarmDispatcher alarmDispatcher;
+
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
 		// Making sure the Log4J is configured, even if the main application process is not started
 		new Log4jConfiguration();
-		log.warn("The Background Service is created.");
+		log.warn("Creating the Background Service.");
 
+		// Setup the notification and start the service as foreground service
+		Notification notification = prepareOngoingNotification();
+		startForeground(ONGOING_NOTIFICATION, notification);
+
+		alarmDispatcher = new SystemAlarmDispatcher(this);
+	}
+
+	@Override
+	public int onStartCommand(Intent intent, int flags, int startId) {
+		super.onStartCommand(intent, flags, startId);
+		log.warn("Starting Background Service with intent: " + intent);
+		Toast.makeText(this, "Background Service Started...", Toast.LENGTH_SHORT).show();
+
+		// Process the extras
+		int event = intent.getIntExtra(SERVICE_EVENT_FIELD_NAME, SERVICE_EVENT_NONE);
+		if (event != SERVICE_EVENT_NONE)
+			processEvent(event);
+
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(10), SERVICE_EVENT_WIFI);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15), SERVICE_EVENT_NONE);
+
+		return START_NOT_STICKY;
+	}
+
+	/**
+	 * Processes an event received by the service.
+	 * 
+	 * @param event the event
+	 */
+	private void processEvent(int event) {
+		log.info("Processing received event: " + event);
+	}
+
+	private List<Alarm> fetchFullAlarms() {
 		// Fetch the complete alarms (using a separate thread)
 		new Thread(new Runnable() {
 			@Override
@@ -52,22 +100,7 @@ public class BackgroundService extends Service {
 				log.info("Fetched alarms from database: " + alarms);
 			}
 		}).start();
-
-		// Setup the notification and start the service as foreground service
-		Notification notification = prepareOngoingNotification();
-		startForeground(ONGOING_NOTIFICATION, notification);
-	}
-
-	@Override
-	public int onStartCommand(Intent intent, int flags, int startId) {
-		super.onStartCommand(intent, flags, startId);
-		log.warn("The Background Service is started with the start id: " + startId);
-		Toast.makeText(this, "Background Service Started...", Toast.LENGTH_SHORT).show();
-
-		SystemAlarmDispatcher ad = new SystemAlarmDispatcher(this);
-		ad.dispatchAlarm(Utils.getTimeAfterInSecs(15));
-
-		return START_STICKY;
+		return alarms;
 	}
 
 	@Override
@@ -77,9 +110,10 @@ public class BackgroundService extends Service {
 		Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
 
 		SystemAlarmDispatcher ad = new SystemAlarmDispatcher(this);
-		ad.cancelAlarm();
+		ad.cancelAlarm(SERVICE_EVENT_WIFI);
+		ad.cancelAlarm(SERVICE_EVENT_NONE);
 
-		log.warn("The Background service is stopped.");
+		log.warn("Stopping background service...");
 	}
 
 	/**

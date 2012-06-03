@@ -38,36 +38,43 @@ public class SystemAlarmDispatcher {
 
 	/**
 	 * Dispatches an alarm to the {@link SystemAlarmReceiver} class at a specified time in the
-	 * future.
+	 * future, for a specific type of "event" (defined by SERVICE_EVENT_xxx in
+	 * {@link BackgroundService}).
 	 * 
-	 * @param cal the specific time when the alarm should set off
+	 * @param when the specific time when the alarm should set off
+	 * @param eventType the event type
 	 */
-	public void dispatchAlarm(Calendar cal) {
+	public void dispatchAlarm(Calendar when, int eventType) {
 		// Build the intent
 		Intent intent = new Intent(mContext, SystemAlarmReceiver.class);
-		intent.putExtra("message", "Single Shot Alarm");
+		intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, eventType);
 
 		// Create a pending intent that is necessary to pass to an alarm manager
 		PendingIntent pi = PendingIntent.getBroadcast(mContext, // context, or activity, or service
-				1, // request id, used for disambiguating this intent
+				eventType + 1, // request id, used for disambiguating this intent -- same as
+								// eventType
+								// for canceling purpose
 				intent, // intent to be delivered
 				0); // pending intent flags
 
 		// Set the alarm
-		alarmManager.set(AlarmManager.RTC_WAKEUP, cal.getTimeInMillis(), pi);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, when.getTimeInMillis(), pi);
 	}
 
 	/**
 	 * Cancels a system alarm.
+	 * 
+	 * @param eventType the event type
 	 */
-	public void cancelAlarm() {
+	public void cancelAlarm(int eventType) {
 		// Build the intent
 		Intent intent = new Intent(mContext, SystemAlarmReceiver.class);
-		intent.putExtra("message", "Single Shot Alarm");
 
 		// Create the identical pending intent that is necessary to cancel
 		PendingIntent pi = PendingIntent.getBroadcast(mContext, // context, or activity, or service
-				1, // request id, used for disambiguating this intent
+				eventType + 1, // request id, used for disambiguating this intent -- same as
+								// eventType
+								// for canceling purpose
 				intent, // intent to be delivered
 				0); // pending intent flags
 
