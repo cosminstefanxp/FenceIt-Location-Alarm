@@ -6,6 +6,8 @@
  */
 package com.fenceit.ui;
 
+import android.app.Notification;
+import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;

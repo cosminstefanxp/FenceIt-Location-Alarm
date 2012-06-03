@@ -201,9 +201,9 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 						Toast.LENGTH_SHORT).show();
 				return;
 			}
-			Intent intent=new Intent();
+			Intent intent = new Intent();
 			intent.putExtra("id", location.getId());
-			setResult(RESULT_OK,intent);
+			setResult(RESULT_OK, intent);
 			finish();
 			return;
 		} else if (v == (findViewById(R.id.wificonn_favoriteSection))) {

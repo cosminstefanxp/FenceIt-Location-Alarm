@@ -11,7 +11,6 @@ import java.util.ArrayList;
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;

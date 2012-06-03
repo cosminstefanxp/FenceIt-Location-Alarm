@@ -42,6 +42,8 @@
         <service
             android:name=".service.BackgroundService"
             android:exported="false" />
+
+        <receiver android:name=".service.AlarmReceiver" />
     </application>
 
 </manifest>
