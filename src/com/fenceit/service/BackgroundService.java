@@ -21,6 +21,8 @@ import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseAccessor;
+import com.fenceit.service.checkers.TriggerCheckerBroker;
+import com.fenceit.service.checkers.TriggerCheckerThread;
 import com.fenceit.ui.FenceItActivity;
 
 /**
@@ -63,6 +65,7 @@ public class BackgroundService extends Service {
 		startForeground(ONGOING_NOTIFICATION, notification);
 
 		alarmDispatcher = new SystemAlarmDispatcher(this);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15), SERVICE_EVENT_WIFI);
 	}
 
 	@Override
@@ -86,18 +89,13 @@ public class BackgroundService extends Service {
 	 */
 	private void processEvent(int event) {
 		log.info("Processing received event: " + event);
-	}
 
-	private List<Alarm> fetchFullAlarms() {
-		// Fetch the complete alarms (using a separate thread)
-		new Thread(new Runnable() {
-			@Override
-			public void run() {
-				alarms = DatabaseAccessor.buildFullAlarms(getApplicationContext(), null);
-				log.info("Fetched alarms from database: " + alarms);
-			}
-		}).start();
-		return alarms;
+		// Dispatch the next alarm
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15), event);
+
+		// Run the trigger checker thread
+		Thread thread = TriggerCheckerBroker.getTriggerCheckerThread(this, event);
+		thread.start();
 	}
 
 	@Override
@@ -105,6 +103,9 @@ public class BackgroundService extends Service {
 		super.onDestroy();
 
 		Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
+
+		// TODO: Debug only - Stop any pending system alarms
+		alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFI);
 
 		// If somehow the wakelock is still locked, release it
 		WakeLockManager.releaseWakeLock();

@@ -12,6 +12,7 @@ import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
 import com.fenceit.provider.ContextData;
+import com.fenceit.provider.WifiContextData;
 
 /**
  * The Class WifiConnectedLocation.
@@ -81,7 +82,9 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 	 * @see com.fenceit.alarm.locations.AlarmLocation#isInside(com.fenceit.alarm.ContextInfo) */
 	@Override
 	public boolean isInside(ContextData info) {
-		// TODO Auto-generated method stub
+		WifiContextData data = (WifiContextData) info;
+		if (data.connectedWifiInfo.getBSSID().equals(this.getBssid()))
+			return true;
 		return false;
 	}
 

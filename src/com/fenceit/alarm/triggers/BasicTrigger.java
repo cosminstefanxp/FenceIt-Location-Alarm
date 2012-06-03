@@ -68,8 +68,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * .alarm.EnvironmentData ) */
 	@Override
 	public boolean shouldTrigger(ContextData data) {
-		// TODO Auto-generated method stub
-		return false;
+		return getLocation().isInside(data);
 	}
 
 	/**
@@ -123,8 +122,9 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * @see java.lang.Object#toString() */
 	@Override
 	public String toString() {
-		if(alarm!=null)
-			return "BasicTrigger [id=" + id + ", alarm=" + alarm.getId() + ", type=" + type + ", location=" + location + "]";
+		if (alarm != null)
+			return "BasicTrigger [id=" + id + ", alarm=" + alarm.getId() + ", type=" + type + ", location=" + location
+					+ "]";
 		else
 			return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", location=" + location + "]";
 	}
