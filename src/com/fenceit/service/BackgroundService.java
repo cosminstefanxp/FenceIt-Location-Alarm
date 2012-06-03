@@ -76,9 +76,6 @@ public class BackgroundService extends Service {
 		if (event != SERVICE_EVENT_NONE)
 			processEvent(event);
 
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(10), SERVICE_EVENT_WIFI);
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15), SERVICE_EVENT_NONE);
-
 		return START_NOT_STICKY;
 	}
 
@@ -109,9 +106,8 @@ public class BackgroundService extends Service {
 
 		Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
 
-		SystemAlarmDispatcher ad = new SystemAlarmDispatcher(this);
-		ad.cancelAlarm(SERVICE_EVENT_WIFI);
-		ad.cancelAlarm(SERVICE_EVENT_NONE);
+		// If somehow the wakelock is still locked, release it
+		WakeLockManager.releaseWakeLock();
 
 		log.warn("Stopping background service...");
 	}
