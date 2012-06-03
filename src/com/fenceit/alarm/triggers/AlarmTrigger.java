@@ -8,6 +8,7 @@ package com.fenceit.alarm.triggers;
 
 import org.androwrapee.db.DatabaseReferenceClass;
 
+import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.provider.ContextData;
 
 /**
@@ -37,6 +38,13 @@ public interface AlarmTrigger extends DatabaseReferenceClass{
 	 * @return the id
 	 */
 	public long getId();
+	
+	/**
+	 * Gets the location.
+	 *
+	 * @return the location
+	 */
+	public AlarmLocation getLocation();
 	
 	/**
 	 * Gets the main description.
