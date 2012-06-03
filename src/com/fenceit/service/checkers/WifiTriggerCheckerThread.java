@@ -10,11 +10,14 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
+import android.os.Handler;
+import android.os.Message;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
+import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.WifiDataProvider;
@@ -31,9 +34,10 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	 * Instantiates a new wifi service thread.
 	 * 
 	 * @param context the context
+	 * @param handler the handler for the main thread
 	 */
-	public WifiTriggerCheckerThread(Context context) {
-		super(context);
+	public WifiTriggerCheckerThread(Context context, Handler handler) {
+		super(context, handler);
 	}
 
 	/* (non-Javadoc)
@@ -60,6 +64,9 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	@Override
 	protected void triggerAlarm(AlarmTrigger trigger) {
 		log.warn("An alarm was triggered: " + trigger);
+		BasicTrigger t = (BasicTrigger) trigger;
+		Message m = mParentHandler.obtainMessage(0, (int) t.getAlarm().getId(), (int) t.getId());
+		mParentHandler.sendMessage(m);
 	}
 
 	/* (non-Javadoc)

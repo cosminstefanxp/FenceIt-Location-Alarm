@@ -11,6 +11,7 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import android.content.Context;
+import android.os.Handler;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
@@ -31,6 +32,9 @@ public abstract class TriggerCheckerThread extends Thread {
 	/** The context. */
 	protected Context mContext;
 
+	/** The handler of the Background service. */
+	protected Handler mParentHandler;
+
 	/** The Constant log. */
 	protected static final Logger log = Logger.getLogger(TriggerCheckerThread.class);
 
@@ -39,9 +43,10 @@ public abstract class TriggerCheckerThread extends Thread {
 	 * 
 	 * @param context the context
 	 */
-	public TriggerCheckerThread(Context context) {
+	public TriggerCheckerThread(Context context, Handler handler) {
 		super();
 		this.mContext = context;
+		this.mParentHandler = handler;
 	}
 
 	/* (non-Javadoc)
