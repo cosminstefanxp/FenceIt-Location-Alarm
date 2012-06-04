@@ -23,11 +23,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation {
 	/** The activation distance. */
 	double activationDistance;
 
-	@Override
-	public boolean isInside(ContextData info) {
-		// TODO Auto-generated method stub
-		return false;
-	}
+
 
 	@Override
 	public String getDescription() {
@@ -54,6 +50,12 @@ public class CoordinatesLocation extends AbstractAlarmLocation {
 	public boolean isComplete() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	@Override
+	public Status checkStatus(ContextData info) {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 }

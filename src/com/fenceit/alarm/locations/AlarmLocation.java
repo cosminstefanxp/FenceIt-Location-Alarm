@@ -18,13 +18,33 @@ import com.fenceit.provider.ContextData;
 public interface AlarmLocation extends DatabaseReferenceClass {
 
 	/**
-	 * Checks if the is inside of the fence.
+	 * The Enum Status that describes the status of the device regarding a Location.
+	 */
+	public enum Status {
+
+		/** The device STAYED inside since the last query. */
+		STAYED_INSIDE,
+		/** The device STAYED outside since the last query. */
+		STAYED_OUTSIDE,
+		/** The device ENTERED the location since the last query. */
+		ENTERED,
+		/** The device LEFT inside since the last query. */
+		LEFT,
+		/**
+		 * There is not enough information to decide anything (usually the required context data is
+		 * not available).
+		 */
+		UNKNOWN
+	};
+
+	/**
+	 * Checks if the is inside/ouside of the fence or it has just entered/left the location.
 	 * 
 	 * @param info the context information which provides enough details to check if the device is
 	 *            inside the fence/location
-	 * @return true, if is inside
+	 * @return the status
 	 */
-	public boolean isInside(ContextData info);
+	public Status checkStatus(ContextData info);
 
 	/**
 	 * Gets the id.
@@ -60,12 +80,12 @@ public interface AlarmLocation extends DatabaseReferenceClass {
 	 * @return the name
 	 */
 	public String getName();
-	
+
 	/**
 	 * Checks if is complete and all required fields are valid.
-	 *
+	 * 
 	 * @return true, if is complete
 	 */
 	public boolean isComplete();
-	
+
 }

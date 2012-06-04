@@ -12,6 +12,7 @@ import org.androwrapee.db.ReferenceField;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
+import com.fenceit.alarm.locations.AlarmLocation.Status;
 import com.fenceit.provider.ContextData;
 
 /**
@@ -68,7 +69,11 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * .alarm.EnvironmentData ) */
 	@Override
 	public boolean shouldTrigger(ContextData data) {
-		return getLocation().isInside(data);
+		if (this.type == TriggerType.ON_ENTER && location.checkStatus(data) == Status.ENTERED)
+			return true;
+		if (this.type == TriggerType.ON_EXIT && location.checkStatus(data) == Status.LEFT)
+			return true;
+		return false;
 	}
 
 	/**

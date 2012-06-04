@@ -81,11 +81,32 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 	 * 
 	 * @see com.fenceit.alarm.locations.AlarmLocation#isInside(com.fenceit.alarm.ContextInfo) */
 	@Override
-	public boolean isInside(ContextData info) {
+	public Status checkStatus(ContextData info) {
 		WifiContextData data = (WifiContextData) info;
-		if (data.connectedWifiInfo.getBSSID().equals(this.getBssid()))
-			return true;
-		return false;
+		if (data == null || data.connectedWifiInfo == null)
+			return Status.UNKNOWN;
+		// Check current status
+		boolean isInside = false;
+		if (data.connectedWifiInfo.getBSSID() != null && data.connectedWifiInfo.getBSSID().equals(this.bssid))
+			isInside = true;
+
+		// Check previous status
+		boolean wasInside = false;
+		if (data.prevConnectedBSSID != null && data.prevConnectedBSSID.equals(this.bssid))
+			wasInside = true;
+
+		// Compute the status
+		if (isInside) {
+			if (wasInside)
+				return Status.STAYED_INSIDE;
+			else
+				return Status.ENTERED;
+		} else {
+			if (wasInside)
+				return Status.LEFT;
+			else
+				return Status.STAYED_OUTSIDE;
+		}
 	}
 
 	/* (non-Javadoc)

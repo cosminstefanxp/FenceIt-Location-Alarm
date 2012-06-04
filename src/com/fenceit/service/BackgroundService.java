@@ -101,7 +101,7 @@ public class BackgroundService extends Service {
 		log.info("Processing received event: " + event);
 
 		// Dispatch the next alarm
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(30), event);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15), event);
 
 		// Run the trigger checker thread
 		Thread thread = TriggerCheckerBroker.getTriggerCheckerThread(getApplicationContext(), handler, event);

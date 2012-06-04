@@ -20,12 +20,16 @@ public class WifiContextData implements ContextData {
 	/** The wifi info for the connected Wifi network. */
 	public WifiInfo connectedWifiInfo;
 
+	/** The last connected bssid. */
+	public String prevConnectedBSSID;
+
 	/** The scan results of the Wireless networks in range. */
 	public List<ScanResult> scanResults;
 
 	@Override
 	public String toString() {
-		return "WifiContextData [connectedWifiInfo=" + connectedWifiInfo + ", scanResults=" + scanResults + "]";
+		return "WifiContextData [connectedWifiInfo=" + connectedWifiInfo + ", prevConnectedBSSID=" + prevConnectedBSSID
+				+ ", scanResults=" + scanResults + "]";
 	}
 
 }

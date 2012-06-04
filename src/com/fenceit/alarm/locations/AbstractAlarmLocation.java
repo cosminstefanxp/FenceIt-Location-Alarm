@@ -23,6 +23,11 @@ public abstract class AbstractAlarmLocation implements AlarmLocation {
 	/** The name of the location. */
 	@DatabaseField
 	protected String name;
+	
+	public static final int STAYED_INSIDE=0;
+	public static final int STAYED_OUTSIDE=1;
+	public static final int ENTERED_LOCATION=2;
+	public static final int LEFT_LOCATION=3;
 
 	/**
 	 * If the location is a favorite one. Only the favorite locations remain in the database after
