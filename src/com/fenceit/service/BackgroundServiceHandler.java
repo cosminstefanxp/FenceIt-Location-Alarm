@@ -15,8 +15,11 @@ import android.os.Message;
  */
 public class BackgroundServiceHandler extends Handler {
 
+	/** The Constant HANDLER_NOTIFICATION. */
+	public static final int HANDLER_NOTIFICATION = 1;
+
 	/** The service. */
-	BackgroundService service;
+	private BackgroundService service;
 
 	/**
 	 * Instantiates a new background service handler.
@@ -34,10 +37,24 @@ public class BackgroundServiceHandler extends Handler {
 	@Override
 	public void handleMessage(Message msg) {
 		super.handleMessage(msg);
-		int alarmId = msg.arg1;
-		int triggerId = msg.arg2;
-		service.publishNotification("FenceIt - Alarm triggered", "A FenceIt alarm was triggered.", "The Alarm with id "
-				+ alarmId + "\n was triggered because of trigger " + triggerId);
+		switch (msg.what) {
+		case HANDLER_NOTIFICATION:
+			int alarmId = msg.arg1;
+			int triggerId = msg.arg2;
+			service.publishNotification("FenceIt - Alarm triggered", "A FenceIt alarm was triggered.",
+					"The Alarm with id " + alarmId + "\n was triggered because of trigger " + triggerId);
+			break;
+		}
+
+	}
+
+	/**
+	 * Gets the service.
+	 * 
+	 * @return the service
+	 */
+	public BackgroundService getService() {
+		return service;
 	}
 
 }

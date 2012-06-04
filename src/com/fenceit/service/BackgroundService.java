@@ -6,9 +6,6 @@
  */
 package com.fenceit.service;
 
-import java.util.Calendar;
-import java.util.List;
-
 import org.apache.log4j.Logger;
 
 import android.app.Notification;
@@ -16,16 +13,12 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.os.Handler;
 import android.os.IBinder;
 import android.widget.Toast;
 
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
-import com.fenceit.alarm.Alarm;
-import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
-import com.fenceit.service.checkers.TriggerCheckerThread;
 import com.fenceit.ui.AlarmPanelActivity;
 
 /**
@@ -49,11 +42,14 @@ public class BackgroundService extends Service {
 	/** The Constant SERVICE_EVENT_NONE. */
 	public static final int SERVICE_EVENT_NONE = 2;
 
+	/** The Constant SERVICE_EVENT_RESET_ALARMS. */
+	public static final int SERVICE_EVENT_RESET_ALARMS = 0;
+
 	/** The Constant SERVICE_EVENT_FIELD_NAME. */
 	public static final String SERVICE_EVENT_FIELD_NAME = "event";
 
 	/** The handler. */
-	private Handler handler;
+	private BackgroundServiceHandler handler;
 
 	/** The alarm dispatcher. */
 	private SystemAlarmDispatcher alarmDispatcher;
@@ -80,7 +76,7 @@ public class BackgroundService extends Service {
 		handler = new BackgroundServiceHandler(this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15), SERVICE_EVENT_WIFI);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15).getTimeInMillis(), SERVICE_EVENT_WIFI);
 	}
 
 	@Override
@@ -99,9 +95,6 @@ public class BackgroundService extends Service {
 
 	private void processEvent(int event) {
 		log.info("Processing received event: " + event);
-
-		// Dispatch the next alarm
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15), event);
 
 		// Run the trigger checker thread
 		Thread thread = TriggerCheckerBroker.getTriggerCheckerThread(getApplicationContext(), handler, event);
@@ -141,8 +134,8 @@ public class BackgroundService extends Service {
 		Intent notificationIntent = new Intent(getApplicationContext(), AlarmPanelActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
-		notification.setLatestEventInfo(getApplicationContext(), "FenceIt", "The application is constantly searching for triggers.",
-				pendingIntent);
+		notification.setLatestEventInfo(getApplicationContext(), "FenceIt",
+				"The application is constantly searching for triggers.", pendingIntent);
 		notification.flags |= Notification.FLAG_NO_CLEAR;
 		return notification;
 	}
@@ -166,7 +159,7 @@ public class BackgroundService extends Service {
 		notification.setLatestEventInfo(this, title, message, pendingIntent);
 		notification.defaults = Notification.DEFAULT_ALL;
 		notification.flags |= Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_AUTO_CANCEL;
-		notificationManager.notify(0, notification);
+		notificationManager.notify(ALARM_TRIGGERED_NOTIFICATION, notification);
 	}
 
 	/* (non-Javadoc)
@@ -176,6 +169,16 @@ public class BackgroundService extends Service {
 	public IBinder onBind(Intent intent) {
 		// Not allowing binding
 		return null;
+	}
+
+	/**
+	 * Creates an alarm. This method will be used by the handler, called from checker threads.
+	 * 
+	 * @param when the when, as milliseconds since 1st of January 1970
+	 * @param eventType the event type
+	 */
+	public void dispatchAlarm(long when, int eventType) {
+		this.alarmDispatcher.dispatchAlarm(when, eventType);
 	}
 
 }

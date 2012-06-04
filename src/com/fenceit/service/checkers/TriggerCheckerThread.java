@@ -11,12 +11,12 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import android.content.Context;
-import android.os.Handler;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.provider.ContextData;
+import com.fenceit.service.BackgroundServiceHandler;
 import com.fenceit.service.WakeLockManager;
 
 /**
@@ -32,8 +32,11 @@ public abstract class TriggerCheckerThread extends Thread {
 	/** The context. */
 	protected Context mContext;
 
+	/** The event type. */
+	protected int mEventType;
+
 	/** The handler of the Background service. */
-	protected Handler mParentHandler;
+	protected BackgroundServiceHandler mParentHandler;
 
 	/** The Constant log. */
 	protected static final Logger log = Logger.getLogger(TriggerCheckerThread.class);
@@ -42,11 +45,14 @@ public abstract class TriggerCheckerThread extends Thread {
 	 * Instantiates a new trigger checker thread.
 	 * 
 	 * @param context the context
+	 * @param handler the handler
+	 * @param eventType the event type
 	 */
-	public TriggerCheckerThread(Context context, Handler handler) {
+	public TriggerCheckerThread(Context context, BackgroundServiceHandler handler, int eventType) {
 		super();
 		this.mContext = context;
 		this.mParentHandler = handler;
+		this.mEventType = eventType;
 	}
 
 	/* (non-Javadoc)
@@ -86,6 +92,14 @@ public abstract class TriggerCheckerThread extends Thread {
 			if (t.shouldTrigger(contextData))
 				triggerAlarm(t);
 
+		// Compute the next time when the thread should be run
+		Long delay = computeNextCheckTime(triggers);
+		if (log.isInfoEnabled())
+			log.info("Scheduling next check in (s): " + delay/1000);
+
+		// Set a system alarm for the next time
+		mParentHandler.getService().dispatchAlarm(System.currentTimeMillis() + delay, mEventType);
+
 		// Release the Wake Lock
 		WakeLockManager.releaseWakeLock();
 	}
@@ -121,4 +135,14 @@ public abstract class TriggerCheckerThread extends Thread {
 	 * @return true, if the preconditions are valid
 	 */
 	protected abstract boolean isPreconditionValid();
+
+	/**
+	 * Computes the next wait time until a check, when the checker thread should run and verify all
+	 * the triggering conditions.
+	 * 
+	 * @param triggers the current triggers, as returned by the <code>fetchData</code> method.
+	 * @return the number of milliseconds to wait until the next check time, or null, if a next
+	 *         check should not be scheduled
+	 */
+	protected abstract Long computeNextCheckTime(List<AlarmTrigger> triggers);
 }

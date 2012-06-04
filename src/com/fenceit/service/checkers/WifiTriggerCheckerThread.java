@@ -10,7 +10,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 import android.content.Context;
-import android.os.Handler;
 import android.os.Message;
 
 import com.fenceit.alarm.Alarm;
@@ -21,6 +20,7 @@ import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.WifiDataProvider;
+import com.fenceit.service.BackgroundServiceHandler;
 
 /**
  * The WifiServiceThread handles the check for conditions regarding the currently connected Wifi
@@ -36,8 +36,8 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	 * @param context the context
 	 * @param handler the handler for the main thread
 	 */
-	public WifiTriggerCheckerThread(Context context, Handler handler) {
-		super(context, handler);
+	public WifiTriggerCheckerThread(Context context, BackgroundServiceHandler handler, int eventType) {
+		super(context, handler, eventType);
 	}
 
 	/* (non-Javadoc)
@@ -65,7 +65,8 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	protected void triggerAlarm(AlarmTrigger trigger) {
 		log.warn("An alarm was triggered: " + trigger);
 		BasicTrigger t = (BasicTrigger) trigger;
-		Message m = mParentHandler.obtainMessage(0, (int) t.getAlarm().getId(), (int) t.getId());
+		Message m = mParentHandler.obtainMessage(BackgroundServiceHandler.HANDLER_NOTIFICATION, (int) t.getAlarm()
+				.getId(), (int) t.getId());
 		mParentHandler.sendMessage(m);
 	}
 
@@ -90,5 +91,18 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 		}
 
 		return true;
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime() */
+	@Override
+	protected Long computeNextCheckTime(List<AlarmTrigger> triggers) {
+
+		if (triggers.isEmpty())
+			return null;
+
+		// TODO: Temporary, fixed check time
+		return 30000L;
 	}
 }

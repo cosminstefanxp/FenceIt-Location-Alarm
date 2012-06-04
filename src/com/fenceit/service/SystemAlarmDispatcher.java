@@ -6,8 +6,6 @@
  */
 package com.fenceit.service;
 
-import java.util.Calendar;
-
 import android.app.AlarmManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -41,10 +39,11 @@ public class SystemAlarmDispatcher {
 	 * future, for a specific type of "event" (defined by SERVICE_EVENT_xxx in
 	 * {@link BackgroundService}).
 	 * 
-	 * @param when the specific time when the alarm should set off
+	 * @param when the specific time when the alarm should set off, in millis since 1st January 1970
+	 *            (as an output from Calendar)
 	 * @param eventType the event type
 	 */
-	public synchronized void dispatchAlarm(Calendar when, int eventType) {
+	public synchronized void dispatchAlarm(long when, int eventType) {
 		// Build the intent
 		Intent intent = new Intent(mContext, SystemAlarmReceiver.class);
 		intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, eventType);
@@ -58,7 +57,7 @@ public class SystemAlarmDispatcher {
 				0); // pending intent flags
 
 		// Set the alarm
-		alarmManager.set(AlarmManager.RTC_WAKEUP, when.getTimeInMillis(), pi);
+		alarmManager.set(AlarmManager.RTC_WAKEUP, when, pi);
 	}
 
 	/**

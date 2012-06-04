@@ -7,10 +7,10 @@
 package com.fenceit.service.checkers;
 
 import android.content.Context;
-import android.os.Handler;
 
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.service.BackgroundService;
+import com.fenceit.service.BackgroundServiceHandler;
 
 /**
  * The TriggerCheckerBroker is used as a broker to add an abstraction layer between the background
@@ -26,10 +26,11 @@ public class TriggerCheckerBroker {
 	 * @param eventType the event type
 	 * @return the trigger checker thread
 	 */
-	public static TriggerCheckerThread getTriggerCheckerThread(Context context, Handler handler, int eventType) {
+	public static TriggerCheckerThread getTriggerCheckerThread(Context context, BackgroundServiceHandler handler,
+			int eventType) {
 		switch (eventType) {
 		case BackgroundService.SERVICE_EVENT_WIFI:
-			return new WifiTriggerCheckerThread(context, handler);
+			return new WifiTriggerCheckerThread(context, handler, BackgroundService.SERVICE_EVENT_WIFI);
 		default:
 			return null;
 		}
