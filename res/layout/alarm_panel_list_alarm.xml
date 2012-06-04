@@ -4,7 +4,7 @@
     android:layout_height="wrap_content" >
 
     <ToggleButton
-        android:id="@+id/alarmListEnableToggle"
+        android:id="@+id/alarmPanel.alarmToggleButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="6dp"
@@ -17,7 +17,7 @@
         android:orientation="vertical" >
 
         <TextView
-            android:id="@+id/alarmListTitleText"
+            android:id="@+id/alarmPanel.alarmTitleText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:padding="3dp"
@@ -25,7 +25,7 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <TextView
-            android:id="@+id/alarmListDescText"
+            android:id="@+id/alarmPanel.alarmDescrText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:paddingLeft="3dp"

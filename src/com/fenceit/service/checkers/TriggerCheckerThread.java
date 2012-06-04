@@ -58,22 +58,34 @@ public abstract class TriggerCheckerThread extends Thread {
 		log.info("Starting trigger checker thread of type: " + this.getClass().getSimpleName());
 
 		// Process the triggers, but only if all the requirements (preconditions) are met
-		if (isPreconditionValid()) {
-			// Fetch the required triggers corresponding to this Location Type
-			List<AlarmTrigger> triggers = fetchData();
-			if (log.isDebugEnabled())
-				log.debug("Fetched triggers: " + triggers);
-
-			// Get the Context data needed for checking the triggers
-			ContextData contextData = acquireContextData();
-
-			// Check conditions for every trigger
-			if (log.isDebugEnabled())
-				log.debug("Checking if any of the alarms can be triggered with the contextual data: " + contextData);
-			for (AlarmTrigger t : triggers)
-				if (t.shouldTrigger(contextData))
-					triggerAlarm(t);
+		if (!isPreconditionValid()) {
+			// Release the Wake Lock
+			WakeLockManager.releaseWakeLock();
+			return;
 		}
+
+		// Fetch the required triggers corresponding to this Location Type
+		List<AlarmTrigger> triggers = fetchData();
+		if (log.isDebugEnabled())
+			log.debug("Fetched triggers: " + triggers);
+
+		// If no active triggers for this type of Locations, skip further processing
+		if (triggers.isEmpty()) {
+			// Release the Wake Lock
+			WakeLockManager.releaseWakeLock();
+			return;
+		}
+
+		// Get the Context data needed for checking the triggers
+		ContextData contextData = acquireContextData();
+
+		// Check conditions for every trigger
+		if (log.isDebugEnabled())
+			log.debug("Checking if any of the alarms can be triggered with the contextual data: " + contextData);
+		for (AlarmTrigger t : triggers)
+			if (t.shouldTrigger(contextData))
+				triggerAlarm(t);
+
 		// Release the Wake Lock
 		WakeLockManager.releaseWakeLock();
 	}

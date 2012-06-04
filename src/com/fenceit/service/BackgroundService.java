@@ -26,7 +26,7 @@ import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
 import com.fenceit.service.checkers.TriggerCheckerThread;
-import com.fenceit.ui.FenceItActivity;
+import com.fenceit.ui.AlarmPanelActivity;
 
 /**
  * The Class BackgroundService is the background service that is indefinitely runnning in the
@@ -79,7 +79,7 @@ public class BackgroundService extends Service {
 		// Setup other stuff
 		handler = new BackgroundServiceHandler(this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
-		alarmDispatcher = new SystemAlarmDispatcher(this);
+		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
 		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15), SERVICE_EVENT_WIFI);
 	}
 
@@ -101,10 +101,10 @@ public class BackgroundService extends Service {
 		log.info("Processing received event: " + event);
 
 		// Dispatch the next alarm
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15), event);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(30), event);
 
 		// Run the trigger checker thread
-		Thread thread = TriggerCheckerBroker.getTriggerCheckerThread(this, handler, event);
+		Thread thread = TriggerCheckerBroker.getTriggerCheckerThread(getApplicationContext(), handler, event);
 		thread.start();
 	}
 
@@ -138,10 +138,10 @@ public class BackgroundService extends Service {
 
 		// On click, create a new FenceIt Activity. If the activity is started already, clear
 		// everything above it and bring it back
-		Intent notificationIntent = new Intent(this, FenceItActivity.class);
+		Intent notificationIntent = new Intent(getApplicationContext(), AlarmPanelActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		notification.setLatestEventInfo(this, "FenceIt", "The application is constantly searching for triggers.",
+		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
+		notification.setLatestEventInfo(getApplicationContext(), "FenceIt", "The application is constantly searching for triggers.",
 				pendingIntent);
 		notification.flags |= Notification.FLAG_NO_CLEAR;
 		return notification;
@@ -157,13 +157,15 @@ public class BackgroundService extends Service {
 	protected void publishNotification(String title, String tickerText, String message) {
 		// On click, create a new FenceIt Activity. If the activity is started already, clear
 		// everything above it and bring it back
-		Intent notificationIntent = new Intent(this, FenceItActivity.class);
+		Intent notificationIntent = new Intent(this, AlarmPanelActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
-		
+
+		// Create the notification
 		Notification notification = new Notification(R.drawable.ic_logo, tickerText, System.currentTimeMillis());
 		notification.setLatestEventInfo(this, title, message, pendingIntent);
 		notification.defaults = Notification.DEFAULT_ALL;
+		notification.flags |= Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(0, notification);
 	}
 

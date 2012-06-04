@@ -8,21 +8,28 @@ package com.fenceit.ui.adapters;
 
 import java.util.ArrayList;
 
+import org.androwrapee.db.DefaultDAO;
+
 import android.app.Activity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.CompoundButton;
+import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
+import com.fenceit.db.DatabaseManager;
 
 /**
  * The Class AlarmAdapter that is used to display the alarms in a ListView.
  */
-public class AlarmAdapter extends BaseAdapter {
+public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 
 	/** The context. */
 	private final Activity context;
@@ -77,12 +84,16 @@ public class AlarmAdapter extends BaseAdapter {
 		if (rowView == null) {
 			// Inflate a new view
 			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.main_list_alarm, null);
+			rowView = inflater.inflate(R.layout.alarm_panel_list_alarm, null);
 			// Save the fields in the view holder for quick reference
 			holder = new ViewHolder();
-			holder.enableButton = (ToggleButton) rowView.findViewById(R.id.alarmListEnableToggle);
-			holder.titleTextV = (TextView) rowView.findViewById(R.id.alarmListTitleText);
-			holder.descTextV = (TextView) rowView.findViewById(R.id.alarmListDescText);
+			holder.enableButton = (ToggleButton) rowView.findViewById(R.id.alarmPanel_alarmToggleButton);
+			holder.titleTextV = (TextView) rowView.findViewById(R.id.alarmPanel_alarmTitleText);
+			holder.descTextV = (TextView) rowView.findViewById(R.id.alarmPanel_alarmDescrText);
+
+			// Create the onclick event for the button
+			holder.enableButton.setOnClickListener(this);
+
 			// Save the view holder as a tag
 			rowView.setTag(holder);
 		} else {
@@ -92,9 +103,10 @@ public class AlarmAdapter extends BaseAdapter {
 
 		// Populate the view
 		Alarm a = alarms.get(position);
+		holder.enableButton.setTag(position); // for the click event
 		holder.enableButton.setChecked(a.isEnabled());
 		holder.titleTextV.setText(a.getName());
-		holder.descTextV.setText(a.getTriggers().size()+" triggers / "+a.getActions().size()+" actions");
+		holder.descTextV.setText(a.getTriggers().size() + " triggers / " + a.getActions().size() + " actions");
 
 		return rowView;
 	}
@@ -120,5 +132,35 @@ public class AlarmAdapter extends BaseAdapter {
 	@Override
 	public long getItemId(int position) {
 		return alarms.get(position).getId();
+	}
+
+	/* Method called when there is a click on the toggle button.
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see android.widget.CompoundButton.OnCheckedChangeListener#onCheckedChanged(android.widget.
+	 * CompoundButton, boolean) */
+	@Override
+	public void onClick(View v) {
+
+		// Change the alarm enabled status
+		ToggleButton buttonView = (ToggleButton) v;
+		Integer position = (Integer) buttonView.getTag();
+		if (position == null)
+			return;
+		Alarm alarm = alarms.get(position);
+		// If the alarm is already checked, skip this
+		Log.i(this.getClass().getName(), "Toggle button for alarm with id " + alarm.getId() + " toggled to "
+				+ buttonView.isChecked());
+		if (alarm.isEnabled() == buttonView.isChecked())
+			return;
+		alarm.setEnabled(buttonView.isChecked());
+
+		// Persist the alarm in the database
+		DefaultDAO<Alarm> dao = DatabaseManager.getDAOInstance(this.context.getApplicationContext(), Alarm.class,
+				Alarm.tableName);
+		dao.open();
+		dao.update(alarm, alarm.getId());
+		dao.close();
 	}
 }

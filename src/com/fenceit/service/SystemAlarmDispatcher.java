@@ -44,7 +44,7 @@ public class SystemAlarmDispatcher {
 	 * @param when the specific time when the alarm should set off
 	 * @param eventType the event type
 	 */
-	public void dispatchAlarm(Calendar when, int eventType) {
+	public synchronized void dispatchAlarm(Calendar when, int eventType) {
 		// Build the intent
 		Intent intent = new Intent(mContext, SystemAlarmReceiver.class);
 		intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, eventType);
@@ -66,7 +66,7 @@ public class SystemAlarmDispatcher {
 	 * 
 	 * @param eventType the event type
 	 */
-	public void cancelAlarm(int eventType) {
+	public synchronized void cancelAlarm(int eventType) {
 		// Build the intent
 		Intent intent = new Intent(mContext, SystemAlarmReceiver.class);
 

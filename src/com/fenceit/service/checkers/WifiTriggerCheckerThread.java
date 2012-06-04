@@ -45,7 +45,7 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	 * @see com.fenceit.service.TriggerCheckerThread#fetchData() */
 	@Override
 	protected List<AlarmTrigger> fetchData() {
-		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext, "enabled='t'");
+		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='t'");
 		List<AlarmTrigger> triggers = new LinkedList<AlarmTrigger>();
 		// Prepare only the triggers that have locations of the required type
 		for (Alarm a : alarms) {

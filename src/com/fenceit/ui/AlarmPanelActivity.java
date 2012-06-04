@@ -35,16 +35,13 @@ import com.fenceit.ui.adapters.AlarmAdapter;
 /**
  * The Class FenceItActivity.
  */
-public class FenceItActivity extends DefaultActivity implements OnClickListener, OnItemClickListener {
+public class AlarmPanelActivity extends DefaultActivity implements OnClickListener, OnItemClickListener {
 
 	/** The logger. */
 	private static Logger log = Logger.getRootLogger();
 
 	/** The alarms. */
 	ArrayList<Alarm> alarms;
-
-	/** The db helper. */
-	private static SQLiteOpenHelper dbHelper = null;
 
 	/** The dao. */
 	private DefaultDAO<Alarm> dao = null;
@@ -74,14 +71,11 @@ public class FenceItActivity extends DefaultActivity implements OnClickListener,
 		super.onCreate(savedInstanceState);
 		init();
 
-		setContentView(R.layout.main);
+		setContentView(R.layout.alarm_panel);
 
 		// Prepare database connection
-		if (dbHelper == null)
-			dbHelper = DatabaseManager.getDBHelper(getApplicationContext());
 		if (dao == null)
-			dao = new DefaultDAO<Alarm>(Alarm.class, dbHelper,
-					DatabaseManager.getReflectionManagerInstance(Alarm.class), Alarm.tableName);
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), Alarm.class, Alarm.tableName);
 
 		// Add listeners
 		ImageButton but = (ImageButton) findViewById(R.id.main_addAlarmButton);
@@ -91,7 +85,7 @@ public class FenceItActivity extends DefaultActivity implements OnClickListener,
 		fetchAlarms();
 
 		// Prepare the listview
-		listView = (ListView) findViewById(R.id.main_alarmList);
+		listView = (ListView) findViewById(R.id.alarmPanel_alarmList);
 		listAdapter = new AlarmAdapter(this, alarms);
 		listView.setAdapter(listAdapter);
 		registerForContextMenu(listView);
@@ -173,10 +167,14 @@ public class FenceItActivity extends DefaultActivity implements OnClickListener,
 	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
 	@Override
 	public void onClick(View v) {
-		if (v == findViewById(R.id.main_addAlarmButton)) {
+		switch (v.getId()) {
+		// The button to add a new alarm was clicked
+		case R.id.main_addAlarmButton:
 			log.debug("Add alarm button clicked.");
 			Intent addAlarmActivityIntent = new Intent(this, AlarmActivity.class);
 			startActivityForResult(addAlarmActivityIntent, REQ_CODE_ADD_ALARM);
+			break;
+
 		}
 
 	}
