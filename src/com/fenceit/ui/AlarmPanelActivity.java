@@ -28,7 +28,7 @@ import android.widget.ListView;
 
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
-import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.Wifi;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.AlarmAdapter;
 
@@ -41,10 +41,10 @@ public class AlarmPanelActivity extends DefaultActivity implements OnClickListen
 	private static Logger log = Logger.getRootLogger();
 
 	/** The alarms. */
-	ArrayList<Alarm> alarms;
+	ArrayList<Wifi> alarms;
 
 	/** The dao. */
-	private DefaultDAO<Alarm> dao = null;
+	private DefaultDAO<Wifi> dao = null;
 
 	/** The context menu id. */
 	private long contextMenuPosition;
@@ -75,7 +75,7 @@ public class AlarmPanelActivity extends DefaultActivity implements OnClickListen
 
 		// Prepare database connection
 		if (dao == null)
-			dao = DatabaseManager.getDAOInstance(getApplicationContext(), Alarm.class, Alarm.tableName);
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), Wifi.class, Wifi.tableName);
 
 		// Add listeners
 		ImageButton but = (ImageButton) findViewById(R.id.main_addAlarmButton);
@@ -135,7 +135,7 @@ public class AlarmPanelActivity extends DefaultActivity implements OnClickListen
 	 * 
 	 * @param alarm the alarm
 	 */
-	private void deleteAlarm(Alarm alarm) {
+	private void deleteAlarm(Wifi alarm) {
 		log.info("Deleting alarm: " + alarm);
 		dao.open();
 		dao.delete(alarm.getId());

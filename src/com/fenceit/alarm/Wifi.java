@@ -25,7 +25,7 @@ import com.fenceit.provider.ContextData;
  * The Class Alarm that defines an alarm.
  */
 @DatabaseClass
-public class Alarm implements Serializable, DatabaseReferenceClass {
+public class Wifi implements Serializable, DatabaseReferenceClass {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -2191764559986512813L;
@@ -53,7 +53,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	private Date creationDate = new Date();
 
 	/** The logger. */
-	private static Logger log = Logger.getLogger(Alarm.class);
+	private static Logger log = Logger.getLogger(Wifi.class);
 
 	/** The Constant tableName. */
 	public static final String tableName = "alarms";
@@ -89,7 +89,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Instantiates a new alarm.
 	 */
-	public Alarm() {
+	public Wifi() {
 		super();
 		this.enabled = false;
 		this.triggers = new ArrayList<AlarmTrigger>();
@@ -102,7 +102,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	 * 
 	 * @param id the id
 	 */
-	public Alarm(long id) {
+	public Wifi(long id) {
 		this();
 		this.id = id;
 	}
@@ -278,7 +278,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Alarm other = (Alarm) obj;
+		Wifi other = (Wifi) obj;
 		if (enabled != other.enabled)
 			return false;
 		if (id != other.id)

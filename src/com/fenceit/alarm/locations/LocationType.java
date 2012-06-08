@@ -15,8 +15,8 @@ public enum LocationType {
 	CoordinatesLocation(0),
 	/** A location based on the connected Wifi. */
 	WifiConnectedLocation(1),
-	/** A location based on the visible Wifi(s). */
-	WifiVisibleLocation(2),
+	/** A location based on the detected Wifi(s) network(s). */
+	WifisDetectedLocation(2),
 	/** A location based on the visible Phone Tower Cells. */
 	TowerCellLocation(3);
 

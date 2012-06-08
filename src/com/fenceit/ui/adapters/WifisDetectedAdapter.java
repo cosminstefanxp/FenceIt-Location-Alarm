@@ -8,34 +8,27 @@ package com.fenceit.ui.adapters;
 
 import java.util.ArrayList;
 
-import org.androwrapee.db.DefaultDAO;
-
 import android.app.Activity;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
-import android.widget.CompoundButton;
-import android.widget.CompoundButton.OnCheckedChangeListener;
 import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.fenceit.R;
-import com.fenceit.alarm.Wifi;
-import com.fenceit.db.DatabaseManager;
-
+import com.fenceit.alarm.locations.WifisDetectedLocation.Wifi;
 /**
  * The Class AlarmAdapter that is used to display the alarms in a ListView.
  */
-public class AlarmAdapter extends BaseAdapter implements OnClickListener {
+public class WifisDetectedAdapter extends BaseAdapter implements OnClickListener {
 
 	/** The context. */
 	private final Activity context;
 
-	/** The alarms. */
-	private ArrayList<Wifi> alarms;
+	/** The wifis. */
+	private ArrayList<Wifi> wifis;
 
 	/**
 	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for
@@ -46,22 +39,22 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		/** The enable button. */
 		public ToggleButton enableButton;
 
-		/** The title. */
-		public TextView titleTextV;
+		/** The SSID. */
+		public TextView ssidTextV;
 
-		/** The type. */
-		public TextView descTextV;
+		/** The BSSID. */
+		public TextView bssidTextV;
 	}
 
 	/**
-	 * Instantiates a new alarm adapter.
+	 * Instantiates a new adapter for detected Wifi networks.
 	 * 
 	 * @param context the context
-	 * @param alarms the alarms
+	 * @param wifis the wifis
 	 */
-	public AlarmAdapter(Activity context, ArrayList<Wifi> alarms) {
+	public WifisDetectedAdapter(Activity context, ArrayList<Wifi> wifis) {
 		this.context = context;
-		this.alarms = alarms;
+		this.wifis = wifis;
 	}
 
 	/* (non-Javadoc)
@@ -69,7 +62,7 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 	 * @see android.widget.ArrayAdapter#getCount() */
 	@Override
 	public int getCount() {
-		return alarms.size();
+		return wifis.size();
 	}
 
 	/* (non-Javadoc)
@@ -84,12 +77,12 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		if (rowView == null) {
 			// Inflate a new view
 			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.alarm_panel_list_alarm, null);
+			rowView = inflater.inflate(R.layout.wifi_detected_location_list, null);
 			// Save the fields in the view holder for quick reference
 			holder = new ViewHolder();
-			holder.enableButton = (ToggleButton) rowView.findViewById(R.id.alarmPanel_alarmToggleButton);
-			holder.titleTextV = (TextView) rowView.findViewById(R.id.alarmPanel_alarmTitleText);
-			holder.descTextV = (TextView) rowView.findViewById(R.id.alarmPanel_alarmDescrText);
+			holder.enableButton = (ToggleButton) rowView.findViewById(R.id.wifidetec_list_selectedCheckbox);
+			holder.ssidTextV = (TextView) rowView.findViewById(R.id.wifidetec_list_ssidText);
+			holder.bssidTextV = (TextView) rowView.findViewById(R.id.wifidetec_list_bssidText);
 
 			// Create the onclick event for the button
 			holder.enableButton.setOnClickListener(this);
@@ -102,28 +95,31 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		}
 
 		// Populate the view
-		Wifi a = alarms.get(position);
+		Wifi w = wifis.get(position);
 		holder.enableButton.setTag(position); // for the click event
-		holder.enableButton.setChecked(a.isEnabled());
-		holder.titleTextV.setText(a.getName());
-		holder.descTextV.setText(a.getTriggers().size() + " triggers / " + a.getActions().size() + " actions");
+		holder.enableButton.setChecked(w.selected);
+		holder.ssidTextV.setText(w.SSID);
+		holder.bssidTextV.setText(w.BSSID);
 
 		return rowView;
 	}
 
 	/**
-	 * Sets the alarms.
+	 * Sets the wifis.
 	 * 
-	 * @param alarms the new alarms
+	 * @param wifis the new wifis
 	 */
-	public void setAlarms(ArrayList<Wifi> alarms) {
-		this.alarms = alarms;
+	public void setWifis(ArrayList<Wifi> wifis) {
+		this.wifis = wifis;
 		super.notifyDataSetChanged();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.widget.Adapter#getItem(int)
+	 */
 	@Override
 	public Object getItem(int position) {
-		return alarms.get(position);
+		return wifis.get(position);
 	}
 
 	/* (non-Javadoc)
@@ -131,7 +127,7 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 	 * @see android.widget.Adapter#getItemId(int) */
 	@Override
 	public long getItemId(int position) {
-		return alarms.get(position).getId();
+		return position;
 	}
 
 	/* Method called when there is a click on the toggle button.
@@ -143,24 +139,27 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 	@Override
 	public void onClick(View v) {
 
-		// Change the alarm enabled status
-		ToggleButton buttonView = (ToggleButton) v;
-		Integer position = (Integer) buttonView.getTag();
-		if (position == null)
-			return;
-		Wifi alarm = alarms.get(position);
-		// If the alarm is already checked, skip this
-		Log.i(this.getClass().getName(), "Toggle button for alarm with id " + alarm.getId() + " toggled to "
-				+ buttonView.isChecked());
-		if (alarm.isEnabled() == buttonView.isChecked())
-			return;
-		alarm.setEnabled(buttonView.isChecked());
-
-		// Persist the alarm in the database
-		DefaultDAO<Wifi> dao = DatabaseManager.getDAOInstance(this.context.getApplicationContext(), Wifi.class,
-				Wifi.tableName);
-		dao.open();
-		dao.update(alarm, alarm.getId());
-		dao.close();
+		// TODO: to fill in
+		// // Change the alarm enabled status
+		// ToggleButton buttonView = (ToggleButton) v;
+		// Integer position = (Integer) buttonView.getTag();
+		// if (position == null)
+		// return;
+		// Wifi alarm = wifis.get(position);
+		// // If the alarm is already checked, skip this
+		// Log.i(this.getClass().getName(), "Toggle button for alarm with id " + alarm.getId() +
+		// " toggled to "
+		// + buttonView.isChecked());
+		// if (alarm.isEnabled() == buttonView.isChecked())
+		// return;
+		// alarm.setEnabled(buttonView.isChecked());
+		//
+		// // Persist the alarm in the database
+		// DefaultDAO<Wifi> dao =
+		// DatabaseManager.getDAOInstance(this.context.getApplicationContext(), Wifi.class,
+		// Wifi.tableName);
+		// dao.open();
+		// dao.update(alarm, alarm.getId());
+		// dao.close();
 	}
 }

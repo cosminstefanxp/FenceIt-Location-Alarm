@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import android.content.Context;
 
-import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.Wifi;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.provider.ContextData;
@@ -106,7 +106,7 @@ public abstract class TriggerCheckerThread extends Thread {
 
 	/**
 	 * Handles the triggering of the alarm and the process of executing the actions. The
-	 * corresponding {@link Alarm} should be available from the trigger.
+	 * corresponding {@link Wifi} should be available from the trigger.
 	 * 
 	 * @param trigger the trigger whose conditions were satisfied.
 	 */

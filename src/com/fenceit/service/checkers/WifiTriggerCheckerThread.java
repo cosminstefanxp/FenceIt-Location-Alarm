@@ -12,7 +12,7 @@ import java.util.List;
 import android.content.Context;
 import android.os.Message;
 
-import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.Wifi;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
@@ -45,10 +45,10 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	 * @see com.fenceit.service.TriggerCheckerThread#fetchData() */
 	@Override
 	protected List<AlarmTrigger> fetchData() {
-		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='t'");
+		List<Wifi> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='t'");
 		List<AlarmTrigger> triggers = new LinkedList<AlarmTrigger>();
 		// Prepare only the triggers that have locations of the required type
-		for (Alarm a : alarms) {
+		for (Wifi a : alarms) {
 			for (AlarmTrigger t : a.getTriggers())
 				if (t.getLocation().getType() == LocationType.WifiConnectedLocation)
 					triggers.add(t);

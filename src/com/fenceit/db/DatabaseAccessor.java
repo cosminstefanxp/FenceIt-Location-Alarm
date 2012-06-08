@@ -15,7 +15,7 @@ import org.apache.log4j.Logger;
 import android.content.Context;
 import android.database.Cursor;
 
-import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.Wifi;
 import com.fenceit.alarm.triggers.BasicTrigger;
 
 /**
@@ -34,16 +34,16 @@ public class DatabaseAccessor {
 	 * @param whereClause the where clause
 	 * @return the full triggers
 	 */
-	public static List<Alarm> buildFullAlarms(Context ctx, String whereClause) {
+	public static List<Wifi> buildFullAlarms(Context ctx, String whereClause) {
 
-		DefaultDAO<Alarm> daoAlarms = DatabaseManager.getDAOInstance(ctx, Alarm.class, Alarm.tableName);
+		DefaultDAO<Wifi> daoAlarms = DatabaseManager.getDAOInstance(ctx, Wifi.class, Wifi.tableName);
 		daoAlarms.open();
 
 		// Fetch all alarms
-		List<Alarm> alarms = daoAlarms.fetchAll(whereClause);
+		List<Wifi> alarms = daoAlarms.fetchAll(whereClause);
 
 		// Fill alarms
-		for (Alarm alarm : alarms) {
+		for (Wifi alarm : alarms) {
 
 			// Fetch associated triggers
 			List<BasicTrigger> triggers = buildFullTriggers(ctx,

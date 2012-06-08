@@ -32,7 +32,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.fenceit.R;
-import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.Wifi;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseManager;
@@ -47,7 +47,7 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 	private static final int REQ_CODE_EDIT_TRIGGER = 2;
 
 	/** The alarm. */
-	private Alarm alarm;
+	private Wifi alarm;
 
 	/** The alarm id. */
 	private Long alarmID;
@@ -59,7 +59,7 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 	private static SQLiteOpenHelper dbHelper = null;
 
 	/** The data access objects. */
-	private DefaultDAO<Alarm> dao = null;
+	private DefaultDAO<Wifi> dao = null;
 	private DefaultDAO<BasicTrigger> daoTriggers = null;
 
 	private Button saveButton;
@@ -87,8 +87,8 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 		if (dbHelper == null)
 			dbHelper = DatabaseManager.getDBHelper(getApplicationContext());
 		if (dao == null)
-			dao = new DefaultDAO<Alarm>(Alarm.class, dbHelper,
-					DatabaseManager.getReflectionManagerInstance(Alarm.class), Alarm.tableName);
+			dao = new DefaultDAO<Wifi>(Wifi.class, dbHelper,
+					DatabaseManager.getReflectionManagerInstance(Wifi.class), Wifi.tableName);
 		if (daoTriggers == null)
 			daoTriggers = new DefaultDAO<BasicTrigger>(BasicTrigger.class, dbHelper,
 					DatabaseManager.getReflectionManagerInstance(BasicTrigger.class), BasicTrigger.tableName);
@@ -160,7 +160,7 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 			log.debug("Fetched alarm: " + alarm);
 		} else {
 			log.info("Creating new alarm...");
-			alarm = new Alarm();
+			alarm = new Wifi();
 			newAlarm = true;
 		}
 	}

@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:paddingLeft="@dimen/margin_size" >
+
+    <CheckBox
+        android:id="@+id/wifidetec.list.selectedCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true" />
+
+    <TextView
+        android:id="@+id/wifidetec.list.ssidLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/wifidetec.list.selectedCheckbox"
+        android:layout_marginLeft="7dp"
+        android:layout_marginTop="6dp"
+        android:layout_toRightOf="@+id/wifidetec.list.selectedCheckbox"
+        android:text="Name/SSID:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/wifidetec.list.bssidLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/wifidetec.list.ssidLabel"
+        android:layout_below="@+id/wifidetec.list.ssidLabel"
+        android:text="BSSID:"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="15sp" />
+
+    <TextView
+        android:id="@+id/wifidetec.list.ssidText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/wifidetec.list.ssidLabel"
+        android:layout_alignBottom="@+id/wifidetec.list.ssidLabel"
+        android:layout_marginLeft="10dp"
+        android:layout_toRightOf="@+id/wifidetec.list.ssidLabel"
+        android:text="TextView" />
+
+    <TextView
+        android:id="@+id/wifidetec.list.bssidText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/wifidetec.list.bssidLabel"
+        android:layout_alignLeft="@+id/wifidetec.list.ssidText"
+        android:text="TextView" />
+
+</RelativeLayout>
