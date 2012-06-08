@@ -5,30 +5,7 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!-- Title Bar -->
-
-    <LinearLayout style="@style/TitleBar" >
-
-        <ImageButton
-            style="@style/TitleBarAction"
-            android:contentDescription="@string/description_home"
-            android:onClick="onClickHome"
-            android:src="@drawable/title_home" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-
-        <TextView
-            style="@style/TitleBarText"
-            android:text="Alarm Edit" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-
-        <Button
-            android:id="@+id/wificonn.saveButton"
-            style="@style/TitleBarAction.Text"
-            android:text="@string/button_save" />
-    </LinearLayout>
-    <!-- End of Title Bar -->
+	<include layout="@layout/template_title_bar" />
 
     <RelativeLayout
         android:id="@+id/RelativeLayout1"
@@ -93,7 +70,7 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/wificonn.maxLabel"
+            android:id="@+id/wificonn.macLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -106,7 +83,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/wificonn.maxLabel"
+            android:layout_below="@+id/wificonn.macLabel"
             android:text="Status:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -115,7 +92,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/wificonn.ssidLabel"
-            android:layout_alignBottom="@+id/wificonn.ssidLabel"
             android:layout_marginLeft="14dp"
             android:layout_toRightOf="@+id/wificonn.ssidLabel"
             android:text="TextView" />
@@ -124,7 +100,7 @@
             android:id="@+id/wificonn.bssidText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/wificonn.maxLabel"
+            android:layout_alignBaseline="@+id/wificonn.bssidLabel"
             android:layout_alignLeft="@+id/wificonn.ssidText"
             android:text="TextView" />
 
@@ -132,7 +108,7 @@
             android:id="@+id/wificonn.macText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_above="@+id/wificonn.statusLabel"
+            android:layout_alignBaseline="@+id/wificonn.macLabel"
             android:layout_alignLeft="@+id/wificonn.bssidText"
             android:text="TextView" />
 
@@ -140,7 +116,7 @@
             android:id="@+id/wificonn.statusText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBottom="@+id/wificonn.statusLabel"
+            android:layout_alignBaseline="@+id/wificonn.statusLabel"
             android:layout_alignLeft="@+id/wificonn.macText"
             android:text="TextView" />
     </RelativeLayout>

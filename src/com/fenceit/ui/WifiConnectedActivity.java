@@ -67,6 +67,7 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_conn_location);
+		((TextView)findViewById(R.id.title_titleText)).setText("Edit Location");
 
 		// Prepare database connection
 		if (dbHelper == null)
@@ -91,7 +92,7 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 		}
 
 		// Buttons and others
-		saveButton = (Button) findViewById(R.id.wificonn_saveButton);
+		saveButton = (Button) findViewById(R.id.title_saveButton);
 		saveButton.setOnClickListener(this);
 		refreshButton = (ImageButton) findViewById(R.id.wificonn_refreshButton);
 		refreshButton.setOnClickListener(this);
