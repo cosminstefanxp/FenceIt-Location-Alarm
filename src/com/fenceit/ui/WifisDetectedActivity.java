@@ -7,6 +7,7 @@
 package com.fenceit.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
@@ -16,7 +17,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.wifi.WifiInfo;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -30,7 +31,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fenceit.R;
-import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation.Wifi;
 import com.fenceit.db.DatabaseManager;
@@ -62,6 +62,8 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 
 	/** The adapter. */
 	private WifisDetectedAdapter adapter;
+
+	private ArrayList<Wifi> wifis;
 
 	/**
 	 * Called when the activity is first created.
@@ -103,8 +105,8 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 		findViewById(R.id.wifidetec_favoriteSection).setOnClickListener(this);
 
 		// Set the adapter
-		adapter=new WifisDetectedAdapter(this, new ArrayList<Wifi>());
-		((ListView)findViewById(R.id.wifidetec_wifisList)).setAdapter(adapter);
+		adapter = new WifisDetectedAdapter(this, wifis);
+		((ListView) findViewById(R.id.wifidetec_wifisList)).setAdapter(adapter);
 
 		// Fill data
 		refreshActivity();
@@ -128,7 +130,8 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 			((ImageView) findViewById(R.id.wifidetec_favoriteImage))
 					.setImageResource(android.R.drawable.btn_star_big_off);
 
-		//TODO: de aici in jos
+		// Refresh the adapter
+		adapter.setWifis(wifis);
 	}
 
 	/**
@@ -139,7 +142,7 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 	 */
 	private void fetchLocation(Long locationID) {
 		if (locationID != null) {
-			log.info("Fetching WifiConnectedLocation from database with id: " + locationID);
+			log.info("Fetching WifisDetectedLocation from database with id: " + locationID);
 			dao.open();
 			location = dao.fetch(locationID);
 			dao.close();
@@ -147,9 +150,10 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 			if (location != null)
 				return;
 		}
+
 		// No entity in database... creating a new one
-		log.info("Creating new WifiConnectedLocation...");
-		location = new WifiConnectedLocation();
+		log.info("Creating new WifisDetectedLocation...");
+		location = new WifisDetectedLocation();
 		newEntity = true;
 	}
 
@@ -165,6 +169,7 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 			return false;
 		}
 		// Store required data
+		location.setBSSIDs((String[]) wifis.toArray());
 
 		// Check if all data is all right
 		if (!location.isComplete()) {
@@ -173,7 +178,7 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 		}
 
 		// Save the entity to the database
-		log.info("Saving location in database...");
+		log.info("Saving location in database: " + location);
 		dao.open();
 		if (newEntity) {
 			long id = dao.insert(location);
@@ -256,16 +261,23 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 			return;
 		}
 
-		WifiInfo wifiInfo = WifiDataProvider.getConnectionWifiInfo(this);
-		log.info("Wifi Connection info: " + wifiInfo);
+		List<ScanResult> wifiScanResults = WifiDataProvider.getScanResults(this);
+		if (log.isInfoEnabled())
+			log.info("Wifi Scan Results: " + wifiScanResults);
+		// Update the Wifis
+		this.wifis.clear();
+		for (ScanResult rest : wifiScanResults) {
+			Wifi w = new Wifi();
+			w.BSSID = rest.BSSID;
+			w.SSID = rest.SSID;
+			w.selected = true;
+		}
+
 		// Update the view
-		((TextView) findViewById(R.id.wificonn_bssidText)).setText(wifiInfo.getBSSID());
-		((TextView) findViewById(R.id.wificonn_ssidText)).setText(wifiInfo.getSSID());
-		((TextView) findViewById(R.id.wificonn_macText)).setText(wifiInfo.getMacAddress());
-		((TextView) findViewById(R.id.wificonn_statusText)).setText(wifiInfo.getSupplicantState().toString());
-		// Update the location
-		location.setBssid(wifiInfo.getBSSID());
-		location.setSsid(wifiInfo.getSSID());
+		adapter.setWifis(wifis);
+
+		// The location is updated in the storeLocation() method
+
 	}
 
 }

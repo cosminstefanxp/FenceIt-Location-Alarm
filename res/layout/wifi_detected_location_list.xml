@@ -4,21 +4,23 @@
     android:layout_height="wrap_content"
     android:paddingLeft="@dimen/margin_size" >
 
-    <CheckBox
-        android:id="@+id/wifidetec.list.selectedCheckbox"
+    <ImageView
+        android:id="@+id/wifidetec.list.selectedImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true" />
+        android:layout_marginTop="20dp"
+        android:contentDescription="If checked, then this Wifi network is used during the scan."
+        android:src="@android:drawable/button_onoff_indicator_on" />
 
     <TextView
         android:id="@+id/wifidetec.list.ssidLabel"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/wifidetec.list.selectedCheckbox"
-        android:layout_marginLeft="7dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="10dp"
         android:layout_marginTop="6dp"
-        android:layout_toRightOf="@+id/wifidetec.list.selectedCheckbox"
+        android:layout_toRightOf="@+id/wifidetec.list.selectedImage"
         android:text="Name/SSID:"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="15sp" />

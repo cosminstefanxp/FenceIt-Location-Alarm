@@ -6,8 +6,11 @@
  */
 package com.fenceit.provider;
 
+import java.util.List;
+
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
@@ -29,6 +32,17 @@ public class WifiDataProvider {
 	public static WifiInfo getConnectionWifiInfo(Context context) {
 		WifiManager m = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		return m.getConnectionInfo();
+	}
+
+	/**
+	 * Gets the scan results.
+	 *
+	 * @param context the context
+	 * @return the scan results
+	 */
+	public static List<ScanResult> getScanResults(Context context) {
+		WifiManager m = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		return m.getScanResults();
 	}
 
 	/**

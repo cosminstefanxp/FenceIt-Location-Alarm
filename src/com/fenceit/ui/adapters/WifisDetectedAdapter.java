@@ -11,18 +11,18 @@ import java.util.ArrayList;
 import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ToggleButton;
 
 import com.fenceit.R;
 import com.fenceit.alarm.locations.WifisDetectedLocation.Wifi;
+
 /**
  * The Class AlarmAdapter that is used to display the alarms in a ListView.
  */
-public class WifisDetectedAdapter extends BaseAdapter implements OnClickListener {
+public class WifisDetectedAdapter extends BaseAdapter {
 
 	/** The context. */
 	private final Activity context;
@@ -36,8 +36,8 @@ public class WifisDetectedAdapter extends BaseAdapter implements OnClickListener
 	 */
 	private static class ViewHolder {
 
-		/** The enable button. */
-		public ToggleButton enableButton;
+		/** The image view that states if this Wifi is used during the scan. */
+		public ImageView enabledImage;
 
 		/** The SSID. */
 		public TextView ssidTextV;
@@ -80,15 +80,10 @@ public class WifisDetectedAdapter extends BaseAdapter implements OnClickListener
 			rowView = inflater.inflate(R.layout.wifi_detected_location_list, null);
 			// Save the fields in the view holder for quick reference
 			holder = new ViewHolder();
-			holder.enableButton = (ToggleButton) rowView.findViewById(R.id.wifidetec_list_selectedCheckbox);
+			holder.enabledImage = (ImageView) rowView.findViewById(R.id.wifidetec_list_selectedImage);
 			holder.ssidTextV = (TextView) rowView.findViewById(R.id.wifidetec_list_ssidText);
 			holder.bssidTextV = (TextView) rowView.findViewById(R.id.wifidetec_list_bssidText);
 
-			// Create the onclick event for the button
-			holder.enableButton.setOnClickListener(this);
-
-			// Save the view holder as a tag
-			rowView.setTag(holder);
 		} else {
 			// Get the holder that contains the view
 			holder = (ViewHolder) rowView.getTag();
@@ -96,10 +91,12 @@ public class WifisDetectedAdapter extends BaseAdapter implements OnClickListener
 
 		// Populate the view
 		Wifi w = wifis.get(position);
-		holder.enableButton.setTag(position); // for the click event
-		holder.enableButton.setChecked(w.selected);
 		holder.ssidTextV.setText(w.SSID);
 		holder.bssidTextV.setText(w.BSSID);
+		if (w.selected)
+			holder.enabledImage.setImageResource(android.R.drawable.button_onoff_indicator_on);
+		else
+			holder.enabledImage.setImageResource(android.R.drawable.button_onoff_indicator_off);
 
 		return rowView;
 	}
@@ -115,8 +112,8 @@ public class WifisDetectedAdapter extends BaseAdapter implements OnClickListener
 	}
 
 	/* (non-Javadoc)
-	 * @see android.widget.Adapter#getItem(int)
-	 */
+	 * 
+	 * @see android.widget.Adapter#getItem(int) */
 	@Override
 	public Object getItem(int position) {
 		return wifis.get(position);
@@ -128,38 +125,5 @@ public class WifisDetectedAdapter extends BaseAdapter implements OnClickListener
 	@Override
 	public long getItemId(int position) {
 		return position;
-	}
-
-	/* Method called when there is a click on the toggle button.
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see android.widget.CompoundButton.OnCheckedChangeListener#onCheckedChanged(android.widget.
-	 * CompoundButton, boolean) */
-	@Override
-	public void onClick(View v) {
-
-		// TODO: to fill in
-		// // Change the alarm enabled status
-		// ToggleButton buttonView = (ToggleButton) v;
-		// Integer position = (Integer) buttonView.getTag();
-		// if (position == null)
-		// return;
-		// Wifi alarm = wifis.get(position);
-		// // If the alarm is already checked, skip this
-		// Log.i(this.getClass().getName(), "Toggle button for alarm with id " + alarm.getId() +
-		// " toggled to "
-		// + buttonView.isChecked());
-		// if (alarm.isEnabled() == buttonView.isChecked())
-		// return;
-		// alarm.setEnabled(buttonView.isChecked());
-		//
-		// // Persist the alarm in the database
-		// DefaultDAO<Wifi> dao =
-		// DatabaseManager.getDAOInstance(this.context.getApplicationContext(), Wifi.class,
-		// Wifi.tableName);
-		// dao.open();
-		// dao.update(alarm, alarm.getId());
-		// dao.close();
 	}
 }
