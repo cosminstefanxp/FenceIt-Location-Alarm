@@ -14,6 +14,7 @@ import android.content.Intent;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
+import com.fenceit.alarm.locations.WifisDetectedLocation;
 import com.fenceit.ui.WifiConnectedActivity;
 import com.fenceit.ui.WifisDetectedActivity;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
@@ -73,6 +74,15 @@ public class AlarmLocationBroker {
 		daoWC.open();
 		location = daoWC.fetch(id);
 		daoWC.close();
+		if (location != null)
+			return location;
+
+		// Fetch WifisDetectedLocation
+		DefaultDAO<WifisDetectedLocation> daoWD = DatabaseManager.getDAOInstance(context, WifisDetectedLocation.class,
+				WifisDetectedLocation.tableName);
+		daoWD.open();
+		location = daoWD.fetch(id);
+		daoWD.close();
 		if (location != null)
 			return location;
 

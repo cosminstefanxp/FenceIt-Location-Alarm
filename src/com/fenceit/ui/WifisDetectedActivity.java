@@ -107,6 +107,16 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 		else {
 			location = (WifisDetectedLocation) savedInstanceState.getSerializable("location");
 			log.info("Restored saved instance of location: " + location);
+			// Prepare the wifis from the location
+			String[] bssids = location.getBSSIDs();
+			wifis = new ArrayList<WifisDetectedLocation.Wifi>(bssids.length);
+			for (String b : bssids) {
+				Wifi w = new Wifi();
+				w.BSSID = b;
+				w.SSID = "-";
+				w.selected = true;
+				wifis.add(w);
+			}
 		}
 
 		// Buttons and others
@@ -119,15 +129,8 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 		findViewById(R.id.wifidetec_favoriteSection).setOnClickListener(this);
 
 		// Set the adapter
-		wifis = new ArrayList<WifisDetectedLocation.Wifi>();
 		adapter = new WifisDetectedAdapter(this, wifis);
 		((ListView) findViewById(R.id.wifidetec_wifisList)).setAdapter(adapter);
-
-		// Prepare broadcast receiver for broadcasts regarding finished scans
-		receiver = new WifiScanReceiver();
-		IntentFilter filter = new IntentFilter();
-		filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-		registerReceiver(receiver, filter);
 
 		// Fill data
 		refreshActivity();
@@ -146,10 +149,12 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 	 * 
 	 * @see android.app.Activity#onDestroy() */
 	@Override
-	protected void onDestroy() {
-		super.onDestroy();
-		if (receiver != null)
+	protected void onStop() {
+		super.onStop();
+		if (receiver != null) {
 			unregisterReceiver(receiver);
+			receiver = null;
+		}
 	}
 
 	/**
@@ -181,13 +186,25 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 			location = dao.fetch(locationID);
 			dao.close();
 			log.debug("Fetched location: " + location);
-			if (location != null)
+			if (location != null) {
+				// Prepare the wifis from the location
+				String[] bssids = location.getBSSIDs();
+				wifis = new ArrayList<WifisDetectedLocation.Wifi>(bssids.length);
+				for (String b : bssids) {
+					Wifi w = new Wifi();
+					w.BSSID = b;
+					w.SSID = "-";
+					w.selected = true;
+					wifis.add(w);
+				}
 				return;
+			}
 		}
 
 		// No entity in database... creating a new one
 		log.info("Creating new WifisDetectedLocation...");
 		location = new WifisDetectedLocation();
+		wifis = new ArrayList<WifisDetectedLocation.Wifi>();
 		newEntity = true;
 	}
 
@@ -202,8 +219,12 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 			log.error("No location to store in database.");
 			return false;
 		}
+
 		// Store required data
-		location.setBSSIDs((String[]) wifis.toArray());
+		String[] bssids = new String[wifis.size()];
+		for (int i = 0; i < bssids.length; i++)
+			bssids[i] = wifis.get(i).BSSID;
+		location.setBSSIDs(bssids);
 
 		// Check if all data is all right
 		if (!location.isComplete()) {
@@ -263,6 +284,13 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 				Toast.makeText(this, "Wifi network is not available", Toast.LENGTH_SHORT);
 				showDialog(DIALOG_ENABLE_WIFI);
 				return;
+			}
+			// Prepare broadcast receiver for broadcasts regarding finished scans
+			if (receiver == null) {
+				receiver = new WifiScanReceiver();
+				IntentFilter filter = new IntentFilter();
+				filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+				registerReceiver(receiver, filter);
 			}
 
 			// Start the scan

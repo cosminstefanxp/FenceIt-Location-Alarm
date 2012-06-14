@@ -2,7 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="wrap_content"
-    android:paddingLeft="@dimen/margin_size" android:background="@color/background" android:paddingBottom="6dp">
+    android:paddingBottom="6dp"
+    android:paddingLeft="@dimen/margin_size" >
 
     <ImageView
         android:id="@+id/wifidetec.list.selectedImage"

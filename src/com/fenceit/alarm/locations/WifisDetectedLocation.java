@@ -46,7 +46,10 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription() */
 	@Override
 	public String getDescription() {
-		return serializedBSSIDs.substring(0, 15);
+		if (serializedBSSIDs.length() > 15)
+			return serializedBSSIDs.substring(0, 14);
+		else
+			return serializedBSSIDs;
 	}
 
 	/* (non-Javadoc)
@@ -70,7 +73,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete() */
 	@Override
 	public boolean isComplete() {
-		return serializedBSSIDs != null;
+		return serializedBSSIDs != null && serializedBSSIDs.length() > 0;
 	}
 
 	/**
@@ -111,6 +114,11 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 
 		/** If is selected. */
 		public boolean selected;
+	}
+
+	@Override
+	public String toString() {
+		return "WifisDetectedLocation [id=" + id + ", name=" + name + ", serializedBSSIDs=" + serializedBSSIDs + "]";
 	}
 
 }
