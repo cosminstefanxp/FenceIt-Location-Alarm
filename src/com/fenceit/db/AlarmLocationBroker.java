@@ -15,6 +15,7 @@ import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.ui.WifiConnectedActivity;
+import com.fenceit.ui.WifisDetectedActivity;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
 /**
@@ -30,8 +31,9 @@ public class AlarmLocationBroker {
 	 * @return the location types adapter
 	 */
 	public static SingleChoiceAdapter<LocationType> getLocationTypesAdapter() {
-		return new SingleChoiceAdapter<LocationType>(new LocationType[] { LocationType.WifiConnectedLocation },
-				new CharSequence[] { "Based on the connected Wifi" });
+		return new SingleChoiceAdapter<LocationType>(new LocationType[] { LocationType.WifiConnectedLocation,
+				LocationType.WifisDetectedLocation }, new CharSequence[] { "Based on the connected Wifi",
+				"Based on the detected Wifis" });
 	}
 
 	/**
@@ -48,13 +50,16 @@ public class AlarmLocationBroker {
 		case WifiConnectedLocation:
 			intent = new Intent(context, WifiConnectedActivity.class);
 			break;
+		case WifisDetectedLocation:
+			intent = new Intent(context, WifisDetectedActivity.class);
+			break;
 		}
 		return intent;
 	}
 
 	/**
 	 * Fetches a location from the database, given the location id.
-	 *
+	 * 
 	 * @param context the context
 	 * @param id the id
 	 * @return the alarm location, or null if no location found

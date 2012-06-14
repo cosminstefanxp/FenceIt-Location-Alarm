@@ -35,8 +35,18 @@ public class WifiDataProvider {
 	}
 
 	/**
+	 * Start a scan.
+	 * 
+	 * @param context the context
+	 */
+	public static void startScan(Context context) {
+		WifiManager m = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
+		m.startScan();
+	}
+
+	/**
 	 * Gets the scan results.
-	 *
+	 * 
 	 * @param context the context
 	 * @return the scan results
 	 */

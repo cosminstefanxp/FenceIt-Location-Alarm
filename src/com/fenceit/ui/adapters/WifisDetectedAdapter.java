@@ -84,6 +84,8 @@ public class WifisDetectedAdapter extends BaseAdapter {
 			holder.ssidTextV = (TextView) rowView.findViewById(R.id.wifidetec_list_ssidText);
 			holder.bssidTextV = (TextView) rowView.findViewById(R.id.wifidetec_list_bssidText);
 
+			// Save the view holder as a tag
+			rowView.setTag(holder);
 		} else {
 			// Get the holder that contains the view
 			holder = (ViewHolder) rowView.getTag();

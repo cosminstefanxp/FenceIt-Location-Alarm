@@ -15,9 +15,13 @@ import org.apache.log4j.Logger;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.net.wifi.ScanResult;
+import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -37,11 +41,15 @@ import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.WifiDataProvider;
 import com.fenceit.ui.adapters.WifisDetectedAdapter;
 
+/**
+ * The Class WifisDetectedActivity.
+ */
 public class WifisDetectedActivity extends Activity implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(WifisDetectedActivity.class);
 
+	/** The Constant DIALOG_ENABLE_WIFI. */
 	private static final int DIALOG_ENABLE_WIFI = 0;
 
 	/** The data access object. */
@@ -56,14 +64,20 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 	/** The save button. */
 	private Button saveButton;
 
+	/** The refresh button. */
 	private ImageButton refreshButton;
 
+	/** The progress bar. */
 	private ProgressBar progressBar;
 
 	/** The adapter. */
 	private WifisDetectedAdapter adapter;
 
+	/** The wifis. */
 	private ArrayList<Wifi> wifis;
+
+	/** The receiver. */
+	private BroadcastReceiver receiver;
 
 	/**
 	 * Called when the activity is first created.
@@ -100,22 +114,42 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 		saveButton.setOnClickListener(this);
 		refreshButton = (ImageButton) findViewById(R.id.wifidetec_refreshButton);
 		refreshButton.setOnClickListener(this);
-		progressBar = (ProgressBar) findViewById(R.id.wifidetec_refreshButton);
+		progressBar = (ProgressBar) findViewById(R.id.wifidetec_progressBar);
 
 		findViewById(R.id.wifidetec_favoriteSection).setOnClickListener(this);
 
 		// Set the adapter
+		wifis = new ArrayList<WifisDetectedLocation.Wifi>();
 		adapter = new WifisDetectedAdapter(this, wifis);
 		((ListView) findViewById(R.id.wifidetec_wifisList)).setAdapter(adapter);
+
+		// Prepare broadcast receiver for broadcasts regarding finished scans
+		receiver = new WifiScanReceiver();
+		IntentFilter filter = new IntentFilter();
+		filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+		registerReceiver(receiver, filter);
 
 		// Fill data
 		refreshActivity();
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle) */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("location", location);
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onDestroy() */
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (receiver != null)
+			unregisterReceiver(receiver);
 	}
 
 	/**
@@ -138,7 +172,7 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 	 * Fetches the associated location from the database, or builds a new one, if no id was
 	 * provided.
 	 * 
-	 * @param locationID
+	 * @param locationID the location id
 	 */
 	private void fetchLocation(Long locationID) {
 		if (locationID != null) {
@@ -195,6 +229,9 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
 	@Override
 	public void onClick(View v) {
 		if (v == saveButton) {
@@ -220,11 +257,25 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 				((ImageView) findViewById(R.id.wificonn_favoriteImage))
 						.setImageResource(android.R.drawable.btn_star_big_off);
 		} else if (v == refreshButton) {
-			log.info("Refreshing details regarding Wifi currently connected to.");
-			gatherContextInfo();
+			log.info("Refreshing the list of Wifis in range. Starting scan...");
+			// Check for availability;
+			if (!WifiDataProvider.isWifiAvailable(this)) {
+				Toast.makeText(this, "Wifi network is not available", Toast.LENGTH_SHORT);
+				showDialog(DIALOG_ENABLE_WIFI);
+				return;
+			}
+
+			// Start the scan
+			WifiDataProvider.startScan(getApplicationContext());
+			progressBar.setVisibility(View.VISIBLE);
+			progressBar.setProgress(0);
+			refreshButton.setVisibility(View.INVISIBLE);
 		}
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateDialog(int) */
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
@@ -254,12 +305,6 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 	 * Gather context info from the environment and fill in the location and the views.
 	 */
 	private void gatherContextInfo() {
-		// Check for availability;
-		if (!WifiDataProvider.isWifiAvailable(this)) {
-			Toast.makeText(this, "Wifi network is not available", Toast.LENGTH_SHORT);
-			showDialog(DIALOG_ENABLE_WIFI);
-			return;
-		}
 
 		List<ScanResult> wifiScanResults = WifiDataProvider.getScanResults(this);
 		if (log.isInfoEnabled())
@@ -271,6 +316,7 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 			w.BSSID = rest.BSSID;
 			w.SSID = rest.SSID;
 			w.selected = true;
+			this.wifis.add(w);
 		}
 
 		// Update the view
@@ -280,4 +326,18 @@ public class WifisDetectedActivity extends Activity implements OnClickListener {
 
 	}
 
+	/**
+	 * The Class WifiScanReceiver that is the BroadcastReceiver for the Wifi Scan Finished.
+	 */
+	private class WifiScanReceiver extends BroadcastReceiver {
+
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			log.info("Wifi Scan Finished Broadcast received.");
+			gatherContextInfo();
+			progressBar.setVisibility(View.GONE);
+			refreshButton.setVisibility(View.VISIBLE);
+		}
+
+	}
 }
