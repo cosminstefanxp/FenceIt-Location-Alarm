@@ -10,7 +10,7 @@ import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 import org.androwrapee.db.ReferenceField;
 
-import com.fenceit.alarm.Wifi;
+import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.AlarmLocation.Status;
 import com.fenceit.provider.ContextData;
@@ -50,7 +50,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * 
 	 * @param alarm the alarm
 	 */
-	public BasicTrigger(Wifi alarm) {
+	public BasicTrigger(Alarm alarm) {
 		super(alarm);
 		this.location = null;
 		this.type = TriggerType.ON_ENTER;

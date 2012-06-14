@@ -18,6 +18,8 @@ import android.widget.Toast;
 
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
+import com.fenceit.alarm.locations.WifiConnectedLocation;
+import com.fenceit.alarm.locations.WifisDetectedLocation;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
 import com.fenceit.ui.AlarmPanelActivity;
 
@@ -36,8 +38,17 @@ public class BackgroundService extends Service {
 	/** The Constant ALARM_TRIGGERED_NOTIFICATION used for identifying notifications. */
 	private static final int ALARM_TRIGGERED_NOTIFICATION = 1;
 
-	/** The Constant SERVICE_EVENT_WIFI. */
-	public static final int SERVICE_EVENT_WIFI = 3;
+	/**
+	 * The Constant SERVICE_EVENT_WIFIS_DETECTED used for defining the event related to
+	 * {@link WifisDetectedLocation}.
+	 */
+	public static final int SERVICE_EVENT_WIFIS_DETECTED = 4;
+
+	/**
+	 * The Constant SERVICE_EVENT_WIFI_CONNECTED used for defining the event related to
+	 * {@link WifiConnectedLocation}.
+	 */
+	public static final int SERVICE_EVENT_WIFI_CONNECTED = 3;
 
 	/** The Constant SERVICE_EVENT_NONE. */
 	public static final int SERVICE_EVENT_NONE = 2;
@@ -76,7 +87,7 @@ public class BackgroundService extends Service {
 		handler = new BackgroundServiceHandler(this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15).getTimeInMillis(), SERVICE_EVENT_WIFI);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15).getTimeInMillis(), SERVICE_EVENT_WIFI_CONNECTED);
 	}
 
 	@Override
@@ -111,7 +122,7 @@ public class BackgroundService extends Service {
 		Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
 
 		// TODO: Debug only - Stop any pending system alarms
-		alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFI);
+		alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFI_CONNECTED);
 
 		// If somehow the wakelock is still locked, release it
 		WakeLockManager.releaseWakeLock();

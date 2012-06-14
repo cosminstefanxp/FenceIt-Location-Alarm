@@ -12,7 +12,7 @@ import org.apache.log4j.Logger;
 
 import android.content.Context;
 
-import com.fenceit.alarm.Wifi;
+import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.provider.ContextData;
@@ -95,10 +95,11 @@ public abstract class TriggerCheckerThread extends Thread {
 		// Compute the next time when the thread should be run
 		Long delay = computeNextCheckTime(triggers);
 		if (log.isInfoEnabled())
-			log.info("Scheduling next check in (s): " + delay/1000);
+			log.info("Scheduling next check in (ms): " + delay);
 
-		// Set a system alarm for the next time
-		mParentHandler.getService().dispatchAlarm(System.currentTimeMillis() + delay, mEventType);
+		// Set a system alarm for the next time, if any
+		if (delay != null)
+			mParentHandler.getService().dispatchAlarm(System.currentTimeMillis() + delay, mEventType);
 
 		// Release the Wake Lock
 		WakeLockManager.releaseWakeLock();
@@ -106,7 +107,7 @@ public abstract class TriggerCheckerThread extends Thread {
 
 	/**
 	 * Handles the triggering of the alarm and the process of executing the actions. The
-	 * corresponding {@link Wifi} should be available from the trigger.
+	 * corresponding {@link Alarm} should be available from the trigger.
 	 * 
 	 * @param trigger the trigger whose conditions were satisfied.
 	 */

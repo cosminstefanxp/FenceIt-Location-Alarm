@@ -14,6 +14,7 @@
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:icon="@drawable/ic_launcher"
@@ -49,6 +50,11 @@
             android:exported="false" />
 
         <receiver android:name=".service.SystemAlarmReceiver" />
+        <receiver android:name=".service.WifiBroadcastReceiver" >
+            <intent-filter>
+                <action android:name="android.net.wifi.SCAN_RESULTS" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

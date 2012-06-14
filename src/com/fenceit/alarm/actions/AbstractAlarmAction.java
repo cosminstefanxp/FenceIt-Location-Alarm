@@ -8,7 +8,7 @@ package com.fenceit.alarm.actions;
 
 import android.content.Context;
 
-import com.fenceit.alarm.Wifi;
+import com.fenceit.alarm.Alarm;
 
 /**
  * The Class AbstractAlarmAction that is a basic abstract implementation for an AlarmAction.
@@ -17,14 +17,14 @@ public abstract class AbstractAlarmAction implements AlarmAction {
 
 	/** The alarm. */
 	@SuppressWarnings("unused")
-	private Wifi alarm;
+	private Alarm alarm;
 	
 	/**
 	 * Instantiates a new abstract alarm action.
 	 *
 	 * @param alarm the alarm
 	 */
-	public AbstractAlarmAction(Wifi alarm) {
+	public AbstractAlarmAction(Alarm alarm) {
 		super();
 		this.alarm = alarm;
 	}

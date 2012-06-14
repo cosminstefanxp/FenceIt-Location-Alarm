@@ -12,7 +12,7 @@ import java.util.List;
 import android.content.Context;
 import android.os.Message;
 
-import com.fenceit.alarm.Wifi;
+import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
@@ -24,11 +24,10 @@ import com.fenceit.service.BackgroundServiceHandler;
 
 /**
  * The WifiServiceThread handles the check for conditions regarding the currently connected Wifi
- * network and the Wifi networks in range (the alarm locations of types.
- * 
- * {@link WifiConnectedLocation} and ). If any of the alarms should be triggered, it does that...
+ * network (the alarm locations of type {@link WifiConnectedLocation}. If any of the alarms should
+ * be triggered, it does that...
  */
-public class WifiTriggerCheckerThread extends TriggerCheckerThread {
+public class WifiConnectedTriggerCheckerThread extends TriggerCheckerThread {
 
 	/**
 	 * Instantiates a new wifi service thread.
@@ -36,7 +35,7 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	 * @param context the context
 	 * @param handler the handler for the main thread
 	 */
-	public WifiTriggerCheckerThread(Context context, BackgroundServiceHandler handler, int eventType) {
+	public WifiConnectedTriggerCheckerThread(Context context, BackgroundServiceHandler handler, int eventType) {
 		super(context, handler, eventType);
 	}
 
@@ -45,10 +44,10 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	 * @see com.fenceit.service.TriggerCheckerThread#fetchData() */
 	@Override
 	protected List<AlarmTrigger> fetchData() {
-		List<Wifi> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='t'");
+		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='t'");
 		List<AlarmTrigger> triggers = new LinkedList<AlarmTrigger>();
 		// Prepare only the triggers that have locations of the required type
-		for (Wifi a : alarms) {
+		for (Alarm a : alarms) {
 			for (AlarmTrigger t : a.getTriggers())
 				if (t.getLocation().getType() == LocationType.WifiConnectedLocation)
 					triggers.add(t);
@@ -63,10 +62,9 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	 * ) */
 	@Override
 	protected void triggerAlarm(AlarmTrigger trigger) {
-		log.warn("An alarm was triggered: " + trigger);
-		BasicTrigger t = (BasicTrigger) trigger;
-		Message m = mParentHandler.obtainMessage(BackgroundServiceHandler.HANDLER_NOTIFICATION, (int) t.getAlarm()
-				.getId(), (int) t.getId());
+		log.warn("An alarm was triggered because of: " + trigger);
+		Message m = mParentHandler.obtainMessage(BackgroundServiceHandler.HANDLER_NOTIFICATION);
+		m.obj = "The alarm '" + trigger.getAlarm().getName() + "' was triggered because of trigger " + trigger.getId();
 		mParentHandler.sendMessage(m);
 	}
 
@@ -75,7 +73,7 @@ public class WifiTriggerCheckerThread extends TriggerCheckerThread {
 	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData() */
 	@Override
 	protected ContextData acquireContextData() {
-		ContextData data = WifiDataProvider.getWifiContextData(mContext);
+		ContextData data = WifiDataProvider.getWifiContextData(mContext, false);
 		return data;
 	}
 

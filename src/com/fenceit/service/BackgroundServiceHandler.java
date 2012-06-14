@@ -39,10 +39,8 @@ public class BackgroundServiceHandler extends Handler {
 		super.handleMessage(msg);
 		switch (msg.what) {
 		case HANDLER_NOTIFICATION:
-			int alarmId = msg.arg1;
-			int triggerId = msg.arg2;
-			service.publishNotification("FenceIt - Alarm triggered", "A FenceIt alarm was triggered.",
-					"The Alarm with id " + alarmId + "\n was triggered because of trigger " + triggerId);
+			String messageS = (String) msg.obj;
+			service.publishNotification("FenceIt - Alarm triggered", "A FenceIt alarm was triggered.", messageS);
 			break;
 		}
 

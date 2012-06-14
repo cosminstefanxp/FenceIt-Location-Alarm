@@ -12,7 +12,7 @@ import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.IdField;
 import org.androwrapee.db.ReferenceField;
 
-import com.fenceit.alarm.Wifi;
+import com.fenceit.alarm.Alarm;
 import com.fenceit.provider.ContextData;
 
 /**
@@ -26,7 +26,7 @@ public abstract class AbstractAlarmTrigger implements AlarmTrigger, Serializable
 
 	/** The alarm. */
 	@ReferenceField
-	protected Wifi alarm;
+	protected Alarm alarm;
 
 	/** The id. */
 	@IdField
@@ -37,7 +37,7 @@ public abstract class AbstractAlarmTrigger implements AlarmTrigger, Serializable
 	 * 
 	 * @param alarm the alarm
 	 */
-	public AbstractAlarmTrigger(Wifi alarm) {
+	public AbstractAlarmTrigger(Alarm alarm) {
 		this.alarm = alarm;
 	}
 
@@ -71,7 +71,7 @@ public abstract class AbstractAlarmTrigger implements AlarmTrigger, Serializable
 	 * 
 	 * @return the alarm
 	 */
-	public Wifi getAlarm() {
+	public Alarm getAlarm() {
 		return alarm;
 	}
 
@@ -80,7 +80,7 @@ public abstract class AbstractAlarmTrigger implements AlarmTrigger, Serializable
 	 * 
 	 * @param alarm the alarm to set
 	 */
-	public void setAlarm(Wifi alarm) {
+	public void setAlarm(Alarm alarm) {
 		this.alarm = alarm;
 	}
 

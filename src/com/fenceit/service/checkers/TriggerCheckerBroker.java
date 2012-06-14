@@ -29,8 +29,10 @@ public class TriggerCheckerBroker {
 	public static TriggerCheckerThread getTriggerCheckerThread(Context context, BackgroundServiceHandler handler,
 			int eventType) {
 		switch (eventType) {
-		case BackgroundService.SERVICE_EVENT_WIFI:
-			return new WifiTriggerCheckerThread(context, handler, BackgroundService.SERVICE_EVENT_WIFI);
+		case BackgroundService.SERVICE_EVENT_WIFI_CONNECTED:
+			return new WifiConnectedTriggerCheckerThread(context, handler, BackgroundService.SERVICE_EVENT_WIFI_CONNECTED);
+		case BackgroundService.SERVICE_EVENT_WIFIS_DETECTED:
+			return new WifisDetectedTriggerCheckerThread(context, handler, BackgroundService.SERVICE_EVENT_WIFIS_DETECTED);
 		default:
 			return null;
 		}

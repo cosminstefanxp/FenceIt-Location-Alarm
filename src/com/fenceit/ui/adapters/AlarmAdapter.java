@@ -21,7 +21,7 @@ import android.widget.TextView;
 import android.widget.ToggleButton;
 
 import com.fenceit.R;
-import com.fenceit.alarm.Wifi;
+import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseManager;
 
 /**
@@ -33,7 +33,7 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 	private final Activity context;
 
 	/** The alarms. */
-	private ArrayList<Wifi> alarms;
+	private ArrayList<Alarm> alarms;
 
 	/**
 	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for
@@ -57,7 +57,7 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 	 * @param context the context
 	 * @param alarms the alarms
 	 */
-	public AlarmAdapter(Activity context, ArrayList<Wifi> alarms) {
+	public AlarmAdapter(Activity context, ArrayList<Alarm> alarms) {
 		this.context = context;
 		this.alarms = alarms;
 	}
@@ -100,7 +100,7 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		}
 
 		// Populate the view
-		Wifi a = alarms.get(position);
+		Alarm a = alarms.get(position);
 		holder.enableButton.setTag(position); // for the click event
 		holder.enableButton.setChecked(a.isEnabled());
 		holder.titleTextV.setText(a.getName());
@@ -114,7 +114,7 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 	 * 
 	 * @param alarms the new alarms
 	 */
-	public void setAlarms(ArrayList<Wifi> alarms) {
+	public void setAlarms(ArrayList<Alarm> alarms) {
 		this.alarms = alarms;
 		super.notifyDataSetChanged();
 	}
@@ -146,7 +146,7 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		Integer position = (Integer) buttonView.getTag();
 		if (position == null)
 			return;
-		Wifi alarm = alarms.get(position);
+		Alarm alarm = alarms.get(position);
 		// If the alarm is already checked, skip this
 		Log.i(this.getClass().getName(), "Toggle button for alarm with id " + alarm.getId() + " toggled to "
 				+ buttonView.isChecked());
@@ -155,8 +155,8 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		alarm.setEnabled(buttonView.isChecked());
 
 		// Persist the alarm in the database
-		DefaultDAO<Wifi> dao = DatabaseManager.getDAOInstance(this.context.getApplicationContext(), Wifi.class,
-				Wifi.tableName);
+		DefaultDAO<Alarm> dao = DatabaseManager.getDAOInstance(this.context.getApplicationContext(), Alarm.class,
+				Alarm.tableName);
 		dao.open();
 		dao.update(alarm, alarm.getId());
 		dao.close();

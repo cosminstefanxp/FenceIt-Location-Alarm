@@ -7,11 +7,16 @@
 package com.fenceit.alarm.locations;
 
 import java.io.Serializable;
+import java.util.HashSet;
 
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
+import android.net.wifi.ScanResult;
+import android.util.Log;
+
 import com.fenceit.provider.ContextData;
+import com.fenceit.provider.WifiContextData;
 
 /**
  * The Class WifisDetectedLocation is an implementation of an AlarmLocation based on the Wifi
@@ -38,7 +43,51 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData) */
 	@Override
 	public Status checkStatus(ContextData info) {
-		return null;
+		WifiContextData data = (WifiContextData) info;
+		if (data == null || data.scanResults == null)
+			return Status.UNKNOWN;
+
+		// Get BSSIDs
+		String[] bssidsV = this.getBSSIDs();
+		HashSet<String> bssids = new HashSet<String>(bssidsV.length);
+		for (String b : bssidsV)
+			bssids.add(b);
+
+		// Check current status
+		boolean isInside = false;
+		if (data.scanResults != null) {
+			int count = 0;
+			for (ScanResult s : data.scanResults)
+				if (bssids.contains(s.BSSID))
+					count++;
+			Log.i("com.fenceit", count + "/" + bssids.size() + " bssids match the condition.");
+			if (count > 0.75 * bssids.size())
+				isInside = true;
+		}
+
+		// Check previous status
+		boolean wasInside = false;
+		if (data.prevConnectedBSSID != null) {
+			int count = 0;
+			for (String b : data.prevScanBSSIDs)
+				if (bssids.contains(b))
+					count++;
+			if (count > 0.75 * bssids.size())
+				wasInside = true;
+		}
+
+		// Compute the status
+		if (isInside) {
+			if (wasInside)
+				return Status.STAYED_INSIDE;
+			else
+				return Status.ENTERED;
+		} else {
+			if (wasInside)
+				return Status.LEFT;
+			else
+				return Status.STAYED_OUTSIDE;
+		}
 	}
 
 	/* (non-Javadoc)

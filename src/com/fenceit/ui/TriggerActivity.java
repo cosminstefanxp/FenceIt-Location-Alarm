@@ -23,7 +23,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fenceit.R;
-import com.fenceit.alarm.Wifi;
+import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.BasicTrigger;
@@ -81,7 +81,7 @@ public class TriggerActivity extends Activity implements OnClickListener {
 			Bundle extras = getIntent().getExtras();
 			Long triggerID = (Long) (extras != null ? extras.get("id") : null);
 
-			Wifi alarm = (Wifi) extras.getSerializable("alarm");
+			Alarm alarm = (Alarm) extras.getSerializable("alarm");
 			fetchTrigger(triggerID, alarm);
 		}
 		// If it's a restored instance
@@ -141,7 +141,7 @@ public class TriggerActivity extends Activity implements OnClickListener {
 	 * 
 	 * @param triggerID
 	 */
-	private void fetchTrigger(Long triggerID, Wifi alarm) {
+	private void fetchTrigger(Long triggerID, Alarm alarm) {
 		if (triggerID != null) {
 			// Trigger
 			log.info("Fetching trigger from database with id: " + triggerID);
