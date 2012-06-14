@@ -28,7 +28,8 @@
         android:layout_height="0dp"
         android:layout_weight="1"
         android:scrollbarStyle="insideOverlay"
-        android:scrollbars="vertical" >
+        android:scrollbars="vertical" 
+        android:cacheColorHint="#00000000">
 
     </ListView>
 

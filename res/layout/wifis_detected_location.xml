@@ -47,10 +47,11 @@
     <ListView
         android:id="@+id/wifidetec.wifisList"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dip"
         android:layout_weight="1"
         android:scrollbarStyle="insideOverlay"
-        android:scrollbars="vertical" >
+        android:scrollbars="vertical" 
+        android:cacheColorHint="#00000000">
 
         <!-- Preview: listitem=@layout/wifi_detectect_location_list -->
     </ListView>

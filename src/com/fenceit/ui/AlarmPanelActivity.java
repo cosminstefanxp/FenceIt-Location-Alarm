@@ -12,7 +12,6 @@ import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
 import android.content.Intent;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;

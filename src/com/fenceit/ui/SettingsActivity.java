@@ -6,8 +6,6 @@
  */
 package com.fenceit.ui;
 
-import android.app.Notification;
-import android.app.PendingIntent;
 import android.content.Intent;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
@@ -32,7 +30,6 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	 * @see android.preference.PreferenceActivity#onCreate(android.os.Bundle) */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
-		// TODO Auto-generated method stub
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
 

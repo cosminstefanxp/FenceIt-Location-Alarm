@@ -23,7 +23,6 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -32,11 +31,15 @@ import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.WifiDataProvider;
 
+/**
+ * The Class WifiConnectedActivity.
+ */
 public class WifiConnectedActivity extends Activity implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(WifiConnectedActivity.class);
 
+	/** The Constant DIALOG_ENABLE_WIFI. */
 	private static final int DIALOG_ENABLE_WIFI = 0;
 
 	/** The database helper. */
@@ -54,9 +57,8 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 	/** The save button. */
 	private Button saveButton;
 
+	/** The refresh button. */
 	private ImageButton refreshButton;
-
-	private ProgressBar progressBar;
 
 	/**
 	 * Called when the activity is first created.
@@ -67,7 +69,7 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_conn_location);
-		((TextView)findViewById(R.id.title_titleText)).setText("Edit Location");
+		((TextView) findViewById(R.id.title_titleText)).setText("Edit Location");
 
 		// Prepare database connection
 		if (dbHelper == null)
@@ -96,7 +98,6 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 		saveButton.setOnClickListener(this);
 		refreshButton = (ImageButton) findViewById(R.id.wificonn_refreshButton);
 		refreshButton.setOnClickListener(this);
-		progressBar = (ProgressBar) findViewById(R.id.wificonn_progressBar);
 
 		findViewById(R.id.wificonn_favoriteSection).setOnClickListener(this);
 
@@ -138,7 +139,7 @@ public class WifiConnectedActivity extends Activity implements OnClickListener {
 	 * Fetches the associated location from the database, or builds a new one, if no id was
 	 * provided.
 	 * 
-	 * @param locationID
+	 * @param locationID the location id
 	 */
 	private void fetchLocation(Long locationID) {
 		if (locationID != null) {
