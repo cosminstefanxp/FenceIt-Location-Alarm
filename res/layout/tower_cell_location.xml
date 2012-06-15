@@ -5,25 +5,23 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-	<include layout="@layout/template_title_bar" />
+    <include layout="@layout/template_title_bar" />
 
     <RelativeLayout
-        android:id="@+id/RelativeLayout1"
         style="@style/SectionHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
         <TextView
-            android:id="@+id/TextView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="Connected Wifi"
+            android:text="Tower Cell"
             android:textAppearance="?android:attr/textAppearanceLarge" />
 
         <ImageButton
-            android:id="@+id/wificonn.refreshButton"
+            android:id="@+id/cell.refreshButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
@@ -40,72 +38,89 @@
         android:paddingLeft="@dimen/margin_size" >
 
         <TextView
-            android:id="@+id/wificonn.ssidLabel"
+            android:id="@+id/cell.cellIdLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_alignParentTop="true"
-            android:text="Name/SSID:"
+            android:text="CellID:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/wificonn.bssidLabel"
+            android:id="@+id/cell.lacLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/wificonn.ssidLabel"
-            android:text="BSSID:"
+            android:layout_below="@+id/cell.cellIdLabel"
+            android:text="Lac:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/wificonn.macLabel"
+            android:id="@+id/cell.mccLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/wificonn.bssidLabel"
-            android:text="MAC Addr:"
+            android:layout_below="@+id/cell.lacLabel"
+            android:text="Mcc"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/wificonn.statusLabel"
+            android:id="@+id/cell.mncLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_below="@+id/wificonn.macLabel"
-            android:text="Status:"
+            android:layout_below="@+id/cell.mccLabel"
+            android:text="Mnc:"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/wificonn.ssidText"
+            android:id="@+id/cell.rssiLabel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wificonn.ssidLabel"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/cell.mncLabel"
+            android:text="Rssi:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:id="@+id/cell.cellIdText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/cell.cellIdLabel"
             android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/wificonn.ssidLabel"
+            android:layout_toRightOf="@+id/cell.cellIdLabel"
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/wificonn.bssidText"
+            android:id="@+id/cell.lacText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wificonn.bssidLabel"
-            android:layout_alignLeft="@+id/wificonn.ssidText"
+            android:layout_alignBaseline="@+id/cell.lacLabel"
+            android:layout_alignLeft="@+id/cell.cellIdText"
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/wificonn.macText"
+            android:id="@+id/cell.mccText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wificonn.macLabel"
-            android:layout_alignLeft="@+id/wificonn.bssidText"
+            android:layout_alignBaseline="@+id/cell.mccLabel"
+            android:layout_alignLeft="@+id/cell.lacText"
             android:text="TextView" />
 
         <TextView
-            android:id="@+id/wificonn.statusText"
+            android:id="@+id/cell.mncText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wificonn.statusLabel"
-            android:layout_alignLeft="@+id/wificonn.macText"
+            android:layout_alignBaseline="@+id/cell.mncLabel"
+            android:layout_alignLeft="@+id/cell.mccText"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/cell.rssiText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/cell.rssiLabel"
+            android:layout_alignLeft="@+id/cell.mncText"
             android:text="TextView" />
     </RelativeLayout>
 
@@ -117,13 +132,13 @@
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <RelativeLayout
-        android:id="@+id/wificonn.favoriteSection"
+        android:id="@+id/cell.favoriteSection"
         style="@style/SettingItem"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
         <ImageView
-            android:id="@+id/wificonn.favoriteImage"
+            android:id="@+id/cell.favoriteImage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
@@ -135,9 +150,10 @@
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/wificonn.favoriteImage"
+            android:layout_toRightOf="@+id/cell.favoriteImage"
             android:text="Save as favorite"
             android:textAppearance="?android:attr/textAppearanceMedium" />
+
     </RelativeLayout>
 
 </LinearLayout>
