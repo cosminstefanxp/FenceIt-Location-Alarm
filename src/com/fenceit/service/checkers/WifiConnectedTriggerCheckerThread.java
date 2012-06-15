@@ -16,7 +16,6 @@ import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
-import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.WifiDataProvider;

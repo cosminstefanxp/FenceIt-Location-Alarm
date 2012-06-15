@@ -20,8 +20,7 @@ import com.fenceit.service.BackgroundServiceHandler;
 import com.fenceit.service.WakeLockManager;
 
 /**
- * The TriggerCheckerThread handles the check for conditions regarding the one type of.
- * 
+ * The TriggerCheckerThread handles the check for conditions regarding the one type of
  * {@link AlarmLocation}. If any of the alarms should be triggered, it handles the execution of the
  * alarms.<br/>
  * If the Thread is started from the background service after it was invoked by a BroadcastReceiver,
@@ -45,8 +44,8 @@ public abstract class TriggerCheckerThread extends Thread {
 	 * Instantiates a new trigger checker thread.
 	 * 
 	 * @param context the context
-	 * @param handler the handler
-	 * @param eventType the event type
+	 * @param handler the handler to the Background Service
+	 * @param eventType the event type of the alarm that is (possibly) set up
 	 */
 	public TriggerCheckerThread(Context context, BackgroundServiceHandler handler, int eventType) {
 		super();
