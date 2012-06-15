@@ -17,15 +17,15 @@ public enum LocationType {
 	WifiConnectedLocation(1),
 	/** A location based on the detected Wifi(s) network(s). */
 	WifisDetectedLocation(2),
-	/** A location based on the visible Phone Tower Cells. */
-	TowerCellLocation(3);
+	/** A location based on the visible Phone Tower Cells and the Tower Cell connected to. */
+	CellLocation(3);
 
 	/** The id. */
 	private int id;
 
 	/**
 	 * Instantiates a new location type.
-	 *
+	 * 
 	 * @param id the id
 	 */
 	private LocationType(int id) {
@@ -34,7 +34,7 @@ public enum LocationType {
 
 	/**
 	 * Gets the id of the enum.
-	 *
+	 * 
 	 * @return the id
 	 */
 	public int getId() {
