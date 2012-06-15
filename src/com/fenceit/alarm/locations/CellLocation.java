@@ -25,25 +25,30 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -413247346212461233L;
 
+	/** The table name. */
+	public static final String tableName = "cell_locations";
+//	CID - > BID
+//	LAC -> NID
+//	MNC -> SID 
 	/** The Cell ID. */
 	@DatabaseField
 	private int cellId;
-	
+
 	/** The mobile network code. */
 	@DatabaseField
 	private int mnc;
-	
+
 	/** The mobile country code. */
 	@DatabaseField
 	private int mcc;
-	
+
 	/** The location area code. */
 	@DatabaseField
 	private int lac;
 
 	/* (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData)
-	 */
+	 * 
+	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData) */
 	@Override
 	public Status checkStatus(ContextData info) {
 		// TODO Auto-generated method stub
@@ -51,8 +56,8 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 	}
 
 	/* (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription()
-	 */
+	 * 
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription() */
 	@Override
 	public String getDescription() {
 		// TODO Auto-generated method stub
@@ -60,28 +65,100 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 	}
 
 	/* (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription()
-	 */
+	 * 
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription() */
 	@Override
 	public String getTypeDescription() {
 		return "Cell Tower";
 	}
 
 	/* (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getType()
-	 */
+	 * 
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getType() */
 	@Override
 	public LocationType getType() {
 		return LocationType.CellLocation;
 	}
 
 	/* (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete()
-	 */
+	 * 
+	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete() */
 	@Override
 	public boolean isComplete() {
 		// TODO Auto-generated method stub
 		return false;
+	}
+
+	/**
+	 * Gets the cell id.
+	 * 
+	 * @return the cell id
+	 */
+	public int getCellId() {
+		return cellId;
+	}
+
+	/**
+	 * Sets the cell id.
+	 * 
+	 * @param cellId the new cell id
+	 */
+	public void setCellId(int cellId) {
+		this.cellId = cellId;
+	}
+
+	/**
+	 * Gets the mobile network code
+	 * 
+	 * @return the mobile network code
+	 */
+	public int getMnc() {
+		return mnc;
+	}
+
+	/**
+	 * Sets the mobile network code
+	 * 
+	 * @param mnc the new mobile network code
+	 */
+	public void setMnc(int mnc) {
+		this.mnc = mnc;
+	}
+
+	/**
+	 * Gets the mobile country code
+	 * 
+	 * @return the mobile country code
+	 */
+	public int getMcc() {
+		return mcc;
+	}
+
+	/**
+	 * Sets the mobile country code.
+	 * 
+	 * @param mcc the new mobile country code
+	 */
+	public void setMcc(int mcc) {
+		this.mcc = mcc;
+	}
+
+	/**
+	 * Gets the location area code.
+	 * 
+	 * @return the location area code
+	 */
+	public int getLac() {
+		return lac;
+	}
+
+	/**
+	 * Sets the location area code.
+	 * 
+	 * @param lac the new location area code
+	 */
+	public void setLac(int lac) {
+		this.lac = lac;
 	}
 
 }
