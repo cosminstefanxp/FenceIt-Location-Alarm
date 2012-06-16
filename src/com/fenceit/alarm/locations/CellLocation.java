@@ -11,8 +11,7 @@ import java.io.Serializable;
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
-import android.telephony.gsm.GsmCellLocation;
-
+import com.fenceit.provider.CellContextData;
 import com.fenceit.provider.ContextData;
 
 /**
@@ -27,32 +26,63 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 
 	/** The table name. */
 	public static final String tableName = "cell_locations";
-//	CID - > BID
-//	LAC -> NID
-//	MNC -> SID 
+	// CID - > BID
+	// LAC -> NID
+	// MNC -> SID
 	/** The Cell ID. */
 	@DatabaseField
-	private int cellId;
+	private int cellId = -1;
 
 	/** The mobile network code. */
 	@DatabaseField
-	private int mnc;
+	private int mnc = -1;
 
 	/** The mobile country code. */
 	@DatabaseField
-	private int mcc;
+	private int mcc = -1;
 
 	/** The location area code. */
 	@DatabaseField
-	private int lac;
+	private int lac = -1;
 
 	/* (non-Javadoc)
 	 * 
 	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData) */
 	@Override
 	public Status checkStatus(ContextData info) {
-		// TODO Auto-generated method stub
-		return null;
+		CellContextData data = (CellContextData) info;
+		if (data == null || data.cellId == -1)
+			return Status.UNKNOWN;
+
+		// Prepare MNC and MCC
+		int localMnc = Integer.parseInt(data.networkOperator.substring(0, 3));
+		int localMcc = Integer.parseInt(data.networkOperator.substring(3));
+
+		// Check current status
+		boolean isInside = false;
+		if (data.cellId == this.cellId && data.lac == this.lac && localMcc == this.mcc && localMnc == this.mnc)
+			isInside = true;
+
+		localMnc = Integer.parseInt(data.prevNetworkOperator.substring(0, 3));
+		localMcc = Integer.parseInt(data.prevNetworkOperator.substring(3));
+
+		// Check previous status
+		boolean wasInside = false;
+		if (data.prevCellId == this.cellId && data.prevLac == this.lac && localMcc == this.mcc && localMnc == this.mnc)
+			isInside = true;
+
+		// Compute the status
+		if (isInside) {
+			if (wasInside)
+				return Status.STAYED_INSIDE;
+			else
+				return Status.ENTERED;
+		} else {
+			if (wasInside)
+				return Status.LEFT;
+			else
+				return Status.STAYED_OUTSIDE;
+		}
 	}
 
 	/* (non-Javadoc)
@@ -60,8 +90,7 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription() */
 	@Override
 	public String getDescription() {
-		// TODO Auto-generated method stub
-		return null;
+		return mcc + "/" + mnc + "/" + lac + "/" + cellId;
 	}
 
 	/* (non-Javadoc)
@@ -85,8 +114,7 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete() */
 	@Override
 	public boolean isComplete() {
-		// TODO Auto-generated method stub
-		return false;
+		return cellId != -1 && lac != -1;
 	}
 
 	/**
@@ -159,6 +187,11 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 	 */
 	public void setLac(int lac) {
 		this.lac = lac;
+	}
+
+	@Override
+	public String toString() {
+		return "CellLocation [cellId=" + cellId + ", mnc=" + mnc + ", mcc=" + mcc + ", lac=" + lac + "]";
 	}
 
 }

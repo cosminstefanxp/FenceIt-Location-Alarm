@@ -18,6 +18,7 @@ import android.widget.Toast;
 
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
+import com.fenceit.alarm.locations.CellLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
@@ -43,6 +44,12 @@ public class BackgroundService extends Service {
 	 * {@link WifisDetectedLocation}.
 	 */
 	public static final int SERVICE_EVENT_WIFIS_DETECTED = 4;
+
+	/**
+	 * The Constant SERVICE_EVENT_WIFIS_CELL_NETWORK used for defining the event related to
+	 * {@link CellLocation}.
+	 */
+	public static final int SERVICE_EVENT_CELL_NETWORK = 5;
 
 	/**
 	 * The Constant SERVICE_EVENT_WIFI_CONNECTED used for defining the event related to
@@ -88,6 +95,7 @@ public class BackgroundService extends Service {
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
 		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15).getTimeInMillis(), SERVICE_EVENT_WIFI_CONNECTED);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(20).getTimeInMillis(), SERVICE_EVENT_CELL_NETWORK);
 	}
 
 	@Override
@@ -123,6 +131,8 @@ public class BackgroundService extends Service {
 
 		// TODO: Debug only - Stop any pending system alarms
 		alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFI_CONNECTED);
+		alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFIS_DETECTED);
+		alarmDispatcher.cancelAlarm(SERVICE_EVENT_CELL_NETWORK);
 
 		// If somehow the wakelock is still locked, release it
 		WakeLockManager.releaseWakeLock();

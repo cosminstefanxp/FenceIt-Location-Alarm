@@ -74,15 +74,6 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/cell.rssiLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/cell.mncLabel"
-            android:text="Rssi:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
             android:id="@+id/cell.cellIdText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -113,14 +104,6 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/cell.mncLabel"
             android:layout_alignLeft="@+id/cell.mccText"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/cell.rssiText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/cell.rssiLabel"
-            android:layout_alignLeft="@+id/cell.mncText"
             android:text="TextView" />
     </RelativeLayout>
 

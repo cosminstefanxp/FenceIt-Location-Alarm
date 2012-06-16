@@ -10,6 +10,8 @@ import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 import org.androwrapee.db.ReferenceField;
 
+import android.util.Log;
+
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.AlarmLocation.Status;
@@ -69,9 +71,11 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * .alarm.EnvironmentData ) */
 	@Override
 	public boolean shouldTrigger(ContextData data) {
-		if (this.type == TriggerType.ON_ENTER && location.checkStatus(data) == Status.ENTERED)
+		Status status = location.checkStatus(data);
+		Log.d("Trigger", "New Trigger Status: " + status);
+		if (this.type == TriggerType.ON_ENTER && status == Status.ENTERED)
 			return true;
-		if (this.type == TriggerType.ON_EXIT && location.checkStatus(data) == Status.LEFT)
+		if (this.type == TriggerType.ON_EXIT && status == Status.LEFT)
 			return true;
 		return false;
 	}
