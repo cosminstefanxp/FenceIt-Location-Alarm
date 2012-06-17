@@ -63,13 +63,14 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 		if (data.cellId == this.cellId && data.lac == this.lac && localMcc == this.mcc && localMnc == this.mnc)
 			isInside = true;
 
+		// Prepare MNC and MCC
 		localMnc = Integer.parseInt(data.prevNetworkOperator.substring(0, 3));
 		localMcc = Integer.parseInt(data.prevNetworkOperator.substring(3));
 
 		// Check previous status
 		boolean wasInside = false;
 		if (data.prevCellId == this.cellId && data.prevLac == this.lac && localMcc == this.mcc && localMnc == this.mnc)
-			isInside = true;
+			wasInside = true;
 
 		// Compute the status
 		if (isInside) {
@@ -189,6 +190,9 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 		this.lac = lac;
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#toString() */
 	@Override
 	public String toString() {
 		return "CellLocation [cellId=" + cellId + ", mnc=" + mnc + ", mcc=" + mcc + ", lac=" + lac + "]";

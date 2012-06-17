@@ -6,6 +6,9 @@
  */
 package com.fenceit.ui;
 
+import java.text.DecimalFormat;
+import java.text.NumberFormat;
+
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
@@ -21,31 +24,33 @@ import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fenceit.R;
 import com.fenceit.alarm.locations.CellLocation;
+import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.CellContextData;
 import com.fenceit.provider.CellContextProvider;
 
 /**
- * The Class CellActivity.
+ * The Class CoordinatesActivity used for setting up Locations based on Coordinates.
  */
-public class CellActivity extends Activity implements OnClickListener {
+public class CoordinatesActivity extends Activity implements OnClickListener {
 
 	/** The logger. */
-	private static final Logger log = Logger.getLogger(CellActivity.class);
+	private static final Logger log = Logger.getLogger(CoordinatesActivity.class);
 
 	/** The Constant DIALOG_ENABLE_NETWORK. */
-	private static final int DIALOG_ENABLE_NETWORK = 0;
+	private static final int DIALOG_ENABLE_LOCATION = 0;
 
 	/** The data access object. */
-	private DefaultDAO<CellLocation> dao = null;
+	private DefaultDAO<CoordinatesLocation> dao = null;
 
 	/** The location. */
-	private CellLocation location;
+	private CoordinatesLocation location;
 
 	/** If it's a new entity. */
 	private boolean newEntity;
@@ -55,6 +60,12 @@ public class CellActivity extends Activity implements OnClickListener {
 
 	/** The refresh button. */
 	private ImageButton refreshButton;
+
+	/** The progress bar. */
+	private ProgressBar progressBar;
+
+	/** The Constant used for number format. */
+	private static final NumberFormat nf = new DecimalFormat("##.########");
 
 	/**
 	 * Called when the activity is first created.
@@ -69,7 +80,8 @@ public class CellActivity extends Activity implements OnClickListener {
 
 		// Prepare database connection
 		if (dao == null)
-			dao = DatabaseManager.getDAOInstance(getApplicationContext(), CellLocation.class, CellLocation.tableName);
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), CoordinatesLocation.class,
+					CoordinatesLocation.tableName);
 
 		// If it's a new activity
 		if (savedInstanceState == null) {
@@ -81,17 +93,20 @@ public class CellActivity extends Activity implements OnClickListener {
 		}
 		// If it's a restored instance
 		else {
-			location = (CellLocation) savedInstanceState.getSerializable("location");
+			location = (CoordinatesLocation) savedInstanceState.getSerializable("location");
 			log.info("Restored saved instance of location: " + location);
 		}
 
 		// Buttons and others
 		saveButton = (Button) findViewById(R.id.title_saveButton);
 		saveButton.setOnClickListener(this);
-		refreshButton = (ImageButton) findViewById(R.id.cell_refreshButton);
+		refreshButton = (ImageButton) findViewById(R.id.coordinates_refreshButton);
 		refreshButton.setOnClickListener(this);
+		progressBar = (ProgressBar) findViewById(R.id.coordinates_progressBar);
 
-		findViewById(R.id.cell_favoriteSection).setOnClickListener(this);
+		findViewById(R.id.coordinates_favoriteSection).setOnClickListener(this);
+		findViewById(R.id.coordinates_mapSection).setOnClickListener(this);
+		findViewById(R.id.coordinates_radiusSection).setOnClickListener(this);
 
 		// Fill data
 		refreshActivity();
@@ -112,20 +127,18 @@ public class CellActivity extends Activity implements OnClickListener {
 	private void refreshActivity() {
 		// Change favorite location image
 		if (location.isFavorite())
-			((ImageView) findViewById(R.id.cell_favoriteImage)).setImageResource(android.R.drawable.btn_star_big_on);
+			((ImageView) findViewById(R.id.coordinates_favoriteImage))
+					.setImageResource(android.R.drawable.btn_star_big_on);
 		else
-			((ImageView) findViewById(R.id.cell_favoriteImage)).setImageResource(android.R.drawable.btn_star_big_off);
+			((ImageView) findViewById(R.id.coordinates_favoriteImage))
+					.setImageResource(android.R.drawable.btn_star_big_off);
 		// Location Section
 		if (location.isComplete()) {
-			((TextView) findViewById(R.id.cell_cellIdText)).setText(Integer.toString(location.getCellId()));
-			((TextView) findViewById(R.id.cell_lacText)).setText(Integer.toString(location.getLac()));
-			((TextView) findViewById(R.id.cell_mncText)).setText(Integer.toString(location.getMnc()));
-			((TextView) findViewById(R.id.cell_mccText)).setText(Integer.toString(location.getMcc()));
+			((TextView) findViewById(R.id.coordinates_latText)).setText(nf.format(location.getLatitude()));
+			((TextView) findViewById(R.id.coordinates_longText)).setText(nf.format(location.getLongitude()));
 		} else {
 			((TextView) findViewById(R.id.cell_cellIdText)).setText("Click on the refresh button.");
 			((TextView) findViewById(R.id.cell_lacText)).setText("-");
-			((TextView) findViewById(R.id.cell_mncText)).setText("-");
-			((TextView) findViewById(R.id.cell_mccText)).setText("-");
 		}
 	}
 
@@ -137,7 +150,7 @@ public class CellActivity extends Activity implements OnClickListener {
 	 */
 	private void fetchLocation(Long locationID) {
 		if (locationID != null) {
-			log.info("Fetching CellLocation from database with id: " + locationID);
+			log.info("Fetching CoordinatesLocation from database with id: " + locationID);
 			dao.open();
 			location = dao.fetch(locationID);
 			dao.close();
@@ -147,7 +160,7 @@ public class CellActivity extends Activity implements OnClickListener {
 		}
 		// No entity in database... creating a new one
 		log.info("Creating new CellLocation...");
-		location = new CellLocation();
+		location = new CoordinatesLocation();
 		newEntity = true;
 	}
 
@@ -193,7 +206,19 @@ public class CellActivity extends Activity implements OnClickListener {
 	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
 	@Override
 	public void onClick(View v) {
-		if (v == saveButton) {
+		switch (v.getId()) {
+		case R.id.coordinates_favoriteSection:
+			// Change location favorite status
+			location.setFavorite(!location.isFavorite());
+			// Change image
+			if (location.isFavorite())
+				((ImageView) findViewById(R.id.coordinates_favoriteImage))
+						.setImageResource(android.R.drawable.btn_star_big_on);
+			else
+				((ImageView) findViewById(R.id.coordinates_favoriteImage))
+						.setImageResource(android.R.drawable.btn_star_big_off);
+			break;
+		case R.id.title_saveButton:
 			log.info("Save button clicked. Storing entity...");
 			if (!storeLocation()) {
 				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
@@ -205,21 +230,15 @@ public class CellActivity extends Activity implements OnClickListener {
 			setResult(RESULT_OK, intent);
 			finish();
 			return;
-		} else if (v == (findViewById(R.id.cell_favoriteSection))) {
-			// Change location favorite status
-			location.setFavorite(!location.isFavorite());
-			// Change image
-			if (location.isFavorite())
-				((ImageView) findViewById(R.id.cell_favoriteImage))
-						.setImageResource(android.R.drawable.btn_star_big_on);
-			else
-				((ImageView) findViewById(R.id.cell_favoriteImage))
-						.setImageResource(android.R.drawable.btn_star_big_off);
-		} else if (v == refreshButton) {
+		case R.id.coordinates_refreshButton:
 			log.info("Refreshing details regarding the Cell Tower currently connected to.");
 			gatherContextInfo();
+			break;
 		}
 	}
+
+	// TODO: Cool:
+	// http://stackoverflow.com/questions/7709030/get-gps-location-in-a-broadcast-receiver-or-service-to-broadcast-receiver-data-t/7709140#7709140
 
 	/* (non-Javadoc)
 	 * 
@@ -229,13 +248,13 @@ public class CellActivity extends Activity implements OnClickListener {
 		Dialog dialog;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch (id) {
-		// Create a dialog asking the user if he wants to go to the Wifi Settings
-		case DIALOG_ENABLE_NETWORK:
+		// Create a dialog asking the user if he wants to go to the Location Settings
+		case DIALOG_ENABLE_LOCATION:
 			builder.setMessage(
-					"The device does not seem to be connected to any mobile phone networks. Would you like to adjust the settings now?")
+					"The device does not seem to have any localization interfaces enabled. Would you like to adjust the settings now?")
 					.setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
-							startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
+							startActivity(new Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS));
 						}
 					}).setNegativeButton("No", new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
@@ -254,20 +273,20 @@ public class CellActivity extends Activity implements OnClickListener {
 	 * Gather context info from the environment and fill in the location and the views.
 	 */
 	private void gatherContextInfo() {
-		// Check for availability;
-		if (!CellContextProvider.isCellNetworkConnected(this)) {
-			Toast.makeText(this, "Cell network is not available", Toast.LENGTH_SHORT);
-			showDialog(DIALOG_ENABLE_NETWORK);
-			return;
-		}
-
-		CellContextData cellInfo = CellContextProvider.getCellContextData(this);
-		log.info("Cell Network info: " + cellInfo);
-		// Update the location
-		location.setCellId(cellInfo.cellId);
-		location.setLac(cellInfo.lac);
-		location.setMnc(Integer.parseInt(cellInfo.networkOperator.substring(0, 3)));
-		location.setMcc(Integer.parseInt(cellInfo.networkOperator.substring(3)));
+		// // Check for availability;
+		// if (!CellContextProvider.isCellNetworkConnected(this)) {
+		// Toast.makeText(this, "Cell network is not available", Toast.LENGTH_SHORT);
+		// showDialog(DIALOG_ENABLE_NETWORK);
+		// return;
+		// }
+		//
+		// CellContextData cellInfo = CellContextProvider.getCellContextData(this);
+		// log.info("Cell Network info: " + cellInfo);
+		// // Update the location
+		// location.setCellId(cellInfo.cellId);
+		// location.setLac(cellInfo.lac);
+		// location.setMnc(Integer.parseInt(cellInfo.networkOperator.substring(0, 3)));
+		// location.setMcc(Integer.parseInt(cellInfo.networkOperator.substring(3)));
 
 		// Update the view
 		refreshActivity();

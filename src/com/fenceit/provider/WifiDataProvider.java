@@ -10,6 +10,7 @@ import java.util.List;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
@@ -83,13 +84,15 @@ public class WifiDataProvider {
 		data.prevScanBSSIDs = sp.getString(PREV_DETECTED_WIFIS_PREF, "").split(SPLITTER);
 
 		// Save current conditions for later
-		sp.edit().putString(PREV_CONNECTED_WIFI_PREF, data.connectedWifiInfo.getBSSID()).commit();
+		Editor ed = sp.edit();
+		ed.putString(PREV_CONNECTED_WIFI_PREF, data.connectedWifiInfo.getBSSID());
 		StringBuilder out = new StringBuilder();
 		for (ScanResult res : data.scanResults) {
 			out.append(res.BSSID);
 			out.append(SPLITTER);
 		}
-		sp.edit().putString(PREV_DETECTED_WIFIS_PREF, out.toString()).commit();
+		ed.putString(PREV_DETECTED_WIFIS_PREF, out.toString());
+		ed.commit();
 
 		return data;
 	}
