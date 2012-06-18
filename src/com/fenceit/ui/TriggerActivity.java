@@ -209,7 +209,8 @@ public class TriggerActivity extends Activity implements OnClickListener {
 
 	@Override
 	public void onClick(View v) {
-		if (v == saveButton) {
+		switch (v.getId()) {
+		case R.id.trigger_saveButton:
 			log.info("Save button clicked. Storing entity...");
 			if (!storeTrigger()) {
 				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
@@ -219,24 +220,26 @@ public class TriggerActivity extends Activity implements OnClickListener {
 			setResult(RESULT_OK);
 			finish();
 			return;
-		} else if (v == (findViewById(R.id.trigger_whenSection))) {
-			// Change location type
+		case R.id.trigger_whenSection:
+			// Change triggering type
 			showDialog(DIALOG_TRIGGER_TYPE);
+			break;
 
-		} else if (v == (findViewById(R.id.trigger_locationSection))) {
+		case R.id.trigger_locationSection:
 			log.debug("Editing the existing location");
 			Intent intent = AlarmLocationBroker.getActivityIntent(this, trigger.getLocation().getType());
 			intent.putExtra("id", trigger.getLocation().getId());
 			startActivityForResult(intent, REQ_CODE_EDIT_LOCATION);
-
-		} else if (v == findViewById(R.id.trigger_locationAddSection)) {
+			break;
+		case R.id.trigger_locationAddSection:
 			// Create a new location
 			showDialog(DIALOG_NEW_LOCATION);
-		} else if (v == findViewById(R.id.trigger_locationFavoriteSection)) {
+			break;
+		case R.id.trigger_locationFavoriteSection:
 			// TODO: Select a favorite location
 			log.debug("Using a pre-defined location");
+			break;
 		}
-
 	}
 
 	@Override

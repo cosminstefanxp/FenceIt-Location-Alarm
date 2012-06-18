@@ -45,6 +45,9 @@
             android:name=".ui.CellActivity"
             android:theme="@style/Theme" />
         <activity
+            android:name=".ui.CoordinatesActivity"
+            android:theme="@style/Theme" />
+        <activity
             android:name=".ui.SettingsActivity"
             android:theme="@style/Theme" />
 

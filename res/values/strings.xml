@@ -7,7 +7,9 @@
     <string name="description_action">Search</string>
     <string name="description_save">Save</string>
     <string name="description_separator">Separator</string>
-    
     <string name="button_save">Save</string>
+    <string name="dialog_set_number">Set</string>
+    <string name="dialog_cancel">Cancel</string>
+    <string name="dialog_picker_title">Choose a number</string>
 
 </resources>

@@ -13,10 +13,12 @@ import android.content.Intent;
 
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.CellLocation;
+import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
 import com.fenceit.ui.CellActivity;
+import com.fenceit.ui.CoordinatesActivity;
 import com.fenceit.ui.WifiConnectedActivity;
 import com.fenceit.ui.WifisDetectedActivity;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
@@ -35,8 +37,9 @@ public class AlarmLocationBroker {
 	 */
 	public static SingleChoiceAdapter<LocationType> getLocationTypesAdapter() {
 		return new SingleChoiceAdapter<LocationType>(new LocationType[] { LocationType.WifiConnectedLocation,
-				LocationType.WifisDetectedLocation, LocationType.CellLocation }, new CharSequence[] {
-				"Based on the connected Wifi", "Based on the detected Wifis", "Based on Cell Network" });
+				LocationType.WifisDetectedLocation, LocationType.CellLocation, LocationType.CoordinatesLocation },
+				new CharSequence[] { "Based on the connected Wifi", "Based on the detected Wifis",
+						"Based on Cell Network", "Based on Geographical Coordinates" });
 	}
 
 	/**
@@ -59,6 +62,8 @@ public class AlarmLocationBroker {
 		case CellLocation:
 			intent = new Intent(context, CellActivity.class);
 			break;
+		case CoordinatesLocation:
+			intent = new Intent(context, CoordinatesActivity.class);
 		}
 		return intent;
 	}
@@ -97,6 +102,15 @@ public class AlarmLocationBroker {
 		daoC.open();
 		location = daoC.fetch(id);
 		daoC.close();
+		if (location != null)
+			return location;
+
+		// Fetch CoordinatesLocation
+		DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context, CoordinatesLocation.class,
+				CoordinatesLocation.tableName);
+		daoCo.open();
+		location = daoCo.fetch(id);
+		daoCo.close();
 		if (location != null)
 			return location;
 

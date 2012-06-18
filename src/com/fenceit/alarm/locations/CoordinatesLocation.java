@@ -8,25 +8,35 @@ package com.fenceit.alarm.locations;
 
 import java.io.Serializable;
 
+import org.androwrapee.db.DatabaseClass;
+import org.androwrapee.db.DatabaseField;
+
 import com.fenceit.provider.ContextData;
 
 /**
  * An AlarmLocation implementation that is defined using the geographical coordinates of a point on
  * earth.
  */
+@DatabaseClass
 public class CoordinatesLocation extends AbstractAlarmLocation implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -7779897033384302042L;
 
+	/** The Constant latitude. */
+	public static final int DEFAULT_ACTIVATION_DISTANCE = 500;
+
 	/** The latitude. */
+	@DatabaseField
 	private Double latitude = null;
 
 	/** The longitude. */
+	@DatabaseField
 	private Double longitude = null;
 
-	/** The activation distance. */
-	private double activationDistance;
+	/** The activation distance, in meters. */
+	@DatabaseField
+	private int activationDistance = DEFAULT_ACTIVATION_DISTANCE;
 
 	/** The Constant tableName. */
 	public static final String tableName = "coordinates_locations";
@@ -104,7 +114,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 	 * 
 	 * @return the activation distance
 	 */
-	public double getActivationDistance() {
+	public int getActivationDistance() {
 		return activationDistance;
 	}
 
@@ -113,7 +123,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 	 * 
 	 * @param activationDistance the new activation distance
 	 */
-	public void setActivationDistance(double activationDistance) {
+	public void setActivationDistance(int activationDistance) {
 		this.activationDistance = activationDistance;
 	}
 

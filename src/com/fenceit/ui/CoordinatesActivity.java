@@ -29,11 +29,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fenceit.R;
-import com.fenceit.alarm.locations.CellLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.db.DatabaseManager;
-import com.fenceit.provider.CellContextData;
-import com.fenceit.provider.CellContextProvider;
+import com.michaelnovakjr.numberpicker.NumberPickerDialog;
+import com.michaelnovakjr.numberpicker.NumberPickerDialog.OnNumberSetListener;
 
 /**
  * The Class CoordinatesActivity used for setting up Locations based on Coordinates.
@@ -45,6 +44,9 @@ public class CoordinatesActivity extends Activity implements OnClickListener {
 
 	/** The Constant DIALOG_ENABLE_NETWORK. */
 	private static final int DIALOG_ENABLE_LOCATION = 0;
+
+	/** The Constant DIALOG_ACTIVATION_DISTANCE. */
+	private static final int DIALOG_ACTIVATION_DISTANCE = 1;
 
 	/** The data access object. */
 	private DefaultDAO<CoordinatesLocation> dao = null;
@@ -75,7 +77,7 @@ public class CoordinatesActivity extends Activity implements OnClickListener {
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		setContentView(R.layout.cell_location);
+		setContentView(R.layout.coordinates_location);
 		((TextView) findViewById(R.id.title_titleText)).setText("Edit Location");
 
 		// Prepare database connection
@@ -137,9 +139,11 @@ public class CoordinatesActivity extends Activity implements OnClickListener {
 			((TextView) findViewById(R.id.coordinates_latText)).setText(nf.format(location.getLatitude()));
 			((TextView) findViewById(R.id.coordinates_longText)).setText(nf.format(location.getLongitude()));
 		} else {
-			((TextView) findViewById(R.id.cell_cellIdText)).setText("Click on the refresh button.");
-			((TextView) findViewById(R.id.cell_lacText)).setText("-");
+			((TextView) findViewById(R.id.coordinates_latText)).setText("Click on the refresh button.");
+			((TextView) findViewById(R.id.coordinates_longText)).setText("-");
 		}
+		// Settings section
+		((TextView) findViewById(R.id.coordinates_radiusText)).setText(location.getActivationDistance() + " m");
 	}
 
 	/**
@@ -230,6 +234,10 @@ public class CoordinatesActivity extends Activity implements OnClickListener {
 			setResult(RESULT_OK, intent);
 			finish();
 			return;
+		case R.id.coordinates_radiusSection:
+			log.debug("Updating radius...");
+			showDialog(DIALOG_ACTIVATION_DISTANCE);
+			break;
 		case R.id.coordinates_refreshButton:
 			log.info("Refreshing details regarding the Cell Tower currently connected to.");
 			gatherContextInfo();
@@ -262,6 +270,22 @@ public class CoordinatesActivity extends Activity implements OnClickListener {
 						}
 					});
 			dialog = builder.create();
+			break;
+		case DIALOG_ACTIVATION_DISTANCE:
+			// Create the dialog associated with the activation distance for the location
+			NumberPickerDialog dialogT = new NumberPickerDialog(this, -1, 0);
+			dialogT.setRange(300, 2000);
+			dialogT.setCurrent(location.getActivationDistance());
+			dialogT.setTitle("It is activated at (m)");
+			dialogT.setOnNumberSetListener(new OnNumberSetListener() {
+
+				@Override
+				public void onNumberSet(int selectedNumber) {
+					location.setActivationDistance(selectedNumber);
+					((TextView) findViewById(R.id.coordinates_radiusText)).setText(selectedNumber + " m");
+				}
+			});
+			dialog = dialogT;
 			break;
 		default:
 			dialog = null;
