@@ -69,7 +69,7 @@ public class WifiDataProvider {
 	 * @param includeScanResults if should include scan results
 	 * @return the wifi context data
 	 */
-	public static WifiContextData getWifiContextData(Context context, boolean includeScanResults) {
+	public static WifiContextData getWifiContextData(Context context, boolean storeLast, boolean includeScanResults) {
 		WifiManager m = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
 		WifiContextData data = new WifiContextData();
 
@@ -81,18 +81,23 @@ public class WifiDataProvider {
 		// Get previous conditions
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
 		data.prevConnectedBSSID = sp.getString(PREV_CONNECTED_WIFI_PREF, null);
-		data.prevScanBSSIDs = sp.getString(PREV_DETECTED_WIFIS_PREF, "").split(SPLITTER);
+		if (includeScanResults)
+			data.prevScanBSSIDs = sp.getString(PREV_DETECTED_WIFIS_PREF, "").split(SPLITTER);
 
 		// Save current conditions for later
-		Editor ed = sp.edit();
-		ed.putString(PREV_CONNECTED_WIFI_PREF, data.connectedWifiInfo.getBSSID());
-		StringBuilder out = new StringBuilder();
-		for (ScanResult res : data.scanResults) {
-			out.append(res.BSSID);
-			out.append(SPLITTER);
+		if (storeLast) {
+			Editor ed = sp.edit();
+			ed.putString(PREV_CONNECTED_WIFI_PREF, data.connectedWifiInfo.getBSSID());
+			if (includeScanResults) {
+				StringBuilder out = new StringBuilder();
+				for (ScanResult res : data.scanResults) {
+					out.append(res.BSSID);
+					out.append(SPLITTER);
+				}
+				ed.putString(PREV_DETECTED_WIFIS_PREF, out.toString());
+			}
+			ed.commit();
 		}
-		ed.putString(PREV_DETECTED_WIFIS_PREF, out.toString());
-		ed.commit();
 
 		return data;
 	}

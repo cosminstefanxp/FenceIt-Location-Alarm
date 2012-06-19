@@ -85,7 +85,7 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData() */
 	@Override
 	protected ContextData acquireContextData() {
-		ContextData data = WifiDataProvider.getWifiContextData(mContext, true);
+		ContextData data = WifiDataProvider.getWifiContextData(mContext, true, true);
 		return data;
 	}
 

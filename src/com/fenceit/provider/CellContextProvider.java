@@ -34,7 +34,7 @@ public class CellContextProvider {
 	 * @param context the context
 	 * @return the cell context data
 	 */
-	public static CellContextData getCellContextData(Context context) {
+	public static CellContextData getCellContextData(Context context, boolean storeLast) {
 		final TelephonyManager telephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
 		CellContextData data = new CellContextData();
 
@@ -55,11 +55,13 @@ public class CellContextProvider {
 			data.prevNetworkOperator = sp.getString(PREV_NETWORK_OPERATOR, null);
 
 			// Save current conditions for later
-			Editor ed = sp.edit();
-			ed.putString(PREV_NETWORK_OPERATOR, data.networkOperator);
-			ed.putInt(PREV_CELL_ID, data.cellId);
-			ed.putInt(PREV_LAC, data.lac);
-			ed.commit();
+			if (storeLast) {
+				Editor ed = sp.edit();
+				ed.putString(PREV_NETWORK_OPERATOR, data.networkOperator);
+				ed.putInt(PREV_CELL_ID, data.cellId);
+				ed.putInt(PREV_LAC, data.lac);
+				ed.commit();
+			}
 
 			return data;
 		} else

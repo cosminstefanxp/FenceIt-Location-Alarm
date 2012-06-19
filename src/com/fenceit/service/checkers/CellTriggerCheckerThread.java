@@ -72,7 +72,7 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData() */
 	@Override
 	protected ContextData acquireContextData() {
-		ContextData data = CellContextProvider.getCellContextData(mContext);
+		ContextData data = CellContextProvider.getCellContextData(mContext, true);
 		return data;
 	}
 

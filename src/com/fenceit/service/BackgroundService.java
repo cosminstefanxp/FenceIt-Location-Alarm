@@ -12,7 +12,9 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.ComponentName;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.os.IBinder;
 import android.widget.Toast;
 
@@ -90,6 +92,11 @@ public class BackgroundService extends Service {
 		Notification notification = prepareOngoingNotification();
 		startForeground(ONGOING_NOTIFICATION, notification);
 
+		// Register for intents
+		ComponentName component = new ComponentName(this, WifiBroadcastReceiver.class);
+		this.getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
+				PackageManager.DONT_KILL_APP);
+
 		// Setup other stuff
 		handler = new BackgroundServiceHandler(this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
@@ -137,6 +144,10 @@ public class BackgroundService extends Service {
 		// If somehow the wakelock is still locked, release it
 		WakeLockManager.releaseWakeLock();
 
+		// Register for intents
+		ComponentName component = new ComponentName(this, WifiBroadcastReceiver.class);
+		this.getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
+				PackageManager.DONT_KILL_APP);
 		log.warn("Stopping background service...");
 	}
 

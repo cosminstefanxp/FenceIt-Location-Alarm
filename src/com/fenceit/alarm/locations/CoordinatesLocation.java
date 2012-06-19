@@ -34,6 +34,9 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 	@DatabaseField
 	private Double longitude = null;
 
+	/** The extra details. */
+	private String extra;
+	
 	/** The activation distance, in meters. */
 	@DatabaseField
 	private int activationDistance = DEFAULT_ACTIVATION_DISTANCE;
@@ -67,6 +70,9 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 		return null;
 	}
 
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "CoordinatesLocation [latitude=" + latitude + ", longitude=" + longitude + ", activationDistance="
@@ -125,6 +131,14 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 	 */
 	public void setActivationDistance(int activationDistance) {
 		this.activationDistance = activationDistance;
+	}
+
+	public String getExtra() {
+		return extra;
+	}
+
+	public void setExtra(String extra) {
+		this.extra = extra;
 	}
 
 }

@@ -261,7 +261,7 @@ public class CellActivity extends Activity implements OnClickListener {
 			return;
 		}
 
-		CellContextData cellInfo = CellContextProvider.getCellContextData(this);
+		CellContextData cellInfo = CellContextProvider.getCellContextData(this, false);
 		log.info("Cell Network info: " + cellInfo);
 		// Update the location
 		location.setCellId(cellInfo.cellId);

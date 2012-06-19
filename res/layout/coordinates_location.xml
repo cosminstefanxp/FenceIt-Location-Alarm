@@ -40,7 +40,6 @@
                 android:contentDescription="Click to gather new info"
                 android:src="@android:drawable/ic_popup_sync" />
         </FrameLayout>
-
     </RelativeLayout>
 
     <RelativeLayout
@@ -67,6 +66,15 @@
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
+            android:id="@+id/coordinates.extraLabel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/coordinates.longLabel"
+            android:text="Extra:"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
             android:id="@+id/coordinates.latText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -80,6 +88,14 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/coordinates.longLabel"
+            android:layout_alignLeft="@+id/coordinates.latText"
+            android:text="TextView" />
+
+        <TextView
+            android:id="@+id/coordinates.extraText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignBaseline="@+id/coordinates.extraLabel"
             android:layout_alignLeft="@+id/coordinates.latText"
             android:text="TextView" />
     </RelativeLayout>
@@ -160,7 +176,6 @@
             android:layout_toRightOf="@+id/coordinates.favoriteImage"
             android:text="Save as favorite"
             android:textAppearance="?android:attr/textAppearanceMedium" />
-
     </RelativeLayout>
 
 </LinearLayout>

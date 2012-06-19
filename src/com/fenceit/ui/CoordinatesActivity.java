@@ -8,6 +8,7 @@ package com.fenceit.ui;
 
 import java.text.DecimalFormat;
 import java.text.NumberFormat;
+import java.util.Date;
 
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
@@ -17,6 +18,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.location.Location;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
@@ -31,13 +33,15 @@ import android.widget.Toast;
 import com.fenceit.R;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.db.DatabaseManager;
+import com.fenceit.provider.CoordinatesLocationDataListener;
+import com.fenceit.provider.LocationDataProvider;
 import com.michaelnovakjr.numberpicker.NumberPickerDialog;
 import com.michaelnovakjr.numberpicker.NumberPickerDialog.OnNumberSetListener;
 
 /**
  * The Class CoordinatesActivity used for setting up Locations based on Coordinates.
  */
-public class CoordinatesActivity extends Activity implements OnClickListener {
+public class CoordinatesActivity extends Activity implements OnClickListener, CoordinatesLocationDataListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(CoordinatesActivity.class);
@@ -68,6 +72,9 @@ public class CoordinatesActivity extends Activity implements OnClickListener {
 
 	/** The Constant used for number format. */
 	private static final NumberFormat nf = new DecimalFormat("##.########");
+
+	/** The location provider. */
+	private LocationDataProvider locationProvider;
 
 	/**
 	 * Called when the activity is first created.
@@ -138,12 +145,26 @@ public class CoordinatesActivity extends Activity implements OnClickListener {
 		if (location.isComplete()) {
 			((TextView) findViewById(R.id.coordinates_latText)).setText(nf.format(location.getLatitude()));
 			((TextView) findViewById(R.id.coordinates_longText)).setText(nf.format(location.getLongitude()));
+			if (location.getExtra() != null)
+				((TextView) findViewById(R.id.coordinates_extraText)).setText(location.getExtra());
+			else
+				((TextView) findViewById(R.id.coordinates_extraText)).setText("-");
 		} else {
 			((TextView) findViewById(R.id.coordinates_latText)).setText("Click on the refresh button.");
 			((TextView) findViewById(R.id.coordinates_longText)).setText("-");
+			((TextView) findViewById(R.id.coordinates_extraText)).setText("-");
 		}
 		// Settings section
 		((TextView) findViewById(R.id.coordinates_radiusText)).setText(location.getActivationDistance() + " m");
+	}
+
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (locationProvider != null) {
+			locationProvider.removeCoordinatesLocationDataListener(this);
+			locationProvider = null;
+		}
 	}
 
 	/**
@@ -239,8 +260,10 @@ public class CoordinatesActivity extends Activity implements OnClickListener {
 			showDialog(DIALOG_ACTIVATION_DISTANCE);
 			break;
 		case R.id.coordinates_refreshButton:
-			log.info("Refreshing details regarding the Cell Tower currently connected to.");
-			gatherContextInfo();
+			log.info("Refreshing details regarding the current loction of the device.");
+			if (locationProvider == null)
+				locationProvider = new LocationDataProvider();
+			locationProvider.addCoordinatesLocationDataListener(this, this.getApplicationContext());
 			break;
 		}
 	}
@@ -314,6 +337,33 @@ public class CoordinatesActivity extends Activity implements OnClickListener {
 
 		// Update the view
 		refreshActivity();
+	}
+
+	@Override
+	public void onLocationUpdate(Location location) {
+		if (log.isInfoEnabled())
+			log.info("Location updated in Activity: " + location);
+
+		// Update the location
+		this.location.setLatitude(location.getLatitude());
+		this.location.setLongitude(location.getLongitude());
+		this.location.setExtra(location.getProvider() + "/" + new Date(location.getTime()).toString());
+
+		// Update the UI
+		refreshActivity();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onStop() */
+	@Override
+	protected void onStop() {
+		super.onStop();
+		if (locationProvider != null) {
+			locationProvider.removeCoordinatesLocationDataListener(this);
+			locationProvider = null;
+		}
+
 	}
 
 }
