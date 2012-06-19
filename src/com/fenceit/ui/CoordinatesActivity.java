@@ -34,7 +34,7 @@ import com.fenceit.R;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.CoordinatesLocationDataListener;
-import com.fenceit.provider.LocationDataProvider;
+import com.fenceit.provider.CoordinatesDataProvider;
 import com.michaelnovakjr.numberpicker.NumberPickerDialog;
 import com.michaelnovakjr.numberpicker.NumberPickerDialog.OnNumberSetListener;
 
@@ -74,7 +74,7 @@ public class CoordinatesActivity extends Activity implements OnClickListener, Co
 	private static final NumberFormat nf = new DecimalFormat("##.########");
 
 	/** The location provider. */
-	private LocationDataProvider locationProvider;
+	private CoordinatesDataProvider locationProvider;
 
 	/**
 	 * Called when the activity is first created.
@@ -262,7 +262,7 @@ public class CoordinatesActivity extends Activity implements OnClickListener, Co
 		case R.id.coordinates_refreshButton:
 			log.info("Refreshing details regarding the current loction of the device.");
 			if (locationProvider == null)
-				locationProvider = new LocationDataProvider();
+				locationProvider = new CoordinatesDataProvider();
 			locationProvider.addCoordinatesLocationDataListener(this, this.getApplicationContext());
 			break;
 		}
@@ -316,29 +316,13 @@ public class CoordinatesActivity extends Activity implements OnClickListener, Co
 		return dialog;
 	}
 
-	/**
-	 * Gather context info from the environment and fill in the location and the views.
-	 */
-	private void gatherContextInfo() {
-		// // Check for availability;
-		// if (!CellContextProvider.isCellNetworkConnected(this)) {
-		// Toast.makeText(this, "Cell network is not available", Toast.LENGTH_SHORT);
-		// showDialog(DIALOG_ENABLE_NETWORK);
-		// return;
-		// }
-		//
-		// CellContextData cellInfo = CellContextProvider.getCellContextData(this);
-		// log.info("Cell Network info: " + cellInfo);
-		// // Update the location
-		// location.setCellId(cellInfo.cellId);
-		// location.setLac(cellInfo.lac);
-		// location.setMnc(Integer.parseInt(cellInfo.networkOperator.substring(0, 3)));
-		// location.setMcc(Integer.parseInt(cellInfo.networkOperator.substring(3)));
-
-		// Update the view
-		refreshActivity();
-	}
-
+	/* Called when a new location is available from the LocationProvider
+	 * 
+	 * (non-Javadoc)
+	 * 
+	 * @see
+	 * com.fenceit.provider.CoordinatesLocationDataListener#onLocationUpdate(android.location.Location
+	 * ) */
 	@Override
 	public void onLocationUpdate(Location location) {
 		if (log.isInfoEnabled())
@@ -347,7 +331,8 @@ public class CoordinatesActivity extends Activity implements OnClickListener, Co
 		// Update the location
 		this.location.setLatitude(location.getLatitude());
 		this.location.setLongitude(location.getLongitude());
-		this.location.setExtra(location.getProvider() + "/" + new Date(location.getTime()).toString());
+		this.location.setExtra(location.getProvider() + "/" + location.getAccuracy() + "/"
+				+ new Date(location.getTime()).toString());
 
 		// Update the UI
 		refreshActivity();

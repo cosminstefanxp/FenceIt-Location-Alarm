@@ -19,7 +19,7 @@ import android.os.Bundle;
 /**
  * The Class LocationDataProvider.
  */
-public class LocationDataProvider implements LocationListener {
+public class CoordinatesDataProvider implements LocationListener {
 
 	/** The location manager. */
 	private LocationManager locationManager;
@@ -34,7 +34,7 @@ public class LocationDataProvider implements LocationListener {
 	private HashSet<CoordinatesLocationDataListener> listeners = new HashSet<CoordinatesLocationDataListener>();
 
 	/** The logger. */
-	private static Logger log = Logger.getLogger(LocationDataProvider.class);
+	private static Logger log = Logger.getLogger(CoordinatesDataProvider.class);
 
 	/**
 	 * Adds a new coordinates location data listener.
@@ -69,8 +69,23 @@ public class LocationDataProvider implements LocationListener {
 		locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
 
 		// Register the listener with the Location Manager to receive location updates
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1000, 0, this);
-		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1000, 0, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 5000, 0, this);
+		locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 1500, 0, this);
+
+		// If there is an existing location we can use...
+		Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
+		if (lastLocation != null) {
+			if (Math.abs(System.currentTimeMillis() - lastLocation.getTime()) < TWO_MINUTES)
+				bestLocation = lastLocation;
+		}
+		lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
+		if (lastLocation != null) {
+			if (Math.abs(System.currentTimeMillis() - lastLocation.getTime()) < TWO_MINUTES)
+				if (isBetterLocation(lastLocation, bestLocation))
+					bestLocation = lastLocation;
+		}
+		if (log.isDebugEnabled())
+			log.debug("Starting with location: " + bestLocation);
 	}
 
 	/**
@@ -82,6 +97,15 @@ public class LocationDataProvider implements LocationListener {
 		log.info("Unregistering from location updates...");
 		locationManager.removeUpdates(this);
 		locationManager = null;
+	}
+
+	/**
+	 * Gets the best location.
+	 * 
+	 * @return the best location
+	 */
+	public Location getBestLocation() {
+		return bestLocation;
 	}
 
 	/**
@@ -151,6 +175,7 @@ public class LocationDataProvider implements LocationListener {
 	 * @see android.location.LocationListener#onLocationChanged(android.location.Location) */
 	@Override
 	public void onLocationChanged(Location location) {
+		location.setTime(System.currentTimeMillis());
 		if (log.isDebugEnabled())
 			log.debug("New location from LocationManager: " + location);
 		if (isBetterLocation(location, bestLocation)) {
@@ -187,5 +212,16 @@ public class LocationDataProvider implements LocationListener {
 	@Override
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 
+	}
+
+	public ContextData getContextData() {
+		if (bestLocation == null)
+			return null;
+
+		// Build the context data with the best location found so far
+		CoordinatesContextData data = new CoordinatesContextData();
+		data.location = bestLocation;
+
+		return data;
 	}
 }

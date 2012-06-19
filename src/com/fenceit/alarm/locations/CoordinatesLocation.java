@@ -25,6 +25,9 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 
 	/** The Constant latitude. */
 	public static final int DEFAULT_ACTIVATION_DISTANCE = 500;
+	
+	/** The Constant MIN_ACTIVATION_DISTANCE. */
+	public static final int MIN_ACTIVATION_DISTANCE=250;
 
 	/** The latitude. */
 	@DatabaseField

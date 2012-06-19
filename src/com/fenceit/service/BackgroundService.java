@@ -59,6 +59,9 @@ public class BackgroundService extends Service {
 	 */
 	public static final int SERVICE_EVENT_WIFI_CONNECTED = 3;
 
+	/** The Constant SERVICE_EVENT_GEO_COORDINATES. */
+	public static final int SERVICE_EVENT_GEO_COORDINATES = 6;
+
 	/** The Constant SERVICE_EVENT_NONE. */
 	public static final int SERVICE_EVENT_NONE = 2;
 
@@ -101,8 +104,10 @@ public class BackgroundService extends Service {
 		handler = new BackgroundServiceHandler(this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(15).getTimeInMillis(), SERVICE_EVENT_WIFI_CONNECTED);
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(20).getTimeInMillis(), SERVICE_EVENT_CELL_NETWORK);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(8).getTimeInMillis(), SERVICE_EVENT_WIFI_CONNECTED);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(0).getTimeInMillis(), SERVICE_EVENT_CELL_NETWORK);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(5).getTimeInMillis(), SERVICE_EVENT_WIFIS_DETECTED);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(13).getTimeInMillis(), SERVICE_EVENT_GEO_COORDINATES);
 	}
 
 	@Override
