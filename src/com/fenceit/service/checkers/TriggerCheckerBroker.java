@@ -37,6 +37,9 @@ public class TriggerCheckerBroker {
 					BackgroundService.SERVICE_EVENT_WIFIS_DETECTED);
 		case BackgroundService.SERVICE_EVENT_CELL_NETWORK:
 			return new CellTriggerCheckerThread(context, handler, BackgroundService.SERVICE_EVENT_CELL_NETWORK);
+		case BackgroundService.SERVICE_EVENT_GEO_COORDINATES:
+			return new GeoCoordinatesTriggerCheckerThread(context, handler,
+					BackgroundService.SERVICE_EVENT_GEO_COORDINATES);
 		default:
 			return null;
 		}

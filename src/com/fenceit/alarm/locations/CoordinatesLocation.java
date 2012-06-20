@@ -11,7 +11,14 @@ import java.io.Serializable;
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
+import android.location.Location;
+import android.location.LocationManager;
+import android.util.Log;
+
+import com.fenceit.alarm.locations.AlarmLocation.Status;
+import com.fenceit.provider.CellContextData;
 import com.fenceit.provider.ContextData;
+import com.fenceit.provider.CoordinatesContextData;
 
 /**
  * An AlarmLocation implementation that is defined using the geographical coordinates of a point on
@@ -25,9 +32,9 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 
 	/** The Constant latitude. */
 	public static final int DEFAULT_ACTIVATION_DISTANCE = 500;
-	
+
 	/** The Constant MIN_ACTIVATION_DISTANCE. */
-	public static final int MIN_ACTIVATION_DISTANCE=250;
+	public static final int MIN_ACTIVATION_DISTANCE = 250;
 
 	/** The latitude. */
 	@DatabaseField
@@ -39,7 +46,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 
 	/** The extra details. */
 	private String extra;
-	
+
 	/** The activation distance, in meters. */
 	@DatabaseField
 	private int activationDistance = DEFAULT_ACTIVATION_DISTANCE;
@@ -69,13 +76,45 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 
 	@Override
 	public Status checkStatus(ContextData info) {
-		// TODO Auto-generated method stub
-		return null;
+		CoordinatesContextData data = (CoordinatesContextData) info;
+		if (data == null)
+			return Status.UNKNOWN;
+
+		Location thisLocation = new Location(LocationManager.GPS_PROVIDER);
+		thisLocation.setLatitude(latitude);
+		thisLocation.setLongitude(longitude);
+
+		// Check current status
+		boolean isInside = false;
+		if (thisLocation.distanceTo(data.location) <= activationDistance)
+			isInside = true;
+
+		Location prevLocation = new Location(LocationManager.GPS_PROVIDER);
+		prevLocation.setLatitude(data.prevLatitude);
+		prevLocation.setLongitude(data.prevLongitude);
+
+		// Check previous status
+		boolean wasInside = false;
+		if (prevLocation.distanceTo(thisLocation) <= activationDistance)
+			wasInside = true;
+
+		// Compute the status
+		if (isInside) {
+			if (wasInside)
+				return Status.STAYED_INSIDE;
+			else
+				return Status.ENTERED;
+		} else {
+			if (wasInside)
+				return Status.LEFT;
+			else
+				return Status.STAYED_OUTSIDE;
+		}
 	}
 
 	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	 * 
+	 * @see java.lang.Object#toString() */
 	@Override
 	public String toString() {
 		return "CoordinatesLocation [latitude=" + latitude + ", longitude=" + longitude + ", activationDistance="

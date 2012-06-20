@@ -16,6 +16,12 @@ public class CoordinatesContextData implements ContextData {
 	/** The location. */
 	public Location location;
 
+	/** The prev latitude. */
+	public double prevLatitude;
+
+	/** The prev longitude. */
+	public double prevLongitude;
+
 	@Override
 	public String toString() {
 		return "CoordinatesContextData [location=" + location + "]";

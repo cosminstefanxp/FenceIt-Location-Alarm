@@ -11,11 +11,9 @@ import java.util.List;
 
 import android.content.Context;
 import android.location.Location;
-import android.location.LocationManager;
 import android.os.Message;
 
 import com.fenceit.alarm.Alarm;
-import com.fenceit.alarm.locations.CellLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.AlarmTrigger;
@@ -104,8 +102,8 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 
 		// Stop the scan and use the best result so far
 		provider.removeCoordinatesLocationDataListener(this);
-		ContextData data = provider.getContextData();
-		
+		ContextData data = provider.getContextData(mContext, true);
+
 		return data;
 	}
 

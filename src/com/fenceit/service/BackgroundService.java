@@ -145,6 +145,7 @@ public class BackgroundService extends Service {
 		alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFI_CONNECTED);
 		alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFIS_DETECTED);
 		alarmDispatcher.cancelAlarm(SERVICE_EVENT_CELL_NETWORK);
+		alarmDispatcher.cancelAlarm(SERVICE_EVENT_GEO_COORDINATES);
 
 		// If somehow the wakelock is still locked, release it
 		WakeLockManager.releaseWakeLock();

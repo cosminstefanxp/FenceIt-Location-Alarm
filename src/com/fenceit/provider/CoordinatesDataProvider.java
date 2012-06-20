@@ -11,10 +11,14 @@ import java.util.HashSet;
 import org.apache.log4j.Logger;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.wifi.ScanResult;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 
 /**
  * The Class LocationDataProvider.
@@ -27,8 +31,14 @@ public class CoordinatesDataProvider implements LocationListener {
 	/** The best location obtained so far. */
 	private Location bestLocation;
 
-	/** The Constant TWO_MINUTES. */
-	private static final int TWO_MINUTES = 1000 * 60 * 2;
+	/** The Constant EXPIRATION_TIME. */
+	private static final int EXPIRATION_TIME = 1000 * 60 * 2;
+
+	/** The Constant PREV_LATITUDE_PREF. */
+	private static final String PREV_LATITUDE_PREF = "prev_latitude";
+
+	/** The Constant PREV_LONGITUDE_PREF. */
+	private static final String PREV_LONGITUDE_PREF = "prev_longitude";
 
 	/** The listeners. */
 	private HashSet<CoordinatesLocationDataListener> listeners = new HashSet<CoordinatesLocationDataListener>();
@@ -40,6 +50,7 @@ public class CoordinatesDataProvider implements LocationListener {
 	 * Adds a new coordinates location data listener.
 	 * 
 	 * @param listener the listener
+	 * @param context the context
 	 */
 	public void addCoordinatesLocationDataListener(CoordinatesLocationDataListener listener, Context context) {
 		if (listeners.size() == 0)
@@ -75,12 +86,12 @@ public class CoordinatesDataProvider implements LocationListener {
 		// If there is an existing location we can use...
 		Location lastLocation = locationManager.getLastKnownLocation(LocationManager.GPS_PROVIDER);
 		if (lastLocation != null) {
-			if (Math.abs(System.currentTimeMillis() - lastLocation.getTime()) < TWO_MINUTES)
+			if (Math.abs(System.currentTimeMillis() - lastLocation.getTime()) < EXPIRATION_TIME)
 				bestLocation = lastLocation;
 		}
 		lastLocation = locationManager.getLastKnownLocation(LocationManager.NETWORK_PROVIDER);
 		if (lastLocation != null) {
-			if (Math.abs(System.currentTimeMillis() - lastLocation.getTime()) < TWO_MINUTES)
+			if (Math.abs(System.currentTimeMillis() - lastLocation.getTime()) < EXPIRATION_TIME)
 				if (isBetterLocation(lastLocation, bestLocation))
 					bestLocation = lastLocation;
 		}
@@ -91,7 +102,6 @@ public class CoordinatesDataProvider implements LocationListener {
 	/**
 	 * Unregister this provider from receiving location updates.
 	 * 
-	 * @param context the context
 	 */
 	private void stopLocating() {
 		log.info("Unregistering from location updates...");
@@ -123,8 +133,8 @@ public class CoordinatesDataProvider implements LocationListener {
 
 		// Check whether the new location fix is newer or older
 		long timeDelta = location.getTime() - currentBestLocation.getTime();
-		boolean isSignificantlyNewer = timeDelta > TWO_MINUTES;
-		boolean isSignificantlyOlder = timeDelta < -TWO_MINUTES;
+		boolean isSignificantlyNewer = timeDelta > EXPIRATION_TIME;
+		boolean isSignificantlyOlder = timeDelta < -EXPIRATION_TIME;
 		boolean isNewer = timeDelta > 0;
 
 		// If it's been more than two minutes since the current location, use the new location
@@ -214,13 +224,33 @@ public class CoordinatesDataProvider implements LocationListener {
 
 	}
 
-	public ContextData getContextData() {
+	/**
+	 * Gets the context data containing the best location found so far.
+	 * 
+	 * @param context the context
+	 * @param storeLast the store last
+	 * @return the context data
+	 */
+	public ContextData getContextData(Context context, boolean storeLast) {
 		if (bestLocation == null)
 			return null;
 
 		// Build the context data with the best location found so far
 		CoordinatesContextData data = new CoordinatesContextData();
 		data.location = bestLocation;
+
+		// Get previous conditions
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+		data.prevLatitude = sp.getFloat(PREV_LATITUDE_PREF, 0);
+		data.prevLongitude = sp.getFloat(PREV_LONGITUDE_PREF, 0);
+
+		// Save current conditions for later
+		if (storeLast) {
+			Editor ed = sp.edit();
+			ed.putFloat(PREV_LATITUDE_PREF, (float) data.location.getLatitude());
+			ed.putFloat(PREV_LONGITUDE_PREF, (float) data.location.getLongitude());
+			ed.commit();
+		}
 
 		return data;
 	}
