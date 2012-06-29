@@ -35,7 +35,6 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	private AlarmLocation location;
 
 	/** The type of location to which this trigger corresponds. Only stored the location type id, to save storage. */
-	@DatabaseField
 	// TODO: to repair implementation
 	private int locationType;
 

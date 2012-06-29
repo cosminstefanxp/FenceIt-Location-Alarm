@@ -47,7 +47,7 @@
             android:name=".ui.WifisDetectedActivity"
             android:theme="@style/Theme" />
         <activity
-            android:name=".ui.CellActivity"
+            android:name=".ui.CellNetworkActivity"
             android:theme="@style/Theme" />
         <activity
             android:name=".ui.CoordinatesActivity"

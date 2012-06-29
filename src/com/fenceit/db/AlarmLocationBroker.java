@@ -17,7 +17,7 @@ import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
-import com.fenceit.ui.CellActivity;
+import com.fenceit.ui.CellNetworkActivity;
 import com.fenceit.ui.CoordinatesActivity;
 import com.fenceit.ui.WifiConnectedActivity;
 import com.fenceit.ui.WifisDetectedActivity;
@@ -60,7 +60,7 @@ public class AlarmLocationBroker {
 			intent = new Intent(context, WifisDetectedActivity.class);
 			break;
 		case CellNetworkLocation:
-			intent = new Intent(context, CellActivity.class);
+			intent = new Intent(context, CellNetworkActivity.class);
 			break;
 		case GeoCoordinatesLocation:
 			intent = new Intent(context, CoordinatesActivity.class);

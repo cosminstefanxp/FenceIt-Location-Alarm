@@ -43,14 +43,14 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Triggered when..."
+            android:text="@string/trigger.whenSectionTitle"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/trigger.whenText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Entering Fence"
+            android:text="Entering Fence" 
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
