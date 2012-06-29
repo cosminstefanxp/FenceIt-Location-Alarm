@@ -33,10 +33,10 @@ import android.widget.Toast;
 import com.fenceit.R;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.db.DatabaseManager;
-import com.fenceit.provider.CoordinatesLocationDataListener;
 import com.fenceit.provider.CoordinatesDataProvider;
-import com.michaelnovakjr.numberpicker.NumberPickerDialog;
-import com.michaelnovakjr.numberpicker.NumberPickerDialog.OnNumberSetListener;
+import com.fenceit.provider.CoordinatesLocationDataListener;
+import com.fenceit.ui.picker.NumberPickerDialog;
+import com.fenceit.ui.picker.NumberPickerDialog.OnNumberSetListener;
 
 /**
  * The Class CoordinatesActivity used for setting up Locations based on Coordinates.
@@ -264,6 +264,9 @@ public class CoordinatesActivity extends Activity implements OnClickListener, Co
 			if (locationProvider == null)
 				locationProvider = new CoordinatesDataProvider();
 			locationProvider.addCoordinatesLocationDataListener(this, this.getApplicationContext());
+			this.progressBar.setProgress(10);
+			this.progressBar.setVisibility(View.VISIBLE);
+			this.refreshButton.setVisibility(View.INVISIBLE);
 			break;
 		}
 	}
@@ -336,6 +339,8 @@ public class CoordinatesActivity extends Activity implements OnClickListener, Co
 
 		// Update the UI
 		refreshActivity();
+		this.progressBar.setVisibility(View.INVISIBLE);
+		this.refreshButton.setVisibility(View.VISIBLE);
 	}
 
 	/* (non-Javadoc)

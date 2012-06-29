@@ -13,10 +13,7 @@ import org.androwrapee.db.DatabaseField;
 
 import android.location.Location;
 import android.location.LocationManager;
-import android.util.Log;
 
-import com.fenceit.alarm.locations.AlarmLocation.Status;
-import com.fenceit.provider.CellContextData;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.CoordinatesContextData;
 
@@ -66,7 +63,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 
 	@Override
 	public LocationType getType() {
-		return LocationType.CoordinatesLocation;
+		return LocationType.GeoCoordinatesLocation;
 	}
 
 	@Override

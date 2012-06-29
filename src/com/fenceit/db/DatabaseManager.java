@@ -18,7 +18,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.fenceit.alarm.Alarm;
-import com.fenceit.alarm.locations.CellLocation;
+import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
@@ -53,9 +53,9 @@ public class DatabaseManager {
 	public static SQLiteOpenHelper getDBHelper(Context context) {
 		if (dbHelper == null)
 			dbHelper = new DefaultDatabaseHelper(context, DATABASE_NAME, DATABASE_VERSION, new Class[] { Alarm.class,
-					BasicTrigger.class, WifiConnectedLocation.class, WifisDetectedLocation.class, CellLocation.class,
+					BasicTrigger.class, WifiConnectedLocation.class, WifisDetectedLocation.class, CellNetworkLocation.class,
 					CoordinatesLocation.class }, new String[] { Alarm.tableName, BasicTrigger.tableName,
-					WifiConnectedLocation.tableName, WifisDetectedLocation.tableName, CellLocation.tableName,
+					WifiConnectedLocation.tableName, WifisDetectedLocation.tableName, CellNetworkLocation.tableName,
 					CoordinatesLocation.tableName });
 		return dbHelper;
 	}

@@ -20,7 +20,7 @@ import android.widget.Toast;
 
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
-import com.fenceit.alarm.locations.CellLocation;
+import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
@@ -49,7 +49,7 @@ public class BackgroundService extends Service {
 
 	/**
 	 * The Constant SERVICE_EVENT_WIFIS_CELL_NETWORK used for defining the event related to
-	 * {@link CellLocation}.
+	 * {@link CellNetworkLocation}.
 	 */
 	public static final int SERVICE_EVENT_CELL_NETWORK = 5;
 

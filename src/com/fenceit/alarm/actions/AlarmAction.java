@@ -15,8 +15,9 @@ import android.content.Context;
 public interface AlarmAction {
 
 	/**
-	 * Executes the alarm int the given Android context.
-	 *
+	 * Executes the alarm in the given Android context. The method must be executed on the main
+	 * thread of the Android application.
+	 * 
 	 * @param context the context
 	 */
 	public void execute(Context context);

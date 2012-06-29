@@ -12,7 +12,7 @@ import android.content.Context;
 import android.content.Intent;
 
 import com.fenceit.alarm.locations.AlarmLocation;
-import com.fenceit.alarm.locations.CellLocation;
+import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
@@ -37,7 +37,7 @@ public class AlarmLocationBroker {
 	 */
 	public static SingleChoiceAdapter<LocationType> getLocationTypesAdapter() {
 		return new SingleChoiceAdapter<LocationType>(new LocationType[] { LocationType.WifiConnectedLocation,
-				LocationType.WifisDetectedLocation, LocationType.CellLocation, LocationType.CoordinatesLocation },
+				LocationType.WifisDetectedLocation, LocationType.CellNetworkLocation, LocationType.GeoCoordinatesLocation },
 				new CharSequence[] { "Based on the connected Wifi", "Based on the detected Wifis",
 						"Based on Cell Network", "Based on Geographical Coordinates" });
 	}
@@ -59,10 +59,10 @@ public class AlarmLocationBroker {
 		case WifisDetectedLocation:
 			intent = new Intent(context, WifisDetectedActivity.class);
 			break;
-		case CellLocation:
+		case CellNetworkLocation:
 			intent = new Intent(context, CellActivity.class);
 			break;
-		case CoordinatesLocation:
+		case GeoCoordinatesLocation:
 			intent = new Intent(context, CoordinatesActivity.class);
 		}
 		return intent;
@@ -97,8 +97,8 @@ public class AlarmLocationBroker {
 			return location;
 
 		// Fetch CellLocation
-		DefaultDAO<CellLocation> daoC = DatabaseManager.getDAOInstance(context, CellLocation.class,
-				CellLocation.tableName);
+		DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context, CellNetworkLocation.class,
+				CellNetworkLocation.tableName);
 		daoC.open();
 		location = daoC.fetch(id);
 		daoC.close();

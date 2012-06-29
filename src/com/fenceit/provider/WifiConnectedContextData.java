@@ -16,7 +16,7 @@ import android.net.wifi.WifiInfo;
  * The WifiContextData contains info regarding the Wireless interface and the Wifi networks
  * (connected and in range).
  */
-public class WifiContextData implements ContextData {
+public class WifiConnectedContextData implements ContextData {
 
 	/** The wifi info for the connected Wifi network. */
 	public WifiInfo connectedWifiInfo;

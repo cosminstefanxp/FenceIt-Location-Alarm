@@ -15,6 +15,7 @@ import android.util.Log;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.AlarmLocation.Status;
+import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.provider.ContextData;
 
 /**
@@ -33,6 +34,11 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	@ReferenceField
 	private AlarmLocation location;
 
+	/** The type of location to which this trigger corresponds. Only stored the location type id, to save storage. */
+	@DatabaseField
+	// TODO: to repair implementation
+	private int locationType;
+
 	/** The type of the triggering. */
 	@DatabaseField
 	private TriggerType type;
@@ -44,7 +50,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		/** The triggering occurs when entering the Location. */
 		ON_ENTER,
 		/** The triggering occurs when exiting the Location. */
-		ON_EXIT,
+		ON_EXIT
 	};
 
 	/**
@@ -159,6 +165,24 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	@Override
 	public String getSecondaryDescription() {
 		return "Home";
+	}
+
+	/**
+	 * Gets the location type id.
+	 * 
+	 * @return the locationType
+	 */
+	public int getLocationTypeId() {
+		return locationType;
+	}
+
+	/**
+	 * Sets the location type.
+	 * 
+	 * @param locationType the locationType to set
+	 */
+	public void setLocationType(LocationType locationType) {
+		this.locationType = locationType.getId();
 	}
 
 }

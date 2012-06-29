@@ -16,7 +16,7 @@ import android.net.wifi.ScanResult;
 import android.util.Log;
 
 import com.fenceit.provider.ContextData;
-import com.fenceit.provider.WifiContextData;
+import com.fenceit.provider.WifisDetectedContextData;
 
 /**
  * The Class WifisDetectedLocation is an implementation of an AlarmLocation based on the Wifi
@@ -25,6 +25,9 @@ import com.fenceit.provider.WifiContextData;
 @DatabaseClass
 public class WifisDetectedLocation extends AbstractAlarmLocation implements Serializable {
 
+	/** The Constant MATCH_PERCENT. */
+	private static final float MATCH_PERCENT=0.75f;
+	
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 780851849280998988L;
 
@@ -43,7 +46,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData) */
 	@Override
 	public Status checkStatus(ContextData info) {
-		WifiContextData data = (WifiContextData) info;
+		WifisDetectedContextData data = (WifisDetectedContextData) info;
 		if (data == null || data.scanResults == null)
 			return Status.UNKNOWN;
 
@@ -61,7 +64,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 				if (bssids.contains(s.BSSID))
 					count++;
 			Log.i("com.fenceit", count + "/" + bssids.size() + " bssids match the condition.");
-			if (count > 0.75 * bssids.size())
+			if (count > MATCH_PERCENT * bssids.size())
 				isInside = true;
 		}
 
@@ -72,7 +75,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 			for (String b : data.prevScanBSSIDs)
 				if (bssids.contains(b))
 					count++;
-			if (count > 0.75 * bssids.size())
+			if (count > MATCH_PERCENT * bssids.size())
 				wasInside = true;
 		}
 

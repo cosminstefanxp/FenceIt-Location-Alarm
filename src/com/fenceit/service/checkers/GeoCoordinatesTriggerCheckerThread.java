@@ -18,7 +18,7 @@ import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.db.DatabaseAccessor;
-import com.fenceit.provider.CellContextProvider;
+import com.fenceit.provider.CellDataProvider;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.CoordinatesDataProvider;
 import com.fenceit.provider.CoordinatesLocationDataListener;
@@ -57,7 +57,7 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 		// Prepare only the triggers that have locations of the required type
 		for (Alarm a : alarms) {
 			for (AlarmTrigger t : a.getTriggers())
-				if (t.getLocation().getType() == LocationType.CoordinatesLocation)
+				if (t.getLocation().getType() == LocationType.GeoCoordinatesLocation)
 					triggers.add(t);
 		}
 		return triggers;
@@ -113,7 +113,7 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 	@Override
 	protected boolean isPreconditionValid() {
 		// Check for availability;
-		if (!CellContextProvider.isCellNetworkConnected(mContext)) {
+		if (!CellDataProvider.isCellNetworkConnected(mContext)) {
 			log.warn("Not connected to Cell Network. Cannot check if the triggering conditions are met for locations requiring Cell contextual data.");
 			return false;
 		}

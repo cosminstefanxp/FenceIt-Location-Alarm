@@ -11,13 +11,14 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
+import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
 import android.util.Log;
 
 /**
  * The Class CellContextProvider gathers information from the context regarding the cell network.
  */
-public class CellContextProvider {
+public class CellDataProvider {
 
 	/** The Constant PREV_CELL_ID. */
 	private static final String PREV_CELL_ID = "cell_id";

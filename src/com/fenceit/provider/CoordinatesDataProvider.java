@@ -16,7 +16,6 @@ import android.content.SharedPreferences.Editor;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
-import android.net.wifi.ScanResult;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 

@@ -69,9 +69,9 @@ public class WifiDataProvider {
 	 * @param includeScanResults if should include scan results
 	 * @return the wifi context data
 	 */
-	public static WifiContextData getWifiContextData(Context context, boolean storeLast, boolean includeScanResults) {
+	public static WifisDetectedContextData getWifiContextData(Context context, boolean storeLast, boolean includeScanResults) {
 		WifiManager m = (WifiManager) context.getSystemService(Context.WIFI_SERVICE);
-		WifiContextData data = new WifiContextData();
+		WifisDetectedContextData data = new WifisDetectedContextData();
 
 		// Get details regarding current conditions
 		data.connectedWifiInfo = m.getConnectionInfo();

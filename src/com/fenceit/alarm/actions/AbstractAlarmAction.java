@@ -6,22 +6,29 @@
  */
 package com.fenceit.alarm.actions;
 
-import android.content.Context;
+import org.androwrapee.db.DatabaseClass;
+import org.androwrapee.db.IdField;
+import org.androwrapee.db.ReferenceField;
 
 import com.fenceit.alarm.Alarm;
 
 /**
  * The Class AbstractAlarmAction that is a basic abstract implementation for an AlarmAction.
  */
+@DatabaseClass
 public abstract class AbstractAlarmAction implements AlarmAction {
 
 	/** The alarm. */
-	@SuppressWarnings("unused")
-	private Alarm alarm;
-	
+	@ReferenceField
+	protected Alarm alarm;
+
+	/** The id. */
+	@IdField
+	protected long id;
+
 	/**
 	 * Instantiates a new abstract alarm action.
-	 *
+	 * 
 	 * @param alarm the alarm
 	 */
 	public AbstractAlarmAction(Alarm alarm) {
@@ -29,9 +36,39 @@ public abstract class AbstractAlarmAction implements AlarmAction {
 		this.alarm = alarm;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.fenceit.alarm.AlarmAction#execute()
+	/**
+	 * Gets the id.
+	 * 
+	 * @return the id
 	 */
-	@Override
-	public abstract void execute(Context context);
+	public long getId() {
+		return id;
+	}
+
+	/**
+	 * Sets the id.
+	 * 
+	 * @param id the id to set
+	 */
+	public void setId(long id) {
+		this.id = id;
+	}
+
+	/**
+	 * Gets the alarm.
+	 * 
+	 * @return the alarm
+	 */
+	public Alarm getAlarm() {
+		return alarm;
+	}
+
+	/**
+	 * Sets the alarm.
+	 * 
+	 * @param alarm the alarm to set
+	 */
+	public void setAlarm(Alarm alarm) {
+		this.alarm = alarm;
+	}
 }

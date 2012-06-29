@@ -25,10 +25,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fenceit.R;
-import com.fenceit.alarm.locations.CellLocation;
+import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.CellContextData;
-import com.fenceit.provider.CellContextProvider;
+import com.fenceit.provider.CellDataProvider;
 
 /**
  * The Class CellActivity.
@@ -42,10 +42,10 @@ public class CellActivity extends Activity implements OnClickListener {
 	private static final int DIALOG_ENABLE_NETWORK = 0;
 
 	/** The data access object. */
-	private DefaultDAO<CellLocation> dao = null;
+	private DefaultDAO<CellNetworkLocation> dao = null;
 
 	/** The location. */
-	private CellLocation location;
+	private CellNetworkLocation location;
 
 	/** If it's a new entity. */
 	private boolean newEntity;
@@ -69,7 +69,7 @@ public class CellActivity extends Activity implements OnClickListener {
 
 		// Prepare database connection
 		if (dao == null)
-			dao = DatabaseManager.getDAOInstance(getApplicationContext(), CellLocation.class, CellLocation.tableName);
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), CellNetworkLocation.class, CellNetworkLocation.tableName);
 
 		// If it's a new activity
 		if (savedInstanceState == null) {
@@ -81,7 +81,7 @@ public class CellActivity extends Activity implements OnClickListener {
 		}
 		// If it's a restored instance
 		else {
-			location = (CellLocation) savedInstanceState.getSerializable("location");
+			location = (CellNetworkLocation) savedInstanceState.getSerializable("location");
 			log.info("Restored saved instance of location: " + location);
 		}
 
@@ -147,7 +147,7 @@ public class CellActivity extends Activity implements OnClickListener {
 		}
 		// No entity in database... creating a new one
 		log.info("Creating new CellLocation...");
-		location = new CellLocation();
+		location = new CellNetworkLocation();
 		newEntity = true;
 	}
 
@@ -255,13 +255,13 @@ public class CellActivity extends Activity implements OnClickListener {
 	 */
 	private void gatherContextInfo() {
 		// Check for availability;
-		if (!CellContextProvider.isCellNetworkConnected(this)) {
+		if (!CellDataProvider.isCellNetworkConnected(this)) {
 			Toast.makeText(this, "Cell network is not available", Toast.LENGTH_SHORT);
 			showDialog(DIALOG_ENABLE_NETWORK);
 			return;
 		}
 
-		CellContextData cellInfo = CellContextProvider.getCellContextData(this, false);
+		CellContextData cellInfo = CellDataProvider.getCellContextData(this, false);
 		log.info("Cell Network info: " + cellInfo);
 		// Update the location
 		location.setCellId(cellInfo.cellId);

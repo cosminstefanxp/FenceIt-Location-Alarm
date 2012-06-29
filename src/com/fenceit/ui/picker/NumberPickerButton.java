@@ -14,7 +14,7 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.michaelnovakjr.numberpicker;
+package com.fenceit.ui.picker;
 
 import com.fenceit.R;
 

@@ -12,7 +12,7 @@ import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
 import com.fenceit.provider.ContextData;
-import com.fenceit.provider.WifiContextData;
+import com.fenceit.provider.WifisDetectedContextData;
 
 /**
  * The Class WifiConnectedLocation.
@@ -82,7 +82,7 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 	 * @see com.fenceit.alarm.locations.AlarmLocation#isInside(com.fenceit.alarm.ContextInfo) */
 	@Override
 	public Status checkStatus(ContextData info) {
-		WifiContextData data = (WifiContextData) info;
+		WifisDetectedContextData data = (WifisDetectedContextData) info;
 		if (data == null || data.connectedWifiInfo == null)
 			return Status.UNKNOWN;
 		// Check current status

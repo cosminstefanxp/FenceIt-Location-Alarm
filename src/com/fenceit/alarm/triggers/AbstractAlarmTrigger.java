@@ -59,13 +59,6 @@ public abstract class AbstractAlarmTrigger implements AlarmTrigger, Serializable
 		this.id = id;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.AlarmTrigger#shouldTrigger(com.fenceit.alarm.EnvironmentData) */
-	@Override
-	public abstract boolean shouldTrigger(ContextData info);
-	
-
 	/**
 	 * Gets the alarm.
 	 * 

@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/BasicActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+
+    <TextView
+        android:id="@+id/notification.TitleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="Alarm Triggered"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/notification.hintText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:gravity="center"
+        android:padding="6dp"
+        android:text="Click anywhere on the screen to stop the alarm." /> 
+
+    <ImageView
+        android:id="@+id/notification.alarmImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/notification.TitleText"
+        android:src="@drawable/alarm_clock" />
+
+    <TextView
+        android:id="@+id/notification.descriptionText"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/notification.hintText"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/notification.alarmImage"
+        android:gravity="center"
+        android:text="	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore."
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

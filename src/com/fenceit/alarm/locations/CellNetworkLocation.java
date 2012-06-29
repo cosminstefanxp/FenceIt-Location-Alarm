@@ -19,7 +19,7 @@ import com.fenceit.provider.ContextData;
  * the device is currently connected.
  */
 @DatabaseClass
-public class CellLocation extends AbstractAlarmLocation implements Serializable {
+public class CellNetworkLocation extends AbstractAlarmLocation implements Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -413247346212461233L;
@@ -107,7 +107,7 @@ public class CellLocation extends AbstractAlarmLocation implements Serializable 
 	 * @see com.fenceit.alarm.locations.AlarmLocation#getType() */
 	@Override
 	public LocationType getType() {
-		return LocationType.CellLocation;
+		return LocationType.CellNetworkLocation;
 	}
 
 	/* (non-Javadoc)

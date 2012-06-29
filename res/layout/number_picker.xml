@@ -20,7 +20,7 @@
 
 <merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <com.michaelnovakjr.numberpicker.NumberPickerButton android:id="@+id/increment"
+    <com.fenceit.ui.picker.NumberPickerButton android:id="@+id/increment"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         style="@style/NumberPickerUpButton" />
@@ -30,7 +30,7 @@
         android:layout_height="wrap_content"
         style="@style/NumberPickerInputText" />
 
-    <com.michaelnovakjr.numberpicker.NumberPickerButton android:id="@+id/decrement"
+    <com.fenceit.ui.picker.NumberPickerButton android:id="@+id/decrement"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         style="@style/NumberPickerDownButton" />

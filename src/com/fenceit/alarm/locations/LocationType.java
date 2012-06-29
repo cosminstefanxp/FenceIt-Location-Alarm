@@ -11,14 +11,14 @@ package com.fenceit.alarm.locations;
  */
 public enum LocationType {
 
-	/** The Coordinates location, based on geographical coordinates. */
-	CoordinatesLocation(0),
+	/** The Geographical Coordinates location, based on geographical coordinates. */
+	GeoCoordinatesLocation(0),
 	/** A location based on the connected Wifi. */
 	WifiConnectedLocation(1),
 	/** A location based on the detected Wifi(s) network(s). */
 	WifisDetectedLocation(2),
-	/** A location based on the visible Phone Tower Cells and the Tower Cell connected to. */
-	CellLocation(3);
+	/** A location based on the visible Cell Network Sites and the Cell Site connected to. */
+	CellNetworkLocation(3);
 
 	/** The id. */
 	private int id;
