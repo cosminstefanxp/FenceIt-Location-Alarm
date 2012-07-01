@@ -29,6 +29,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/notification.TitleText"
+        android:scaleType="fitStart"
         android:src="@drawable/alarm_clock" />
 
     <TextView
@@ -37,8 +38,8 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/notification.hintText"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/notification.alarmImage"
         android:gravity="center"
+        android:paddingBottom="15dp"
         android:text="	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore."
         android:textAppearance="?android:attr/textAppearanceMedium" />
 

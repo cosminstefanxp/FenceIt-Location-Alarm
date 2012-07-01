@@ -11,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.widget.TextView;
 
 import com.fenceit.R;
 import com.fenceit.alarm.actions.NotificationAction;
@@ -34,9 +35,12 @@ public class NotificationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notification);
 
-		// Prepare database connection
-		if (dao == null)
-			dao = DatabaseManager.getDAOInstance(getApplicationContext(), NotificationAction.class,
-					NotificationAction.tableName);
+//		// Prepare database connection
+//		if (dao == null)
+//			dao = DatabaseManager.getDAOInstance(getApplicationContext(), NotificationAction.class,
+//					NotificationAction.tableName);
+
+		((TextView) findViewById(R.id.notification_TitleText)).setText("Home Alarm");
+		((TextView) findViewById(R.id.notification_descriptionText)).setText("Call grandma to invite for dinner.");
 	}
 }

@@ -148,4 +148,8 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 		return "WifiConnectedLocation [bssid=" + bssid + ", ssid=" + ssid + "]";
 	}
 
+	@Override
+	public int getTypeImageResource() {
+		return android.R.drawable.ic_menu_preferences;
+	}
 }

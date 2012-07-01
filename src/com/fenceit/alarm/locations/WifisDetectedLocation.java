@@ -172,5 +172,10 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	public String toString() {
 		return "WifisDetectedLocation [id=" + id + ", name=" + name + ", serializedBSSIDs=" + serializedBSSIDs + "]";
 	}
+	
+	@Override
+	public int getTypeImageResource() {
+		return android.R.drawable.ic_menu_preferences;
+	}
 
 }

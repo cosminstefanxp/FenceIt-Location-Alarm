@@ -198,4 +198,9 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 		return "CellLocation [cellId=" + cellId + ", mnc=" + mnc + ", mcc=" + mcc + ", lac=" + lac + "]";
 	}
 
+	@Override
+	public int getTypeImageResource() {
+		return android.R.drawable.ic_menu_compass;
+	}
+
 }

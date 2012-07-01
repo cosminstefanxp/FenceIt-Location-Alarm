@@ -73,6 +73,13 @@ public interface AlarmLocation extends DatabaseReferenceClass {
 	 * @return the type
 	 */
 	public LocationType getType();
+	
+	/**
+	 * Gets the type image resource.
+	 *
+	 * @return the type image resource
+	 */
+	public int getTypeImageResource();
 
 	/**
 	 * Gets the name.

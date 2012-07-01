@@ -35,6 +35,9 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".ui.LocationPanelActivity"
+            android:theme="@style/Theme" />
+        <activity
             android:name=".ui.AlarmActivity"
             android:theme="@style/Theme" />
         <activity
@@ -55,7 +58,9 @@
         <activity
             android:name=".ui.SettingsActivity"
             android:theme="@style/Theme" />
-
+        <activity
+            android:name=".ui.NotificationActivity"
+            android:theme="@style/Theme" />
         <service
             android:name=".service.BackgroundService"
             android:exported="false" />

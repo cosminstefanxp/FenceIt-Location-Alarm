@@ -179,5 +179,9 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 	public void setExtra(String extra) {
 		this.extra = extra;
 	}
+	@Override
+	public int getTypeImageResource() {
+		return android.R.drawable.ic_menu_mapmode;
+	}
 
 }

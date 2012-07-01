@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/BasicActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    	<!--     Title Bar	 -->
+    <LinearLayout style="@style/TitleBar" >
+        <ImageButton
+            style="@style/TitleBarAction"
+            android:contentDescription="@string/description_home"
+            android:onClick="onClickHome"
+            android:src="@drawable/title_home" />
+        <ImageView style="@style/TitleBarSeparator" />
+        <TextView style="@style/TitleBarText" android:text="Locations"/>
+        <ImageButton
+            android:id="@+id/main.addAlarmButton"
+            style="@style/TitleBarAction"
+            android:contentDescription="@string/description_action"
+            android:src="@drawable/title_add" />
+    </LinearLayout>
+	<!--     End of Title Bar -->
+
+    <ListView
+        android:id="@+id/locationPanel.locationList"
+        android:layout_width="fill_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:cacheColorHint="#00000000"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical" >
+        <!-- Preview: listitem=@layout/location_panel_list -->
+    </ListView>
+
+</LinearLayout>
