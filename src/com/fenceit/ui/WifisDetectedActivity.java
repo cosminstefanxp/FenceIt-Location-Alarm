@@ -44,7 +44,7 @@ import com.fenceit.ui.adapters.WifisDetectedAdapter;
 /**
  * The Class WifisDetectedActivity.
  */
-public class WifisDetectedActivity extends Activity implements OnClickListener {
+public class WifisDetectedActivity extends DefaultActivity  implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(WifisDetectedActivity.class);

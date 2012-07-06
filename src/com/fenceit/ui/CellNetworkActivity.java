@@ -33,7 +33,7 @@ import com.fenceit.provider.CellDataProvider;
 /**
  * The Class CellActivity.
  */
-public class CellNetworkActivity extends Activity implements OnClickListener {
+public class CellNetworkActivity extends DefaultActivity  implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(CellNetworkActivity.class);

@@ -34,7 +34,7 @@ import com.fenceit.provider.WifiDataProvider;
 /**
  * The Class WifiConnectedActivity.
  */
-public class WifiConnectedActivity extends Activity implements OnClickListener {
+public class WifiConnectedActivity extends DefaultActivity implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(WifiConnectedActivity.class);

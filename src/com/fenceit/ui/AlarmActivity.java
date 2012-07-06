@@ -12,23 +12,28 @@ import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.ContextMenu;
+import android.view.ContextMenu.ContextMenuInfo;
+import android.view.LayoutInflater;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ContextMenu.ContextMenuInfo;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.AdapterContextMenuInfo;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
-import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fenceit.R;
@@ -38,13 +43,15 @@ import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.TriggersAdapter;
 
-public class AlarmActivity extends Activity implements OnClickListener, OnItemClickListener {
+public class AlarmActivity extends DefaultActivity implements OnClickListener, OnItemClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(AlarmActivity.class);
 
 	private static final int REQ_CODE_ADD_TRIGGER = 1;
 	private static final int REQ_CODE_EDIT_TRIGGER = 2;
+
+	private static final int DIALOG_ALARM_NAME = 1;
 
 	/** The alarm. */
 	private Alarm alarm;
@@ -100,6 +107,9 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 			alarmID = extras != null ? extras.getLong("id") : null;
 		}
 
+		findViewById(R.id.alarm_nameSection).setOnClickListener(this);
+		findViewById(R.id.alarm_enabledSection).setOnClickListener(this);
+
 		saveButton = (Button) findViewById(R.id.alarm_saveButton);
 		saveButton.setOnClickListener(this);
 
@@ -134,8 +144,11 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 			return;
 		}
 
-		((EditText) findViewById(R.id.alarm_nameTextField)).setText(alarm.getName());
-		((CheckBox) findViewById(R.id.alarm_enabledCheckbox)).setChecked(alarm.isEnabled());
+		((TextView) findViewById(R.id.alarm_nameText)).setText(alarm.getName());
+		if (alarm.isEnabled())
+			((TextView) findViewById(R.id.alarm_enabledText)).setText("Alarm ENABLED");
+		else
+			((TextView) findViewById(R.id.alarm_enabledText)).setText("Alarm DISABLED");
 
 		triggersAdapter = new TriggersAdapter(this, alarm.getTriggers());
 		triggersLV.setAdapter(triggersAdapter);
@@ -227,10 +240,6 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 			return false;
 		}
 
-		// Get data from fields
-		alarm.setName(((EditText) findViewById(R.id.alarm_nameTextField)).getText().toString());
-		alarm.setEnabled(((CheckBox) findViewById(R.id.alarm_enabledCheckbox)).isChecked());
-
 		// Check if all data is all right
 		if (!alarm.isComplete()) {
 			log.error("Not all required fields are filled in");
@@ -258,7 +267,9 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
 	@Override
 	public void onClick(View v) {
-		if (v == saveButton) {
+
+		switch (v.getId()) {
+		case R.id.alarm_saveButton:
 			log.info("Save button clicked. Storing alarm...");
 			if (!storeAlarm()) {
 				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
@@ -268,12 +279,25 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 			setResult(RESULT_OK);
 			finish();
 			return;
-		}
-		if (v == addTriggerButton) {
+		case R.id.alarm_addTriggerButton:
 			log.info("Add trigger button clicked.");
 			Intent addTriggerActivityIntent = new Intent(this, TriggerActivity.class);
 			addTriggerActivityIntent.putExtra("alarm", alarm);
 			startActivityForResult(addTriggerActivityIntent, REQ_CODE_ADD_TRIGGER);
+			break;
+		case R.id.alarm_nameSection:
+			showDialog(DIALOG_ALARM_NAME);
+			break;
+		case R.id.alarm_enabledSection:
+			if (alarm.isEnabled()) {
+				alarm.setEnabled(false);
+				((TextView) findViewById(R.id.alarm_enabledText)).setText("Alarm DISABLED");
+			} else {
+				alarm.setEnabled(true);
+				((TextView) findViewById(R.id.alarm_enabledText)).setText("Alarm ENABLED");
+			}
+			break;
+
 		}
 	}
 
@@ -341,4 +365,37 @@ public class AlarmActivity extends Activity implements OnClickListener, OnItemCl
 		}
 	}
 
+	@Override
+	protected Dialog onCreateDialog(int id) {
+		Dialog dialog;
+		AlertDialog.Builder builder = new AlertDialog.Builder(this);
+		switch (id) {
+		case DIALOG_ALARM_NAME:
+			// Create the dialog associated with setting Alarm name
+			builder.setTitle("Alarm name");
+			builder.setMessage("Set the alarm name:");
+			// Prepare the text edit, including with margins
+			LayoutInflater factory = LayoutInflater.from(this);
+			View nameDialogView = factory.inflate(R.layout.dialog_edit_text_layout, null);
+			final EditText nameText = (EditText) nameDialogView.findViewById(R.id.dialog_editText);
+			nameText.setText(alarm.getName());
+			builder.setView(nameDialogView);
+
+			// Only use an OK button
+			builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					alarm.setName(nameText.getText().toString());
+					((TextView) findViewById(R.id.alarm_nameText)).setText(alarm.getName());
+				}
+			});
+
+			// Build the dialog
+			dialog = builder.create();
+			break;
+		default:
+			dialog = null;
+		}
+		return dialog;
+	}
 }

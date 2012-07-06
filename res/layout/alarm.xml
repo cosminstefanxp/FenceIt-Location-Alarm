@@ -30,41 +30,47 @@
     </LinearLayout>
     <!-- End of Title Bar -->
 
-    <TableRow
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
-        android:paddingTop="10dp" >
+    <LinearLayout
+        android:id="@+id/alarm.nameSection"
+        style="@style/SettingItem"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/alarm.nameText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="2dp"
-            android:text="Name:" />
+            android:text="Alarm name"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <EditText
-            android:id="@+id/alarm.nameTextField"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:ems="10" />
-    </TableRow>
-
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp" >
-
-        <CheckBox
-            android:id="@+id/alarm.enabledCheckbox"
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_column="1"
-            android:text="Enabled" />
-    </TableRow>
+            android:text="Click to set the name of this alarm." 
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/alarm.enabledSection"
+        style="@style/SettingItem"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/alarm.enabledText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Alarm enabled"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView                       
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Click to change the status of this alarm." 
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
 
     <TableRow
         android:layout_width="wrap_content"

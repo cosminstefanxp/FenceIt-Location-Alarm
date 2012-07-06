@@ -41,7 +41,7 @@ import com.fenceit.ui.picker.NumberPickerDialog.OnNumberSetListener;
 /**
  * The Class CoordinatesActivity used for setting up Locations based on Coordinates.
  */
-public class CoordinatesActivity extends Activity implements OnClickListener, CoordinatesLocationDataListener {
+public class CoordinatesActivity extends DefaultActivity  implements OnClickListener, CoordinatesLocationDataListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(CoordinatesActivity.class);

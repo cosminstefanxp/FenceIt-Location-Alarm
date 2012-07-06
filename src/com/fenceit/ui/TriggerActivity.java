@@ -32,7 +32,7 @@ import com.fenceit.db.AlarmLocationBroker;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
-public class TriggerActivity extends Activity implements OnClickListener {
+public class TriggerActivity extends DefaultActivity  implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(TriggerActivity.class);

@@ -28,7 +28,7 @@ import com.fenceit.ui.adapters.LocationsAdapter;
 /**
  * The Class LocationPanelActivity.
  */
-public class LocationPanelActivity extends Activity implements OnItemClickListener {
+public class LocationPanelActivity extends DefaultActivity  implements OnItemClickListener {
 
 	/** The list view. */
 	ListView listView;

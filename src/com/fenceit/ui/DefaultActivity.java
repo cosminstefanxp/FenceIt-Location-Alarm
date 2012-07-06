@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 public class DefaultActivity extends Activity {
 
@@ -21,6 +22,10 @@ public class DefaultActivity extends Activity {
 			return true;
 		}
 		return false;
+	}
+
+	public void onClickHome(View v) {
+		startActivity(new Intent(this, HomeActivity.class));
 	}
 
 }
