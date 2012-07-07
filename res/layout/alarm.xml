@@ -47,7 +47,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Click to set the name of this alarm." 
+            android:text="Click to set the name of this alarm."
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
@@ -65,16 +65,16 @@
             android:text="Alarm enabled"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView                       
+        <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Click to change the status of this alarm." 
+            android:text="Click to change the status of this alarm."
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
     <TableRow
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content" >
 
         <RelativeLayout
             style="@style/SectionHeader"
@@ -82,7 +82,7 @@
             android:layout_height="wrap_content"
             android:layout_span="2"
             android:layout_weight="1"
-            android:baselineAligned="true">
+            android:baselineAligned="true" >
 
             <ImageButton
                 android:id="@+id/alarm.addTriggerButton"
@@ -110,7 +110,7 @@
         android:layout_marginLeft="5dp"
         android:layout_marginRight="5dp"
         android:background="@color/delimiter"
-        android:paddingBottom="2dp">
+        android:paddingBottom="2dp" >
 
         <FrameLayout
             android:layout_width="fill_parent"
@@ -131,9 +131,11 @@
                 android:id="@+id/alarm.triggersListView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@color/background"
-                android:padding="1dp" >
+                android:cacheColorHint="#00000000"
+                android:padding="1dp"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical" >
             </ListView>
         </FrameLayout>
     </TableRow>
@@ -144,12 +146,12 @@
         android:layout_marginTop="15dp" >
 
         <RelativeLayout
+            style="@style/SectionHeader"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_span="2"
             android:layout_weight="1"
-            android:baselineAligned="true"
-			style="@style/SectionHeader">
+            android:baselineAligned="true" >
 
             <ImageButton
                 android:id="@+id/alarm.addActionButton"
@@ -168,7 +170,6 @@
                 android:layout_centerVertical="true"
                 android:text="Actions"
                 android:textAppearance="?android:attr/textAppearanceLarge" />
-
         </RelativeLayout>
     </TableRow>
 
@@ -199,9 +200,11 @@
                 android:id="@+id/alarm.actionsListView"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
                 android:background="@color/background"
-                android:padding="1dp" >
+                android:cacheColorHint="#00000000"
+                android:padding="1dp"
+                android:scrollbarStyle="insideOverlay"
+                android:scrollbars="vertical" >
             </ListView>
         </FrameLayout>
     </TableRow>

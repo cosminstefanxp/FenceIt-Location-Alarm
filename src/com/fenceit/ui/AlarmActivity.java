@@ -411,6 +411,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	private void deleteAction(AlarmAction alarmAction) {
 		log.info("Deleting action: " + alarmAction);
 		AlarmActionBroker.deleteAction(getApplicationContext(), alarmAction);
+		alarm.getActions().remove(alarmAction);
 	}
 
 	/* (non-Javadoc)
@@ -420,7 +421,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		log.debug("On Item click on position " + position + " for view: " + view);
-		switch (view.getId()) {
+		switch (parent.getId()) {
 		case R.id.alarm_triggersListView:
 			log.info("ListView item click for editing trigger with id " + id);
 			Intent editActivityIntent = new Intent(this, TriggerActivity.class);
