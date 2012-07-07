@@ -85,11 +85,17 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 			// Get the location from the database
 			Bundle extras = getIntent().getExtras();
 			Long locationID = (Long) (extras != null ? extras.get("id") : null);
+			// See if the location is forced to be favorite
+			isForcedFavorite = extras.getBoolean("forced");
 
 			fetchLocation(locationID);
 		}
 		// If it's a restored instance
 		else {
+			// See if the location is forced to be favorite
+			isForcedFavorite = savedInstanceState.getBoolean("forced");
+
+			// Get the unsaved location from the saved instance
 			location = (WifiConnectedLocation) savedInstanceState.getSerializable("location");
 			log.info("Restored saved instance of location: " + location);
 		}
@@ -108,6 +114,7 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("location", location);
+		outState.putBoolean("forced", isForcedFavorite);
 	}
 
 	/**
@@ -150,6 +157,8 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 		log.info("Creating new WifiConnectedLocation...");
 		location = new WifiConnectedLocation();
 		newEntity = true;
+		if(isForcedFavorite)
+			location.setFavorite(true);
 	}
 
 	/**
@@ -212,6 +221,12 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
+		// Check if the AbstractLocationActivity can handle this type of dialog
+		dialog = createAbstractLocationDialog(id);
+		if (dialog != null)
+			return dialog;
+
+		// Try to handle this type of dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch (id) {
 		// Create a dialog asking the user if he wants to go to the Wifi Settings

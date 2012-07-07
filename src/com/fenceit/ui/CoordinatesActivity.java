@@ -49,7 +49,7 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 	private static final Logger log = Logger.getLogger(CoordinatesActivity.class);
 
 	/** The Constant DIALOG_ENABLE_NETWORK. */
-	private static final int DIALOG_ENABLE_LOCATION = 0;
+	private static final int DIALOG_ENABLE_LOCALIZATION = 0;
 
 	/** The Constant DIALOG_ACTIVATION_DISTANCE. */
 	private static final int DIALOG_ACTIVATION_DISTANCE = 1;
@@ -99,11 +99,17 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 			// Get the location from the database
 			Bundle extras = getIntent().getExtras();
 			Long locationID = (Long) (extras != null ? extras.get("id") : null);
+			// See if the location is forced to be favorite
+			isForcedFavorite = extras.getBoolean("forced");
 
 			fetchLocation(locationID);
 		}
 		// If it's a restored instance
 		else {
+			// See if the location is forced to be favorite
+			isForcedFavorite = savedInstanceState.getBoolean("forced");
+
+			// Get the unsaved location from the saved instance
 			location = (CoordinatesLocation) savedInstanceState.getSerializable("location");
 			log.info("Restored saved instance of location: " + location);
 		}
@@ -129,6 +135,7 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("location", location);
+		outState.putBoolean("forced", isForcedFavorite);
 	}
 
 	/**
@@ -155,6 +162,9 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 		((TextView) findViewById(R.id.coordinates_radiusText)).setText(location.getActivationDistance() + " m");
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onDestroy() */
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -184,6 +194,8 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 		log.info("Creating new CellLocation...");
 		location = new CoordinatesLocation();
 		newEntity = true;
+		if(isForcedFavorite)
+			location.setFavorite(true);
 	}
 
 	/**
@@ -266,10 +278,16 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
+		// Check if the AbstractLocationActivity can handle this type of dialog
+		dialog = createAbstractLocationDialog(id);
+		if (dialog != null)
+			return dialog;
+
+		// Try to handle this type of dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch (id) {
 		// Create a dialog asking the user if he wants to go to the Location Settings
-		case DIALOG_ENABLE_LOCATION:
+		case DIALOG_ENABLE_LOCALIZATION:
 			builder.setMessage(
 					"The device does not seem to have any localization interfaces enabled. Would you like to adjust the settings now?")
 					.setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
@@ -342,6 +360,9 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see com.fenceit.ui.AbstractLocationActivity#getLocation() */
 	@Override
 	protected AbstractAlarmLocation getLocation() {
 		return location;

@@ -1,26 +1,54 @@
-<?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/location.favoriteSection"
-    style="@style/SettingItem"
-    android:layout_width="fill_parent"
-    android:layout_height="wrap_content"
-    android:onClick="onClickFavoriteSection" >
+<!--
+ This template is added on all the layouts for Locations, as it shows the controls necessary
+ for options corresponding to any AbstractAlarmLocation
+-->
+<merge xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <ImageView
-        android:id="@+id/location.favoriteImage"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:id="@+id/location.favoriteSection"
+        style="@style/SettingItem"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentTop="true"
-        android:src="@android:drawable/btn_star_big_on" />
+        android:onClick="onClickFavoriteSection" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerVertical="true"
-        android:layout_marginLeft="14dp"
-        android:layout_toRightOf="@+id/location.favoriteImage"
-        android:text="Save as favorite"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <ImageView
+            android:id="@+id/location.favoriteImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:src="@android:drawable/btn_star_big_on" />
 
-</RelativeLayout>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="14dp"
+            android:layout_toRightOf="@+id/location.favoriteImage"
+            android:text="Save as favorite"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </RelativeLayout>
+
+    <LinearLayout
+        android:id="@+id/location.nameSection"
+        style="@style/SettingItem"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical"
+        android:onClick="onClickNameSection" >
+
+        <TextView
+            android:id="@+id/location.nameText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Location Name"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set the name of this location."
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
+</merge>

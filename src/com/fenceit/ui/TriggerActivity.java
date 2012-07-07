@@ -32,7 +32,7 @@ import com.fenceit.db.AlarmLocationBroker;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
-public class TriggerActivity extends DefaultActivity  implements OnClickListener {
+public class TriggerActivity extends DefaultActivity implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(TriggerActivity.class);
@@ -48,6 +48,9 @@ public class TriggerActivity extends DefaultActivity  implements OnClickListener
 
 	/** The Constant REQ_CODE_NEW_LOCATION. */
 	private static final int REQ_CODE_NEW_LOCATION = 5;
+
+	/** The Constant REQ_CODE_SELECT_LOCATION. */
+	private static final int REQ_CODE_SELECT_LOCATION = 6;
 
 	/** The data access object. */
 	private DefaultDAO<BasicTrigger> dao = null;
@@ -236,8 +239,10 @@ public class TriggerActivity extends DefaultActivity  implements OnClickListener
 			showDialog(DIALOG_NEW_LOCATION);
 			break;
 		case R.id.trigger_locationFavoriteSection:
-			// TODO: Select a favorite location
 			log.debug("Using a pre-defined location");
+			Intent intentLocationsPanel = new Intent(this, LocationPanelActivity.class);
+			intentLocationsPanel.putExtra("selection", true);
+			startActivityForResult(intentLocationsPanel, REQ_CODE_SELECT_LOCATION);
 			break;
 		}
 	}
@@ -299,13 +304,22 @@ public class TriggerActivity extends DefaultActivity  implements OnClickListener
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
+
+		// If a Location was added or edited
 		if (resultCode == RESULT_OK && (requestCode == REQ_CODE_EDIT_LOCATION || requestCode == REQ_CODE_NEW_LOCATION)) {
 			log.debug("Refreshing location...");
 			long id = data.getLongExtra("id", -1);
 			log.debug("The updated location has id: " + id);
 			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), id));
-
 			refreshActivity();
+		}
+		// If a Location was selected using the Locations Panel
+		if (resultCode == RESULT_OK && requestCode == REQ_CODE_SELECT_LOCATION) {
+			long id = data.getLongExtra("id", -1);
+			log.debug("Selected location with id: " + id);
+			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), id));
+			refreshActivity();
+
 		}
 	}
 }

@@ -34,24 +34,34 @@ import com.fenceit.ui.adapters.SingleChoiceAdapter;
  */
 public class LocationPanelActivity extends DefaultActivity implements OnItemClickListener, OnClickListener {
 
+	/** The Constant REQ_CODE_ADD_LOCATION used as a request code when adding a new location. */
 	private static final int REQ_CODE_ADD_LOCATION = 1;
 
+	/**
+	 * The Constant DIALOG_NEW_LOCATION used for the dialog requesting location type, when adding a
+	 * new location.
+	 */
 	private static final int DIALOG_NEW_LOCATION = 1;
 
+	/**
+	 * The Constant REQ_CODE_EDIT_LOCATION used as a request code when editing an existing location.
+	 */
 	private static final int REQ_CODE_EDIT_LOCATION = 2;
 
 	/** The logger. */
-	private static Logger log = Logger.getRootLogger();
+	private static Logger log = Logger.getLogger(LocationPanelActivity.class);
 
-	/** The list view. */
-	ListView listView;
-
-	/** The list adapter. */
+	/** The list adapter for the locations. */
 	LocationsAdapter listAdapter;
 
+	/** The locations. */
 	List<AlarmLocation> locations;
 
-	private SingleChoiceAdapter<LocationType> locationsAdapter;
+	/** The location types adapter. */
+	private SingleChoiceAdapter<LocationType> locationTypesAdapter;
+
+	/** The panel is started for selecting a location and not for managing them. */
+	private boolean isStartedForSelection = false;
 
 	/* (non-Javadoc)
 	 * 
@@ -59,14 +69,19 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-
 		setContentView(R.layout.location_panel);
+
+		// Check the purpose of starting this Locations Panel
+		Bundle extras = getIntent().getExtras();
+		if (extras != null)
+			isStartedForSelection = extras.getBoolean("selection");
+		log.info("Started LocationsPanel for selection: " + isStartedForSelection);
 
 		// Fetch the locations from the database that are marked as favorite
 		fetchLocations();
 
 		// Prepare the listview and the adapter
-		listView = (ListView) findViewById(R.id.locationPanel_locationList);
+		ListView listView = (ListView) findViewById(R.id.locationPanel_locationList);
 		listAdapter = new LocationsAdapter(this, locations);
 		listView.setAdapter(listAdapter);
 		registerForContextMenu(listView);
@@ -74,11 +89,26 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 
 		// Set up other controls
 		findViewById(R.id.locationPanel_addButton).setOnClickListener(this);
-		locationsAdapter = AlarmLocationBroker.getLocationTypesAdapter();
+		locationTypesAdapter = AlarmLocationBroker.getLocationTypesAdapter();
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView,
+	 * android.view.View, int, long) */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+		// If the Panel was started for selecting a Location, just return the id
+		if (isStartedForSelection) {
+			log.info("Selected location with id: " + id);
+			Intent intent = new Intent();
+			intent.putExtra("id", id);
+			setResult(RESULT_OK, intent);
+			finish();
+			return;
+		}
+
+		// Otherwise, edit the Location
 		log.info("ListView item click for editing location with id " + id);
 		Intent editLocationActivityIntent = AlarmLocationBroker.getActivityIntent(getApplicationContext(), locations
 				.get(position).getType());
@@ -86,6 +116,9 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 		startActivityForResult(editLocationActivityIntent, REQ_CODE_EDIT_LOCATION);
 	}
 
+	/**
+	 * Fetch all the favorite locations from the database.
+	 */
 	private void fetchLocations() {
 		// Fetch the locations from the database that are marked as favorite
 		log.info("Fetching all favorite locations from database...");
@@ -93,6 +126,9 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 				+ DefaultDAO.BOOLEAN_TRUE_VALUE + "'");
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -120,9 +156,11 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 			fetchLocations();
 			listAdapter.setLocations(locations);
 		}
-
 	}
 
+	/* (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onCreateDialog(int) */
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
@@ -131,12 +169,13 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 		case DIALOG_NEW_LOCATION:
 			// Create the dialog associated with creating a new type of location
 			builder.setTitle("Location Type");
-			builder.setItems(locationsAdapter.getNames(), new DialogInterface.OnClickListener() {
+			builder.setItems(locationTypesAdapter.getNames(), new DialogInterface.OnClickListener() {
 
 				// Process the selection
+				@Override
 				public void onClick(DialogInterface dialog, int item) {
-					log.debug("Creating new location of type: " + locationsAdapter.getValues()[item]);
-					startActivityForNewLocation(locationsAdapter.getValues()[item]);
+					log.debug("Creating new location of type: " + locationTypesAdapter.getValues()[item]);
+					startActivityForNewLocation(locationTypesAdapter.getValues()[item]);
 					dialog.dismiss();
 				}
 			});
@@ -150,10 +189,13 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 	}
 
 	/**
-	 * Start activity for new location.
+	 * Start the activity for defining a new location.
+	 * 
+	 * @param type the type of location
 	 */
 	private void startActivityForNewLocation(LocationType type) {
 		Intent intent = AlarmLocationBroker.getActivityIntent(this, type);
+		intent.putExtra("forced", true);
 		startActivityForResult(intent, REQ_CODE_ADD_LOCATION);
 	}
 }
