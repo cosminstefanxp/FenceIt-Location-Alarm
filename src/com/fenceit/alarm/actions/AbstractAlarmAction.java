@@ -6,6 +6,8 @@
  */
 package com.fenceit.alarm.actions;
 
+import java.io.Serializable;
+
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.IdField;
 import org.androwrapee.db.ReferenceField;
@@ -16,7 +18,10 @@ import com.fenceit.alarm.Alarm;
  * The Class AbstractAlarmAction that is a basic abstract implementation for an AlarmAction.
  */
 @DatabaseClass
-public abstract class AbstractAlarmAction implements AlarmAction {
+public abstract class AbstractAlarmAction implements AlarmAction, Serializable {
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = -6717518638709984739L;
 
 	/** The alarm. */
 	@ReferenceField

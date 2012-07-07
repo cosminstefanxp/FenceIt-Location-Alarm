@@ -6,30 +6,30 @@
     android:orientation="vertical" >
 
     <ImageView
-        android:id="@+id/alarm.triggersListImage"
+        android:id="@+id/alarm.actionsListTypeImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="7dp"
         android:padding="7dp"
-        android:src="@android:drawable/ic_menu_edit" />
+        android:src="@android:drawable/ic_menu_view" />
 
     <TextView
-        android:id="@+id/alarm.triggersListMainDesc"
+        android:id="@+id/alarm.actionsListMainDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
-        android:layout_toRightOf="@+id/alarm.triggersListImage"
-        android:text="When: "
+        android:layout_toRightOf="@+id/alarm.actionsListTypeImage"
+        android:text="Action Type"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
-        android:id="@+id/alarm.triggersListSecDesc"
+        android:id="@+id/alarm.actionsListSecDesc"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/alarm.triggersListMainDesc"
-        android:layout_below="@+id/alarm.triggersListMainDesc"
-        android:text="Location"
+        android:layout_alignLeft="@+id/alarm.actionsListMainDesc"
+        android:layout_below="@+id/alarm.actionsListMainDesc"
+        android:text="Action description"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

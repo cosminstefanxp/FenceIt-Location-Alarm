@@ -18,6 +18,7 @@ import android.content.Context;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.actions.NotificationAction;
 import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
@@ -33,7 +34,7 @@ public class DatabaseManager {
 	public static final String DATABASE_NAME = "fenceit.db";
 
 	/** The DATABASE VERSION. */
-	public static final int DATABASE_VERSION = 3;
+	public static final int DATABASE_VERSION = 4;
 
 	/** The db helper. */
 	private static SQLiteOpenHelper dbHelper = null;
@@ -53,10 +54,11 @@ public class DatabaseManager {
 	public static SQLiteOpenHelper getDBHelper(Context context) {
 		if (dbHelper == null)
 			dbHelper = new DefaultDatabaseHelper(context, DATABASE_NAME, DATABASE_VERSION, new Class[] { Alarm.class,
-					BasicTrigger.class, WifiConnectedLocation.class, WifisDetectedLocation.class, CellNetworkLocation.class,
-					CoordinatesLocation.class }, new String[] { Alarm.tableName, BasicTrigger.tableName,
-					WifiConnectedLocation.tableName, WifisDetectedLocation.tableName, CellNetworkLocation.tableName,
-					CoordinatesLocation.tableName });
+					BasicTrigger.class, WifiConnectedLocation.class, WifisDetectedLocation.class,
+					CellNetworkLocation.class, CoordinatesLocation.class, NotificationAction.class }, new String[] {
+					Alarm.tableName, BasicTrigger.tableName, WifiConnectedLocation.tableName,
+					WifisDetectedLocation.tableName, CellNetworkLocation.tableName, CoordinatesLocation.tableName,
+					NotificationAction.tableName });
 		return dbHelper;
 	}
 

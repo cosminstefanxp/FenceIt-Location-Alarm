@@ -21,4 +21,47 @@ public interface AlarmAction {
 	 * @param context the context
 	 */
 	public void execute(Context context);
+
+	/**
+	 * Checks if is complete and all required fields are valid.
+	 * 
+	 * @return true, if is complete
+	 */
+	public boolean isComplete();
+
+	/**
+	 * Gets the description.
+	 * 
+	 * @return the description
+	 */
+	public String getDescription();
+
+	/**
+	 * Gets the type description.
+	 * 
+	 * @return the type description
+	 */
+	public String getTypeDescription();
+
+	/**
+	 * Gets the type.
+	 * 
+	 * @return the type
+	 */
+	public ActionType getType();
+
+	/**
+	 * Gets the type image resource.
+	 * 
+	 * @return the type image resource
+	 */
+	public int getTypeImageResource();
+	
+	/**
+	 * Gets the id.
+	 *
+	 * @return the id
+	 */
+	public long getId();
+	
 }

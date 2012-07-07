@@ -27,8 +27,8 @@
         <activity
             android:name=".ui.HomeActivity"
             android:label="@string/app_name"
-            android:theme="@style/Theme" 
-            android:launchMode="singleTask">
+            android:launchMode="singleTask"
+            android:theme="@style/Theme" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -62,6 +62,10 @@
         <activity
             android:name=".ui.NotificationActivity"
             android:theme="@style/Theme" />
+        <activity
+            android:name=".ui.NotificationTriggeredActivity"
+            android:theme="@style/Theme" />
+
         <service
             android:name=".service.BackgroundService"
             android:exported="false" />

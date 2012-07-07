@@ -9,7 +9,6 @@ package com.fenceit.ui;
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -22,7 +21,6 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -86,7 +84,8 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 			Bundle extras = getIntent().getExtras();
 			Long locationID = (Long) (extras != null ? extras.get("id") : null);
 			// See if the location is forced to be favorite
-			isForcedFavorite = extras.getBoolean("forced");
+			if (extras != null)
+				isForcedFavorite = extras.getBoolean("forced");
 
 			fetchLocation(locationID);
 		}

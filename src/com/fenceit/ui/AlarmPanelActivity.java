@@ -25,7 +25,6 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ImageButton;
 import android.widget.ListView;
 
-import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseManager;

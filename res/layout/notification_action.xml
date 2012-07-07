@@ -7,10 +7,8 @@
 
     <include layout="@layout/template_title_bar" />
 
-    <!-- Trigger Type Section -->
-
     <LinearLayout
-        android:id="@+id/notif_def.descriptionSection"
+        android:id="@+id/notification.messageSection"
         style="@style/SettingItem"
         android:clickable="true"
         android:focusable="true"
@@ -19,17 +17,15 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notification Description"
+            android:text="Notification Message"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
-            android:id="@+id/notif_def.descriptionText"
+            android:id="@+id/notification.messageText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="The description for this notification..."
+            android:text="Set the message of this notification."
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
-
-    <!-- Location Section -->
 
 </LinearLayout>

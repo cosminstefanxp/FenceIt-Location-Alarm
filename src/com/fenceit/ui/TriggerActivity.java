@@ -9,7 +9,6 @@ package com.fenceit.ui;
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
-import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;

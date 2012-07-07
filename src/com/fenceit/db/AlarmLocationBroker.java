@@ -30,6 +30,9 @@ import com.fenceit.ui.adapters.SingleChoiceAdapter;
  * The AlarmLocationBroker is a class that is aware of the implemented activities corresponding to
  * location types. It is used to mediate communication between activities that use AlarmLocation and
  * the effective implementations of Activities corresponding to each Alarm Location type.
+ * <p>
+ * It is also used to handle interaction with the database.
+ * </p>
  */
 public class AlarmLocationBroker {
 
