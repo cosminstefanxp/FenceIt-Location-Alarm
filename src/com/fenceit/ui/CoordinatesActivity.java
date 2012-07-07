@@ -31,6 +31,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fenceit.R;
+import com.fenceit.alarm.locations.AbstractAlarmLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.CoordinatesDataProvider;
@@ -41,7 +42,8 @@ import com.fenceit.ui.picker.NumberPickerDialog.OnNumberSetListener;
 /**
  * The Class CoordinatesActivity used for setting up Locations based on Coordinates.
  */
-public class CoordinatesActivity extends DefaultActivity  implements OnClickListener, CoordinatesLocationDataListener {
+public class CoordinatesActivity extends AbstractLocationActivity implements OnClickListener,
+		CoordinatesLocationDataListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(CoordinatesActivity.class);
@@ -113,7 +115,6 @@ public class CoordinatesActivity extends DefaultActivity  implements OnClickList
 		refreshButton.setOnClickListener(this);
 		progressBar = (ProgressBar) findViewById(R.id.coordinates_progressBar);
 
-		findViewById(R.id.coordinates_favoriteSection).setOnClickListener(this);
 		findViewById(R.id.coordinates_mapSection).setOnClickListener(this);
 		findViewById(R.id.coordinates_radiusSection).setOnClickListener(this);
 
@@ -134,13 +135,9 @@ public class CoordinatesActivity extends DefaultActivity  implements OnClickList
 	 * Refresh the activity displayed views using the data from the location.
 	 */
 	private void refreshActivity() {
-		// Change favorite location image
-		if (location.isFavorite())
-			((ImageView) findViewById(R.id.coordinates_favoriteImage))
-					.setImageResource(android.R.drawable.btn_star_big_on);
-		else
-			((ImageView) findViewById(R.id.coordinates_favoriteImage))
-					.setImageResource(android.R.drawable.btn_star_big_off);
+		// Refresh options of the AbstractAlarmLocation
+		refreshAbstractLocationElements();
+
 		// Location Section
 		if (location.isComplete()) {
 			((TextView) findViewById(R.id.coordinates_latText)).setText(nf.format(location.getLatitude()));
@@ -232,17 +229,6 @@ public class CoordinatesActivity extends DefaultActivity  implements OnClickList
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.coordinates_favoriteSection:
-			// Change location favorite status
-			location.setFavorite(!location.isFavorite());
-			// Change image
-			if (location.isFavorite())
-				((ImageView) findViewById(R.id.coordinates_favoriteImage))
-						.setImageResource(android.R.drawable.btn_star_big_on);
-			else
-				((ImageView) findViewById(R.id.coordinates_favoriteImage))
-						.setImageResource(android.R.drawable.btn_star_big_off);
-			break;
 		case R.id.title_saveButton:
 			log.info("Save button clicked. Storing entity...");
 			if (!storeLocation()) {
@@ -354,6 +340,11 @@ public class CoordinatesActivity extends DefaultActivity  implements OnClickList
 			locationProvider = null;
 		}
 
+	}
+
+	@Override
+	protected AbstractAlarmLocation getLocation() {
+		return location;
 	}
 
 }

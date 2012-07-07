@@ -154,28 +154,6 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
-    <RelativeLayout
-        android:id="@+id/coordinates.favoriteSection"
-        style="@style/SettingItem"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <ImageView
-            android:id="@+id/coordinates.favoriteImage"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:src="@android:drawable/btn_star_big_on" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
-            android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/coordinates.favoriteImage"
-            android:text="Save as favorite"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-    </RelativeLayout>
+    <include layout="@layout/location_common_settings" />
 
 </LinearLayout>

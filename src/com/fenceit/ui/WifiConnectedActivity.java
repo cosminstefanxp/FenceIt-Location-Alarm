@@ -27,6 +27,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fenceit.R;
+import com.fenceit.alarm.locations.AbstractAlarmLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.WifiDataProvider;
@@ -34,7 +35,7 @@ import com.fenceit.provider.WifiDataProvider;
 /**
  * The Class WifiConnectedActivity.
  */
-public class WifiConnectedActivity extends DefaultActivity implements OnClickListener {
+public class WifiConnectedActivity extends AbstractLocationActivity implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(WifiConnectedActivity.class);
@@ -99,8 +100,6 @@ public class WifiConnectedActivity extends DefaultActivity implements OnClickLis
 		refreshButton = (ImageButton) findViewById(R.id.wificonn_refreshButton);
 		refreshButton.setOnClickListener(this);
 
-		findViewById(R.id.wificonn_favoriteSection).setOnClickListener(this);
-
 		// Fill data
 		refreshActivity();
 	}
@@ -115,13 +114,9 @@ public class WifiConnectedActivity extends DefaultActivity implements OnClickLis
 	 * Refresh the activity displayed views using the data from the location.
 	 */
 	private void refreshActivity() {
-		// Change favorite location image
-		if (location.isFavorite())
-			((ImageView) findViewById(R.id.wificonn_favoriteImage))
-					.setImageResource(android.R.drawable.btn_star_big_on);
-		else
-			((ImageView) findViewById(R.id.wificonn_favoriteImage))
-					.setImageResource(android.R.drawable.btn_star_big_off);
+		// Refresh options of the AbstractAlarmLocation
+		refreshAbstractLocationElements();
+
 		// Location Section
 		if (location.getBssid() != null) {
 			((TextView) findViewById(R.id.wificonn_bssidText)).setText(location.getBssid());
@@ -208,16 +203,6 @@ public class WifiConnectedActivity extends DefaultActivity implements OnClickLis
 			setResult(RESULT_OK, intent);
 			finish();
 			return;
-		} else if (v == (findViewById(R.id.wificonn_favoriteSection))) {
-			// Change location favorite status
-			location.setFavorite(!location.isFavorite());
-			// Change image
-			if (location.isFavorite())
-				((ImageView) findViewById(R.id.wificonn_favoriteImage))
-						.setImageResource(android.R.drawable.btn_star_big_on);
-			else
-				((ImageView) findViewById(R.id.wificonn_favoriteImage))
-						.setImageResource(android.R.drawable.btn_star_big_off);
 		} else if (v == refreshButton) {
 			log.info("Refreshing details regarding Wifi currently connected to.");
 			gatherContextInfo();
@@ -270,6 +255,11 @@ public class WifiConnectedActivity extends DefaultActivity implements OnClickLis
 		// Update the location
 		location.setBssid(wifiInfo.getBSSID());
 		location.setSsid(wifiInfo.getSSID());
+	}
+
+	@Override
+	protected AbstractAlarmLocation getLocation() {
+		return location;
 	}
 
 }

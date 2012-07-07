@@ -68,7 +68,6 @@ public class AlarmPanelActivity extends DefaultActivity implements OnClickListen
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
-		init();
 
 		setContentView(R.layout.alarm_panel);
 
@@ -152,15 +151,6 @@ public class AlarmPanelActivity extends DefaultActivity implements OnClickListen
 		dao.close();
 	}
 
-	/**
-	 * Initializes the application environment.
-	 */
-	private void init() {
-		new Log4jConfiguration();
-		log.info("Starting up...");
-
-	}
-
 	/* (non-Javadoc)
 	 * 
 	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
@@ -173,7 +163,6 @@ public class AlarmPanelActivity extends DefaultActivity implements OnClickListen
 			Intent addAlarmActivityIntent = new Intent(this, AlarmActivity.class);
 			startActivityForResult(addAlarmActivityIntent, REQ_CODE_ADD_ALARM);
 			break;
-
 		}
 
 	}

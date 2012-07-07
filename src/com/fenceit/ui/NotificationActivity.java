@@ -10,12 +10,14 @@ import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
 import android.app.Activity;
+import android.media.Ringtone;
+import android.media.RingtoneManager;
+import android.net.Uri;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.fenceit.R;
 import com.fenceit.alarm.actions.NotificationAction;
-import com.fenceit.db.DatabaseManager;
 
 public class NotificationActivity extends Activity {
 	/** The logger. */
@@ -35,12 +37,29 @@ public class NotificationActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notification);
 
-//		// Prepare database connection
-//		if (dao == null)
-//			dao = DatabaseManager.getDAOInstance(getApplicationContext(), NotificationAction.class,
-//					NotificationAction.tableName);
+		// // Prepare database connection
+		// if (dao == null)
+		// dao = DatabaseManager.getDAOInstance(getApplicationContext(), NotificationAction.class,
+		// NotificationAction.tableName);
 
 		((TextView) findViewById(R.id.notification_TitleText)).setText("Home Alarm");
 		((TextView) findViewById(R.id.notification_descriptionText)).setText("Call grandma to invite for dinner.");
+
+		Uri alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_ALARM);
+		if (alert == null) {
+			// alert is null, using backup
+			alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
+			if (alert == null) { // I can't see this ever being null (as always have a default
+									// notification) but just incase
+				// alert backup is null, using 2nd backup
+				alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
+			}
+		}
+		if (alert != null) {
+			Ringtone r = RingtoneManager.getRingtone(getApplicationContext(), alert);
+			//R-ul devine null
+			r.play();
+		}
+
 	}
 }

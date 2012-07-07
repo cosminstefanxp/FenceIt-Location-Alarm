@@ -14,8 +14,9 @@
             android:src="@drawable/title_home" />
         <ImageView style="@style/TitleBarSeparator" />
         <TextView style="@style/TitleBarText" android:text="Locations"/>
+        <ImageView style="@style/TitleBarSeparator" />
         <ImageButton
-            android:id="@+id/main.addAlarmButton"
+            android:id="@+id/locationPanel.addButton"
             style="@style/TitleBarAction"
             android:contentDescription="@string/description_action"
             android:src="@drawable/title_add" />

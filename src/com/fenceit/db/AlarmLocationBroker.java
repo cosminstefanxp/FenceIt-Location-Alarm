@@ -6,6 +6,9 @@
  */
 package com.fenceit.db;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.androwrapee.db.DefaultDAO;
 
 import android.content.Context;
@@ -37,9 +40,9 @@ public class AlarmLocationBroker {
 	 */
 	public static SingleChoiceAdapter<LocationType> getLocationTypesAdapter() {
 		return new SingleChoiceAdapter<LocationType>(new LocationType[] { LocationType.WifiConnectedLocation,
-				LocationType.WifisDetectedLocation, LocationType.CellNetworkLocation, LocationType.GeoCoordinatesLocation },
-				new CharSequence[] { "Based on the connected Wifi", "Based on the detected Wifis",
-						"Based on Cell Network", "Based on Geographical Coordinates" });
+				LocationType.WifisDetectedLocation, LocationType.CellNetworkLocation,
+				LocationType.GeoCoordinatesLocation }, new CharSequence[] { "Based on the connected Wifi",
+				"Based on the detected Wifis", "Based on Cell Network", "Based on Geographical Coordinates" });
 	}
 
 	/**
@@ -115,6 +118,50 @@ public class AlarmLocationBroker {
 			return location;
 
 		return location;
+	}
 
+	/**
+	 * Fetches all the locations that match a particular where clause from the database.
+	 * 
+	 * @param context the context
+	 * @param where the where clause
+	 * @return the list of locations
+	 */
+	public static List<AlarmLocation> fetchAllLocation(Context context, String where) {
+		List<AlarmLocation> locations = new ArrayList<AlarmLocation>();
+
+		// Fetch WifiConnectedLocations
+		DefaultDAO<WifiConnectedLocation> daoWC = DatabaseManager.getDAOInstance(context, WifiConnectedLocation.class,
+				WifiConnectedLocation.tableName);
+		daoWC.open();
+		List<WifiConnectedLocation> locationsWC = daoWC.fetchAll(where);
+		daoWC.close();
+		locations.addAll(locationsWC);
+
+		// Fetch WifisDetectedLocations
+		DefaultDAO<WifisDetectedLocation> daoWD = DatabaseManager.getDAOInstance(context, WifisDetectedLocation.class,
+				WifisDetectedLocation.tableName);
+		daoWD.open();
+		List<WifisDetectedLocation> locationsWD = daoWD.fetchAll(where);
+		daoWD.close();
+		locations.addAll(locationsWD);
+
+		// Fetch CellLocations
+		DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context, CellNetworkLocation.class,
+				CellNetworkLocation.tableName);
+		daoC.open();
+		List<CellNetworkLocation> locationsC = daoC.fetchAll(where);
+		daoC.close();
+		locations.addAll(locationsC);
+
+		// Fetch CoordinatesLocations
+		DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context, CoordinatesLocation.class,
+				CoordinatesLocation.tableName);
+		daoCo.open();
+		List<CoordinatesLocation> locationsCo = daoCo.fetchAll(where);
+		daoCo.close();
+		locations.addAll(locationsCo);
+
+		return locations;
 	}
 }

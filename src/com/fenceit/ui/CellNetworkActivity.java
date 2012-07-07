@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.fenceit.R;
+import com.fenceit.alarm.locations.AbstractAlarmLocation;
 import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.CellContextData;
@@ -33,7 +34,7 @@ import com.fenceit.provider.CellDataProvider;
 /**
  * The Class CellActivity.
  */
-public class CellNetworkActivity extends DefaultActivity  implements OnClickListener {
+public class CellNetworkActivity extends AbstractLocationActivity implements OnClickListener {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(CellNetworkActivity.class);
@@ -69,7 +70,8 @@ public class CellNetworkActivity extends DefaultActivity  implements OnClickList
 
 		// Prepare database connection
 		if (dao == null)
-			dao = DatabaseManager.getDAOInstance(getApplicationContext(), CellNetworkLocation.class, CellNetworkLocation.tableName);
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), CellNetworkLocation.class,
+					CellNetworkLocation.tableName);
 
 		// If it's a new activity
 		if (savedInstanceState == null) {
@@ -91,8 +93,6 @@ public class CellNetworkActivity extends DefaultActivity  implements OnClickList
 		refreshButton = (ImageButton) findViewById(R.id.cell_refreshButton);
 		refreshButton.setOnClickListener(this);
 
-		findViewById(R.id.cell_favoriteSection).setOnClickListener(this);
-
 		// Fill data
 		refreshActivity();
 	}
@@ -110,11 +110,9 @@ public class CellNetworkActivity extends DefaultActivity  implements OnClickList
 	 * Refresh the activity displayed views using the data from the location.
 	 */
 	private void refreshActivity() {
-		// Change favorite location image
-		if (location.isFavorite())
-			((ImageView) findViewById(R.id.cell_favoriteImage)).setImageResource(android.R.drawable.btn_star_big_on);
-		else
-			((ImageView) findViewById(R.id.cell_favoriteImage)).setImageResource(android.R.drawable.btn_star_big_off);
+		// Refresh options of the AbstractAlarmLocation
+		refreshAbstractLocationElements();
+
 		// Location Section
 		if (location.isComplete()) {
 			((TextView) findViewById(R.id.cell_cellIdText)).setText(Integer.toString(location.getCellId()));
@@ -205,16 +203,6 @@ public class CellNetworkActivity extends DefaultActivity  implements OnClickList
 			setResult(RESULT_OK, intent);
 			finish();
 			return;
-		} else if (v == (findViewById(R.id.cell_favoriteSection))) {
-			// Change location favorite status
-			location.setFavorite(!location.isFavorite());
-			// Change image
-			if (location.isFavorite())
-				((ImageView) findViewById(R.id.cell_favoriteImage))
-						.setImageResource(android.R.drawable.btn_star_big_on);
-			else
-				((ImageView) findViewById(R.id.cell_favoriteImage))
-						.setImageResource(android.R.drawable.btn_star_big_off);
 		} else if (v == refreshButton) {
 			log.info("Refreshing details regarding the Cell Tower currently connected to.");
 			gatherContextInfo();
@@ -271,6 +259,11 @@ public class CellNetworkActivity extends DefaultActivity  implements OnClickList
 
 		// Update the view
 		refreshActivity();
+	}
+
+	@Override
+	protected AbstractAlarmLocation getLocation() {
+		return location;
 	}
 
 }

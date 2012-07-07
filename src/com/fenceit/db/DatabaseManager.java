@@ -33,7 +33,7 @@ public class DatabaseManager {
 	public static final String DATABASE_NAME = "fenceit.db";
 
 	/** The DATABASE VERSION. */
-	public static final int DATABASE_VERSION = 2;
+	public static final int DATABASE_VERSION = 3;
 
 	/** The db helper. */
 	private static SQLiteOpenHelper dbHelper = null;
