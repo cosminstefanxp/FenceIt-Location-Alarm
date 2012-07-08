@@ -103,6 +103,8 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 			log.info("Selected location with id: " + id);
 			Intent intent = new Intent();
 			intent.putExtra("id", id);
+			AlarmLocation location = locations.get(position);
+			intent.putExtra("type", location.getType().toString());
 			setResult(RESULT_OK, intent);
 			finish();
 			return;

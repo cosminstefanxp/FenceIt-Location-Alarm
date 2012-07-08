@@ -100,9 +100,7 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/delimiter"
-        android:paddingBottom="1dp" >
+        android:layout_weight="1" >
 
         <TextView
             android:id="@+id/alarm.noTrigggersText"
@@ -110,13 +108,12 @@
             android:layout_height="fill_parent"
             android:padding="3dp"
             android:text="No triggers yet."
-            android:background="@color/delimiter"
             android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <ListView
             android:id="@+id/alarm.triggersListView"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:background="@color/background"
             android:cacheColorHint="#00000000"
             android:padding="1dp"
@@ -155,15 +152,12 @@
     <FrameLayout
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1"
-        android:background="@color/delimiter"
-        android:paddingBottom="1dp" >
+        android:layout_weight="1" >
 
         <TextView
             android:id="@+id/alarm.noActionsText"
             android:layout_width="fill_parent"
             android:layout_height="fill_parent"
-            android:background="@color/background" 
             android:padding="3dp"
             android:text="No actions yet."
             android:textAppearance="?android:attr/textAppearanceSmall" />
@@ -171,10 +165,9 @@
         <ListView
             android:id="@+id/alarm.actionsListView"
             android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
+            android:layout_height="wrap_content"
             android:background="@color/background"
             android:cacheColorHint="#00000000"
-            android:padding="1dp"
             android:scrollbarStyle="insideOverlay"
             android:scrollbars="vertical" >
         </ListView>

@@ -320,7 +320,11 @@ public class TriggerActivity extends DefaultActivity implements OnClickListener 
 		// If a Location was selected using the Locations Panel
 		if (resultCode == RESULT_OK && requestCode == REQ_CODE_SELECT_LOCATION) {
 			long id = data.getLongExtra("id", -1);
-			log.debug("Selected location from panel with id: " + id + ". Fetching location...");
+			String typeS = data.getStringExtra("type");
+			LocationType type = LocationType.valueOf(LocationType.class, typeS);
+			
+			log.debug("Selected location from panel with id: " + id + " and type: "+type+". Fetching location...");
+			trigger.setLocationType(type);
 			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), id,
 					trigger.getLocationType()));
 			refreshActivity();

@@ -167,7 +167,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getSecondaryDescription() */
 	@Override
 	public String getSecondaryDescription() {
-		return "Home";
+		return locationType.toString();
 	}
 
 	/**

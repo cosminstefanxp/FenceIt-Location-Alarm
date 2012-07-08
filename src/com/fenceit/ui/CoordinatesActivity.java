@@ -73,6 +73,8 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 	/** The Constant used for number format. */
 	private static final NumberFormat nf = new DecimalFormat("##.########");
 
+	private static final int REQ_MAP_SELECT = 0;
+
 	/** The location provider. */
 	private CoordinatesDataProvider locationProvider;
 
@@ -265,6 +267,11 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 			this.progressBar.setProgress(10);
 			this.progressBar.setVisibility(View.VISIBLE);
 			this.refreshButton.setVisibility(View.INVISIBLE);
+			break;
+		case R.id.coordinates_mapSection:
+			log.info("Showing map for coordinates selection.");
+			Intent mapIntent = new Intent(this, CoordinatesMapActivity.class);
+			startActivityForResult(mapIntent, REQ_MAP_SELECT);
 			break;
 		}
 	}
