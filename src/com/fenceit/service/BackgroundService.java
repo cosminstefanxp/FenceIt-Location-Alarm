@@ -16,6 +16,7 @@ import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
 import android.widget.Toast;
@@ -23,8 +24,10 @@ import android.widget.Toast;
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
 import com.fenceit.alarm.locations.CellNetworkLocation;
+import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
+import com.fenceit.provider.CoordinatesDataProvider;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
 import com.fenceit.ui.AlarmPanelActivity;
 
@@ -38,11 +41,30 @@ public class BackgroundService extends Service {
 	private static final Logger log = Logger.getLogger(BackgroundService.class);
 
 	/** The Constant ONGOING_NOTIFICATION used for identifying notifications. */
-	private static final int ONGOING_NOTIFICATION = 2;
+	private static final int ONGOING_NOTIFICATION = 101;
 
 	/** The Constant ALARM_TRIGGERED_NOTIFICATION used for identifying notifications. */
-	private static final int ALARM_TRIGGERED_NOTIFICATION = 1;
+	private static final int ALARM_TRIGGERED_NOTIFICATION = 102;
 
+	/** The Constant SERVICE_EVENT_NONE used to define a non-existing event. */
+	public static final int SERVICE_EVENT_NONE = 0;
+
+	/**
+	 * The Constant SERVICE_EVENT_SHUTDOWN used to notify the service that service should shut down.
+	 */
+	public static final int SERVICE_EVENT_SHUTDOWN = 1;
+
+	/**
+	 * The Constant SERVICE_EVENT_RESET_ALARMS used to define an event which appears when a check
+	 * should be done for all location types.
+	 */
+	public static final int SERVICE_EVENT_RESET_ALARMS = 2;
+
+	/**
+	 * The Constant SERVICE_EVENT_WIFI_CONNECTED used for defining the event related to
+	 * {@link WifiConnectedLocation}.
+	 */
+	public static final int SERVICE_EVENT_WIFI_CONNECTED = 3;
 	/**
 	 * The Constant SERVICE_EVENT_WIFIS_DETECTED used for defining the event related to
 	 * {@link WifisDetectedLocation}.
@@ -56,26 +78,12 @@ public class BackgroundService extends Service {
 	public static final int SERVICE_EVENT_CELL_NETWORK = 5;
 
 	/**
-	 * The Constant SERVICE_EVENT_WIFI_CONNECTED used for defining the event related to
-	 * {@link WifiConnectedLocation}.
+	 * The Constant SERVICE_EVENT_GEO_COORDINATES used for defining the event related to
+	 * {@link CoordinatesLocation}..
 	 */
-	public static final int SERVICE_EVENT_WIFI_CONNECTED = 3;
-
-	/** The Constant SERVICE_EVENT_GEO_COORDINATES. */
 	public static final int SERVICE_EVENT_GEO_COORDINATES = 6;
 
-	/** The Constant SERVICE_EVENT_NONE. */
-	public static final int SERVICE_EVENT_NONE = 2;
-
-	/** The Constant SERVICE_EVENT_RESET_ALARMS. */
-	public static final int SERVICE_EVENT_RESET_ALARMS = 0;
-
-	/**
-	 * The Constant SERVICE_EVENT_SHUTDOWN used to notify the service that service should shut down.
-	 */
-	public static final int SERVICE_EVENT_SHUTDOWN = 7;
-
-	/** The Constant SERVICE_EVENT_FIELD_NAME. */
+	/** The Constant SERVICE_EVENT_FIELD_NAME used to store the event in the intents. */
 	public static final String SERVICE_EVENT_FIELD_NAME = "event";
 
 	/** The handler. */
@@ -117,6 +125,7 @@ public class BackgroundService extends Service {
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
 		forceFullScan();
+		CoordinatesDataProvider.mHandler = new Handler();
 	}
 
 	/**
@@ -240,7 +249,7 @@ public class BackgroundService extends Service {
 
 	/**
 	 * Publishes a notification.
-	 *
+	 * 
 	 * @param title the title
 	 * @param requestCode the request code for the notification
 	 * @param tickerText the ticker text

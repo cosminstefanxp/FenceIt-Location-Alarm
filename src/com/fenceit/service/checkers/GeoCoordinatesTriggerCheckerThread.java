@@ -89,7 +89,7 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 
 		// Start a scan for location
 		CoordinatesDataProvider provider = new CoordinatesDataProvider();
-		provider.addCoordinatesLocationDataListener(this, mContext);
+		provider.addCoordinatesLocationDataListenerOnMainThread(this, mContext);
 
 		// Wait for a given amount of time or until the conditions are satisfied
 		while (!isDone && waitingTime > 0) {
@@ -102,7 +102,7 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 		}
 
 		// Stop the scan and use the best result so far
-		provider.removeCoordinatesLocationDataListener(this);
+		provider.removeCoordinatesLocationDataListenerOnMainThread(this);
 		ContextData data = provider.getContextData(mContext, true);
 
 		return data;
@@ -113,11 +113,6 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 	 * @see com.fenceit.service.TriggerCheckerThread#isPreconditionValid() */
 	@Override
 	protected boolean isPreconditionValid() {
-		// Check for availability;
-		if (!CellDataProvider.isCellNetworkConnected(mContext)) {
-			log.warn("Not connected to Cell Network. Cannot check if the triggering conditions are met for locations requiring Cell contextual data.");
-			return false;
-		}
 
 		return true;
 	}
@@ -132,7 +127,7 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 			return null;
 
 		// TODO: Temporary, fixed check time
-		return 90000L;
+		return 30000L;
 	}
 
 	/**

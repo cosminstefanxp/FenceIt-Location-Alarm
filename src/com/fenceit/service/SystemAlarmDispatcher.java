@@ -47,6 +47,7 @@ public class SystemAlarmDispatcher {
 		// Build the intent
 		Intent intent = new Intent(mContext, SystemAlarmReceiver.class);
 		intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, eventType);
+		intent.setAction("com.fenceit.dummy");
 
 		// Create a pending intent that is necessary to pass to an alarm manager
 		PendingIntent pi = PendingIntent.getBroadcast(mContext, // context, or activity, or service
@@ -54,7 +55,7 @@ public class SystemAlarmDispatcher {
 								// eventType
 								// for canceling purpose
 				intent, // intent to be delivered
-				0); // pending intent flags
+				PendingIntent.FLAG_UPDATE_CURRENT); // pending intent flags
 
 		// Set the alarm
 		alarmManager.set(AlarmManager.RTC_WAKEUP, when, pi);

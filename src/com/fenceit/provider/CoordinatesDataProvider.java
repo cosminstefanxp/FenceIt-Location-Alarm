@@ -17,12 +17,17 @@ import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 
 /**
  * The Class LocationDataProvider.
  */
 public class CoordinatesDataProvider implements LocationListener {
+
+	/** The handler. */
+	// TODO: Memory leak
+	public static Handler mHandler;
 
 	/** The location manager. */
 	private LocationManager locationManager;
@@ -58,6 +63,26 @@ public class CoordinatesDataProvider implements LocationListener {
 	}
 
 	/**
+	 * Adds a new coordinates location data listener. If it's the first listener, it will use the
+	 * static handler (which has to be initialized by the main thread) to register for location
+	 * updates.
+	 * 
+	 * @param listener the listener
+	 * @param context the context
+	 */
+	public void addCoordinatesLocationDataListenerOnMainThread(CoordinatesLocationDataListener listener,
+			final Context context) {
+		if (listeners.size() == 0) {
+			mHandler.post(new Runnable() {
+				public void run() {
+					startLocating(context);
+				}
+			});
+		}
+		listeners.add(listener);
+	}
+
+	/**
 	 * Removes a coordinates location data listener.
 	 * 
 	 * @param listener the listener
@@ -66,6 +91,24 @@ public class CoordinatesDataProvider implements LocationListener {
 		listeners.remove(listener);
 		if (listeners.size() == 0)
 			stopLocating();
+	}
+
+	/**
+	 * Removes a coordinates location data listener. If it's the last listener, it will use the
+	 * static handler (which has to be initialized by the main thread) to unregister for location
+	 * updates.
+	 * 
+	 * @param listener the listener
+	 */
+	public void removeCoordinatesLocationDataListenerOnMainThread(CoordinatesLocationDataListener listener) {
+		listeners.remove(listener);
+		if (listeners.size() == 0) {
+			mHandler.post(new Runnable() {
+				public void run() {
+					stopLocating();
+				}
+			});
+		}
 	}
 
 	/**
