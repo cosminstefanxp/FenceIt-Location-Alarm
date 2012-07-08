@@ -9,9 +9,10 @@ package com.fenceit.service.checkers;
 import java.util.LinkedList;
 import java.util.List;
 
+import org.androwrapee.db.DefaultDAO;
+
 import android.content.Context;
 import android.location.Location;
-import android.os.Message;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.CoordinatesLocation;
@@ -52,7 +53,8 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 	 * @see com.fenceit.service.TriggerCheckerThread#fetchData() */
 	@Override
 	protected List<AlarmTrigger> fetchData() {
-		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='t'");
+		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='"
+				+ DefaultDAO.BOOLEAN_TRUE_VALUE + "'");
 		List<AlarmTrigger> triggers = new LinkedList<AlarmTrigger>();
 		// Prepare only the triggers that have locations of the required type
 		for (Alarm a : alarms) {
@@ -69,11 +71,10 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 	 * com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger
 	 * ) */
 	@Override
-	protected void triggerAlarm(AlarmTrigger trigger) {
+	protected String getTriggerMessage(AlarmTrigger trigger) {
 		log.warn("An alarm was triggered because of: " + trigger);
-		Message m = mParentHandler.obtainMessage(BackgroundServiceHandler.HANDLER_NOTIFICATION);
-		m.obj = "The alarm '" + trigger.getAlarm().getName() + "' was triggered because of trigger " + trigger.getId();
-		mParentHandler.sendMessage(m);
+		return "The alarm '" + trigger.getAlarm().getName() + "' was triggered because of a "
+				+ trigger.getSecondaryDescription();
 	}
 
 	/* (non-Javadoc)

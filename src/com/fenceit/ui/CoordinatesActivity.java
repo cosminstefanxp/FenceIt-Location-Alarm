@@ -355,6 +355,25 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 	}
 
 	/* (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
+	@Override
+	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+
+		if (resultCode == RESULT_OK && requestCode == REQ_MAP_SELECT) {
+			log.info("User selected location: " + data);
+			// Update the location
+			this.location.setLatitude((double) (data.getExtras().getInt("lat")) / 1000000);
+			this.location.setLongitude((double) (data.getExtras().getInt("long")) / 1000000);
+			this.location.setExtra("User selected location");
+
+			// Update the UI
+			refreshActivity();
+		}
+	}
+
+	/* (non-Javadoc)
 	 * 
 	 * @see android.app.Activity#onStop() */
 	@Override

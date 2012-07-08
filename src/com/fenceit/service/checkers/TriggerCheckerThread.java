@@ -11,6 +11,9 @@ import java.util.List;
 import org.apache.log4j.Logger;
 
 import android.content.Context;
+import android.content.SharedPreferences;
+import android.os.Message;
+import android.preference.PreferenceManager;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
@@ -62,6 +65,15 @@ public abstract class TriggerCheckerThread extends Thread {
 		super.run();
 		log.info("Starting trigger checker thread of type: " + this.getClass().getSimpleName());
 
+		// Check if service is enabled
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
+		if (sp.getBoolean("service_status", true) == false) {
+			// Release the Wake Lock
+			WakeLockManager.releaseWakeLock();
+			log.info("Skipping trigger checking because service is off.");
+			return;
+		}
+
 		// Process the triggers, but only if all the requirements (preconditions) are met
 		if (!isPreconditionValid()) {
 			// Release the Wake Lock
@@ -77,6 +89,7 @@ public abstract class TriggerCheckerThread extends Thread {
 		// If no active triggers for this type of Locations, skip further processing
 		if (triggers.isEmpty()) {
 			// Release the Wake Lock
+			log.info("No triggers of this type. Skipping check and no future scheduling of check.");
 			WakeLockManager.releaseWakeLock();
 			return;
 		}
@@ -88,8 +101,13 @@ public abstract class TriggerCheckerThread extends Thread {
 		if (log.isDebugEnabled())
 			log.debug("Checking if any of the alarms can be triggered with the contextual data: " + contextData);
 		for (AlarmTrigger t : triggers)
-			if (t.shouldTrigger(contextData))
-				triggerAlarm(t);
+			if (t.shouldTrigger(contextData)) {
+				String triggerReason = getTriggerMessage(t);
+				Message m = mParentHandler.obtainMessage(BackgroundServiceHandler.HANDLER_ALARM_TRIGGERED);
+				m.obj = triggerReason;
+				m.arg1 = (int) t.getAlarm().getId();
+				mParentHandler.sendMessage(m);
+			}
 
 		// Compute the next time when the thread should be run
 		Long delay = computeNextCheckTime(triggers);
@@ -105,12 +123,13 @@ public abstract class TriggerCheckerThread extends Thread {
 	}
 
 	/**
-	 * Handles the triggering of the alarm and the process of executing the actions. The
-	 * corresponding {@link Alarm} should be available from the trigger.
+	 * Get the message describing the triggering of the of the alarm. The corresponding
+	 * {@link Alarm} is available from the trigger. The actual triggering of the Actions is done on
+	 * the main thread.
 	 * 
 	 * @param trigger the trigger whose conditions were satisfied.
 	 */
-	protected abstract void triggerAlarm(AlarmTrigger trigger);
+	protected abstract String getTriggerMessage(AlarmTrigger trigger);
 
 	/**
 	 * Fetches the fully populated triggers from the database. Only the triggers that can be checked

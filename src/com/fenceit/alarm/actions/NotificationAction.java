@@ -10,10 +10,11 @@ import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 import org.apache.log4j.Logger;
 
-import com.fenceit.alarm.Alarm;
-
 import android.content.Context;
-import android.widget.Toast;
+import android.content.Intent;
+
+import com.fenceit.alarm.Alarm;
+import com.fenceit.ui.NotificationTriggeredActivity;
 
 /**
  * The Class NotificationAction that implements an Alarm Action that displays a simple notification
@@ -57,8 +58,10 @@ public class NotificationAction extends AbstractAlarmAction {
 	 * @see com.fenceit.alarm.AlarmAction#execute() */
 	@Override
 	public void execute(Context context) {
-		log.warn("Notification alarm triggered.");
-		Toast.makeText(context, "Alarm triggered.", Toast.LENGTH_SHORT);
+		log.warn("Notification alarm triggered: " + this);
+		Intent intent = new Intent(context, NotificationTriggeredActivity.class);
+		intent.putExtra("message", message);
+		context.startActivity(intent);
 	}
 
 	/**

@@ -11,9 +11,7 @@ import android.content.SharedPreferences;
 import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
-import android.telephony.cdma.CdmaCellLocation;
 import android.telephony.gsm.GsmCellLocation;
-import android.util.Log;
 
 /**
  * The Class CellContextProvider gathers information from the context regarding the cell network.
@@ -78,8 +76,6 @@ public class CellDataProvider {
 	 */
 	public static boolean isCellNetworkConnected(Context context) {
 		TelephonyManager telephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		Log.w("Network Operator", telephony.getNetworkOperator());
-		Log.w("Network Type", Integer.toString(telephony.getNetworkType()));
 		return ((telephony.getNetworkOperator() != null && telephony.getNetworkOperator().equals("")) ? false : true);
 	}
 }

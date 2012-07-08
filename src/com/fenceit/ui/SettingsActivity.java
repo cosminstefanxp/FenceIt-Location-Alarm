@@ -23,7 +23,7 @@ import com.fenceit.service.BackgroundService;
 public class SettingsActivity extends PreferenceActivity implements OnPreferenceChangeListener {
 
 	/** The service status. */
-	private CheckBoxPreference serviceStatus;
+	private CheckBoxPreference forceServiceOff;
 
 	/* (non-Javadoc)
 	 * 
@@ -33,8 +33,8 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		super.onCreate(savedInstanceState);
 		addPreferencesFromResource(R.xml.settings);
 
-		serviceStatus = (CheckBoxPreference) findPreference("service_status");
-		serviceStatus.setOnPreferenceChangeListener(this);
+		forceServiceOff = (CheckBoxPreference) findPreference("service_status");
+		forceServiceOff.setOnPreferenceChangeListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -45,13 +45,11 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		// Handle status change for the Service
-		if (preference == serviceStatus) {
-			serviceStatus.setChecked((Boolean) newValue);
+		if (preference == forceServiceOff) {
+			forceServiceOff.setChecked((Boolean) newValue);
 			Toast.makeText(this, "New service status: " + newValue, Toast.LENGTH_SHORT).show();
 			Intent intent = new Intent(this, BackgroundService.class);
-			if ((Boolean) newValue == true) {
-				startService(intent);
-			} else {
+			if ((Boolean) newValue == false) {
 				stopService(intent);
 			}
 

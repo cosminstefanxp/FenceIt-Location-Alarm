@@ -50,7 +50,7 @@ public class NotificationTriggeredActivity extends Activity {
 			// alert is null, using backup
 			alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
 			if (alert == null) { // I can't see this ever being null (as always have a default
-									// notification) but just incase
+									// notification) but just in  case
 				// alert backup is null, using 2nd backup
 				alert = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_RINGTONE);
 			}

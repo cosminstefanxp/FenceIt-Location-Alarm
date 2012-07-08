@@ -206,6 +206,10 @@ public class TriggerActivity extends DefaultActivity implements OnClickListener 
 			dao.update(trigger, trigger.getId());
 		dao.close();
 
+		// Notify the Background service that a trigger was modified, so a rescheduling might be
+		// necessary
+		AlarmLocationBroker.startServiceFromActivity(this, trigger.getLocationType());
+
 		return true;
 
 	}
@@ -322,8 +326,8 @@ public class TriggerActivity extends DefaultActivity implements OnClickListener 
 			long id = data.getLongExtra("id", -1);
 			String typeS = data.getStringExtra("type");
 			LocationType type = LocationType.valueOf(LocationType.class, typeS);
-			
-			log.debug("Selected location from panel with id: " + id + " and type: "+type+". Fetching location...");
+
+			log.debug("Selected location from panel with id: " + id + " and type: " + type + ". Fetching location...");
 			trigger.setLocationType(type);
 			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), id,
 					trigger.getLocationType()));

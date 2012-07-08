@@ -20,6 +20,7 @@ import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
+import com.fenceit.service.BackgroundService;
 import com.fenceit.ui.CellNetworkActivity;
 import com.fenceit.ui.CoordinatesActivity;
 import com.fenceit.ui.WifiConnectedActivity;
@@ -161,5 +162,44 @@ public class AlarmLocationBroker {
 		locations.addAll(locationsCo);
 
 		return locations;
+	}
+
+	/**
+	 * Start the background service from an activity and issues a trigger check for a particular
+	 * location type.
+	 * <p>
+	 * The purpose is to notify the background service, if running (otherwise start it), that some
+	 * triggers with this particular location type has been modified and that at a trigger check
+	 * should be scheduled soon.
+	 * </p>
+	 * 
+	 * @param context the context
+	 * @param type the type of location, or null if the service should schedule a check for all
+	 *            location types
+	 */
+	public static void startServiceFromActivity(Context context, LocationType type) {
+		Intent intent = new Intent(context, BackgroundService.class);
+		if (type == null)
+			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_RESET_ALARMS);
+		else
+			switch (type) {
+			case WifiConnectedLocation:
+				intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
+						BackgroundService.SERVICE_EVENT_WIFI_CONNECTED);
+				break;
+			case WifisDetectedLocation:
+				intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
+						BackgroundService.SERVICE_EVENT_WIFIS_DETECTED);
+				break;
+			case GeoCoordinatesLocation:
+				intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
+						BackgroundService.SERVICE_EVENT_GEO_COORDINATES);
+				break;
+			case CellNetworkLocation:
+				intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
+						BackgroundService.SERVICE_EVENT_CELL_NETWORK);
+				break;
+			}
+		context.startService(intent);
 	}
 }
