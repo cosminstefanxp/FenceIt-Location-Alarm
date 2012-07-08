@@ -27,7 +27,7 @@ public class HomeActivity extends DefaultActivity implements OnClickListener {
 		(findViewById(R.id.home_alarmsButton)).setOnClickListener(this);
 		(findViewById(R.id.home_locationsButton)).setOnClickListener(this);
 		(findViewById(R.id.home_aboutButton)).setOnClickListener(this);
-	} 
+	}
 
 	/**
 	 * Initializes the application environment.

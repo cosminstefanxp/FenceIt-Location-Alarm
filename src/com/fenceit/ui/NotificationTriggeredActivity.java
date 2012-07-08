@@ -14,6 +14,7 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Bundle;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.TextView;
 
 import com.fenceit.R;
@@ -35,7 +36,11 @@ public class NotificationTriggeredActivity extends Activity {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notification_triggered);
 
-		((TextView) findViewById(R.id.notification_TitleText)).setText("Alarm Triggered");
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_TURN_SCREEN_ON);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
+		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
+
+		((TextView) findViewById(R.id.notification_titleText)).setText("Alarm Triggered");
 		((TextView) findViewById(R.id.notification_descriptionText)).setText(getIntent().getExtras().getString(
 				"message"));
 
@@ -64,11 +69,21 @@ public class NotificationTriggeredActivity extends Activity {
 	/**
 	 * Triggered when the user clicks anywhere on the screen.
 	 * 
-	 * @param v the v
+	 * @param v the view
 	 */
 	public void onClickScreen(View v) {
 		if (ringtone != null)
 			ringtone.stop();
 		finish();
+	}
+
+	/* (non-Javadoc)
+	 * 
+	 * @see android.app.Activity#onDestroy() */
+	@Override
+	protected void onDestroy() {
+		super.onDestroy();
+		if (ringtone != null)
+			ringtone.stop();
 	}
 }

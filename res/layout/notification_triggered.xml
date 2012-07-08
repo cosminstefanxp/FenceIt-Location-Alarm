@@ -6,13 +6,14 @@
     android:onClick="onClickScreen" >
 
     <TextView
-        android:id="@+id/notification.TitleText"
+        android:id="@+id/notification.titleText"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
+        android:layout_below="@+id/notification.logoText"
         android:layout_centerHorizontal="true"
+        android:layout_marginTop="8dp"
         android:text="Alarm Triggered"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/notification.hintText"
@@ -22,14 +23,14 @@
         android:layout_alignParentLeft="true"
         android:gravity="center"
         android:padding="6dp"
-        android:text="Click anywhere on the screen to stop the alarm." /> 
+        android:text="Click anywhere on the screen to stop the alarm." />
 
     <ImageView
         android:id="@+id/notification.alarmImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_below="@+id/notification.titleText"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/notification.TitleText"
         android:scaleType="fitStart"
         android:src="@drawable/alarm_clock" />
 
@@ -43,5 +44,17 @@
         android:paddingBottom="15dp"
         android:text="	Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore."
         android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/notification.logoText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="15dp"
+        android:text="FenceIt"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="24sp"
+        android:textStyle="bold" />
 
 </RelativeLayout>
