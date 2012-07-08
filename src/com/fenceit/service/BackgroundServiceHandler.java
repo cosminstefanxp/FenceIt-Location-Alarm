@@ -71,7 +71,7 @@ public class BackgroundServiceHandler extends Handler {
 				DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarmId);
 
 		// Publish a notification
-		service.publishNotification("FenceIt - Alarm Triggered", triggerReason, triggerReason);
+		service.publishNotification("FenceIt - Alarm Triggered", alarmId, triggerReason, triggerReason);
 
 		// Execute the actions
 		log.info("Executing actions");

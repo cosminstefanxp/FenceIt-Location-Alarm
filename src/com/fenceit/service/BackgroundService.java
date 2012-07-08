@@ -94,6 +94,11 @@ public class BackgroundService extends Service {
 	public void onCreate() {
 		super.onCreate();
 
+		// Check if the background service is disabled
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sp.getBoolean("service_status", true) == false)
+			stopSelf();
+
 		// Making sure the Log4J is configured, even if the main application process is not started
 		new Log4jConfiguration();
 		log.warn("Creating the Background Service...");
@@ -111,7 +116,17 @@ public class BackgroundService extends Service {
 		handler = new BackgroundServiceHandler(this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
+		forceFullScan();
+	}
 
+	/**
+	 * Force a full scan for all type of locations.
+	 */
+	private void forceFullScan() {
+		// Check if the background service is disabled
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sp.getBoolean("service_status", true) == false)
+			return;
 		// Force a scan of all location types
 		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(1).getTimeInMillis(), SERVICE_EVENT_WIFI_CONNECTED);
 		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(3).getTimeInMillis(), SERVICE_EVENT_CELL_NETWORK);
@@ -122,6 +137,12 @@ public class BackgroundService extends Service {
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
+
+		// Check if the background service is disabled
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sp.getBoolean("service_status", true) == false)
+			return START_NOT_STICKY;
+
 		log.info("Starting Background Service with intent: " + intent);
 		Toast.makeText(this, "Background Service Started...", Toast.LENGTH_SHORT).show();
 
@@ -145,6 +166,11 @@ public class BackgroundService extends Service {
 		if (event == SERVICE_EVENT_SHUTDOWN) {
 			shutdown();
 			return;
+		}
+
+		// If a scan with all the locations types should be scheduled
+		if (event == SERVICE_EVENT_RESET_ALARMS) {
+			forceFullScan();
 		}
 
 		// Run the trigger checker thread
@@ -181,12 +207,13 @@ public class BackgroundService extends Service {
 		log.warn("Destroying background service...");
 		Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
 
-		// If somehow the wakelock is still locked, release it
-		WakeLockManager.releaseWakeLock();
-
+		// If the service is disabled, shutdown and cancel all pending alarms
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sp.getBoolean("service_status", true) == false)
 			shutdown();
+
+		// If somehow the wakelock is still locked, release it
+		WakeLockManager.releaseWakeLock();
 
 	}
 
@@ -213,17 +240,18 @@ public class BackgroundService extends Service {
 
 	/**
 	 * Publishes a notification.
-	 * 
+	 *
 	 * @param title the title
+	 * @param requestCode the request code for the notification
 	 * @param tickerText the ticker text
 	 * @param message the message
 	 */
-	protected void publishNotification(String title, String tickerText, String message) {
+	protected void publishNotification(String title, int requestCode, String tickerText, String message) {
 		// On click, create a new FenceIt Activity. If the activity is started already, clear
 		// everything above it and bring it back
 		Intent notificationIntent = new Intent(this, AlarmPanelActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, notificationIntent, 0);
+		PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, notificationIntent, 0);
 
 		// Create the notification
 		Notification notification = new Notification(R.drawable.ic_logo, tickerText, System.currentTimeMillis());

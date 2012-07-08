@@ -102,6 +102,8 @@ public abstract class TriggerCheckerThread extends Thread {
 			log.debug("Checking if any of the alarms can be triggered with the contextual data: " + contextData);
 		for (AlarmTrigger t : triggers)
 			if (t.shouldTrigger(contextData)) {
+				// Get the reason why the alarm was triggered and send a message to the main thread
+				// to handle action execution
 				String triggerReason = getTriggerMessage(t);
 				Message m = mParentHandler.obtainMessage(BackgroundServiceHandler.HANDLER_ALARM_TRIGGERED);
 				m.obj = triggerReason;

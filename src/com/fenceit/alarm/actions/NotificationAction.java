@@ -10,6 +10,7 @@ import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 import org.apache.log4j.Logger;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 
@@ -61,6 +62,7 @@ public class NotificationAction extends AbstractAlarmAction {
 		log.warn("Notification alarm triggered: " + this);
 		Intent intent = new Intent(context, NotificationTriggeredActivity.class);
 		intent.putExtra("message", message);
+		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
 		context.startActivity(intent);
 	}
 
@@ -108,6 +110,14 @@ public class NotificationAction extends AbstractAlarmAction {
 	@Override
 	public int getTypeImageResource() {
 		return android.R.drawable.ic_menu_view;
+	}
+
+	@Override
+	public String toString() {
+		if (alarm != null)
+			return "NotificationAction [id=" + id + ", alarm=" + alarm.getId() + ", message=" + message + "]";
+		else
+			return "NotificationAction [id=" + id + ", alarm=" + alarm + ", message=" + message + "]";
 	}
 
 }

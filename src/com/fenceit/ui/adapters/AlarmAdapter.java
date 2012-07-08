@@ -11,6 +11,7 @@ import java.util.ArrayList;
 import org.androwrapee.db.DefaultDAO;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -24,6 +25,7 @@ import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseManager;
+import com.fenceit.service.BackgroundService;
 
 /**
  * The Class AlarmAdapter that is used to display the alarms in a ListView.
@@ -170,5 +172,12 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		dao.open();
 		dao.update(alarm, alarm.getId());
 		dao.close();
+
+		// Notify the background service that a new alarm is now enabled
+		if (alarm.isEnabled()) {
+			Intent intent = new Intent(context, BackgroundService.class);
+			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_RESET_ALARMS);
+			context.startService(intent);
+		}
 	}
 }

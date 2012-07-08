@@ -39,6 +39,7 @@ import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.AlarmActionBroker;
 import com.fenceit.db.DatabaseManager;
+import com.fenceit.service.BackgroundService;
 import com.fenceit.ui.adapters.ActionsAdapter;
 import com.fenceit.ui.adapters.TriggersAdapter;
 
@@ -231,6 +232,13 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		if (!alarm.isComplete()) {
 			log.error("Not all required fields are filled in");
 			return false;
+		}
+
+		// Notify the background service that a change has been done on an enabled alarm
+		if (alarm.isEnabled()) {
+			Intent intent = new Intent(this, BackgroundService.class);
+			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_RESET_ALARMS);
+			startService(intent);
 		}
 
 		// Save the alarm to the database
