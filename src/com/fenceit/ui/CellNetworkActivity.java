@@ -17,8 +17,6 @@ import android.os.Bundle;
 import android.provider.Settings;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -48,12 +46,6 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 
 	/** If it's a new entity. */
 	private boolean newEntity;
-
-	/** The save button. */
-	private Button saveButton;
-
-	/** The refresh button. */
-	private ImageButton refreshButton;
 
 	/**
 	 * Called when the activity is first created.
@@ -94,10 +86,8 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 		}
 
 		// Buttons and others
-		saveButton = (Button) findViewById(R.id.title_saveButton);
-		saveButton.setOnClickListener(this);
-		refreshButton = (ImageButton) findViewById(R.id.cell_refreshButton);
-		refreshButton.setOnClickListener(this);
+		findViewById(R.id.title_saveButton).setOnClickListener(this);
+		findViewById(R.id.cell_refreshButton).setOnClickListener(this);
 
 		// Fill data
 		refreshActivity();
@@ -154,7 +144,7 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 		log.info("Creating new CellLocation...");
 		location = new CellNetworkLocation();
 		newEntity = true;
-		if(isForcedFavorite)
+		if (isForcedFavorite)
 			location.setFavorite(true);
 	}
 
@@ -200,7 +190,8 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
 	@Override
 	public void onClick(View v) {
-		if (v == saveButton) {
+		switch (v.getId()) {
+		case R.id.title_saveButton:
 			log.info("Save button clicked. Storing entity...");
 			if (!storeLocation()) {
 				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
@@ -209,12 +200,14 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 			}
 			Intent intent = new Intent();
 			intent.putExtra("id", location.getId());
+			intent.putExtra("type", location.getType().toString());
 			setResult(RESULT_OK, intent);
 			finish();
 			return;
-		} else if (v == refreshButton) {
+		case R.id.cell_refreshButton:
 			log.info("Refreshing details regarding the Cell Tower currently connected to.");
 			gatherContextInfo();
+			break;
 		}
 	}
 

@@ -50,7 +50,9 @@ public class HomeActivity extends DefaultActivity implements OnClickListener {
 		case R.id.home_locationsButton:
 			startActivity(new Intent(this, LocationPanelActivity.class));
 			break;
-
+		case R.id.home_aboutButton:
+			startActivity(new Intent(this, AboutActivity.class));
+			break;
 		}
 
 	}

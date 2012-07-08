@@ -158,7 +158,8 @@ public class TriggerActivity extends DefaultActivity implements OnClickListener 
 			// Location
 			long locID = dao.getReferenceId(cursor, "location");
 			log.info("Fetching associated location with id: " + locID);
-			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), locID));
+			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), locID,
+					trigger.getLocationType()));
 
 			cursor.close();
 			dao.close();
@@ -308,15 +309,20 @@ public class TriggerActivity extends DefaultActivity implements OnClickListener 
 		if (resultCode == RESULT_OK && (requestCode == REQ_CODE_EDIT_LOCATION || requestCode == REQ_CODE_NEW_LOCATION)) {
 			log.debug("Refreshing location...");
 			long id = data.getLongExtra("id", -1);
-			log.debug("The updated location has id: " + id);
-			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), id));
+			String typeS = data.getStringExtra("type");
+			LocationType type = LocationType.valueOf(LocationType.class, typeS);
+
+			log.debug("The updated location has id: " + id + " and type: " + type);
+			trigger.setLocationType(type);
+			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), id, type));
 			refreshActivity();
 		}
 		// If a Location was selected using the Locations Panel
 		if (resultCode == RESULT_OK && requestCode == REQ_CODE_SELECT_LOCATION) {
 			long id = data.getLongExtra("id", -1);
-			log.debug("Selected location with id: " + id);
-			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), id));
+			log.debug("Selected location from panel with id: " + id + ". Fetching location...");
+			trigger.setLocation(AlarmLocationBroker.fetchLocation(getApplicationContext(), id,
+					trigger.getLocationType()));
 			refreshActivity();
 
 		}

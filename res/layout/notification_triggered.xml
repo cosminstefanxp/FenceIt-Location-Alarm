@@ -27,7 +27,7 @@
         android:id="@+id/notification.alarmImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="true"
+        android:layout_centerHorizontal="true"
         android:layout_below="@+id/notification.TitleText"
         android:scaleType="fitStart"
         android:src="@drawable/alarm_clock" />

@@ -22,6 +22,7 @@ import android.widget.ToggleButton;
 
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseManager;
 
 /**
@@ -34,6 +35,9 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 
 	/** The alarms. */
 	private ArrayList<Alarm> alarms;
+
+	/** The dao trigger. */
+	private DefaultDAO<BasicTrigger> daoTrigger;
 
 	/**
 	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for
@@ -60,6 +64,8 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 	public AlarmAdapter(Activity context, ArrayList<Alarm> alarms) {
 		this.context = context;
 		this.alarms = alarms;
+		this.daoTrigger = DatabaseManager.getDAOInstance(context.getApplicationContext(), BasicTrigger.class,
+				BasicTrigger.tableName);
 	}
 
 	/* (non-Javadoc)
@@ -104,7 +110,11 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		holder.enableButton.setTag(position); // for the click event
 		holder.enableButton.setChecked(a.isEnabled());
 		holder.titleTextV.setText(a.getName());
-		holder.descTextV.setText(a.getTriggers().size() + " triggers / " + a.getActions().size() + " actions");
+		// Get count of triggers
+		daoTrigger.open();
+		int triggerCount = daoTrigger.countEntries(DefaultDAO.REFERENCE_PREPENDER + "alarm=" + a.getId());
+		daoTrigger.close();
+		holder.descTextV.setText(triggerCount + " active triggers");
 
 		return rowView;
 	}

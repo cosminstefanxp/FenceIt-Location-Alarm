@@ -208,6 +208,7 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 			}
 			Intent intent = new Intent();
 			intent.putExtra("id", location.getId());
+			intent.putExtra("type", location.getType().toString());
 			setResult(RESULT_OK, intent);
 			finish();
 			return;

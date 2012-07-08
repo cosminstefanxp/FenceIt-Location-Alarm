@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/RelativeLayout1"
+    style="@style/BasicActivity"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+
+    <!-- Title Bar -->
+
+    <LinearLayout
+        android:id="@+id/linearLayout1"
+        style="@style/TitleBar" >
+
+        <ImageButton
+            style="@style/TitleBarAction"
+            android:contentDescription="@string/description_home"
+            android:onClick="onClickHome"
+            android:src="@drawable/title_home" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+
+        <TextView
+            style="@style/TitleBarText"
+            android:text="About" />
+
+        <ImageView style="@style/TitleBarSeparator" />
+    </LinearLayout>
+    <!-- End of Title Bar -->
+
+    <ImageView
+        android:id="@+id/about.logoImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_centerVertical="true"
+        android:src="@drawable/ic_logo" />
+
+    <TextView
+        android:id="@+id/about.versionText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/about.logoImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="20dp"
+        android:text="Version 0.9.12"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/about.titleText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/about.versionText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="2dp"
+        android:text="FenceIt"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="@color/title_background"
+        android:textSize="30sp" />
+
+    <TextView
+        android:id="@+id/about.authorText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/about.logoImage"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="20dp"
+        android:text="Cosmin Stefan-Dobrin"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/about.emailText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/about.authorText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
+        android:text="cosmin.stefan-dobrin@cti.pub.ro"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <TextView
+        android:id="@+id/about.copyrightText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/about.emailText"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="2dp"
+        android:text="Copyright 2012"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+</RelativeLayout>

@@ -79,47 +79,42 @@ public class AlarmLocationBroker {
 	 * 
 	 * @param context the context
 	 * @param id the id
+	 * @param type the type
 	 * @return the alarm location, or null if no location found
 	 */
-	public static AlarmLocation fetchLocation(Context context, long id) {
+	public static AlarmLocation fetchLocation(Context context, long id, LocationType type) {
 
 		AlarmLocation location = null;
-		// Fetch WifiConnectedLocation
-		DefaultDAO<WifiConnectedLocation> daoWC = DatabaseManager.getDAOInstance(context, WifiConnectedLocation.class,
-				WifiConnectedLocation.tableName);
-		daoWC.open();
-		location = daoWC.fetch(id);
-		daoWC.close();
-		if (location != null)
-			return location;
-
-		// Fetch WifisDetectedLocation
-		DefaultDAO<WifisDetectedLocation> daoWD = DatabaseManager.getDAOInstance(context, WifisDetectedLocation.class,
-				WifisDetectedLocation.tableName);
-		daoWD.open();
-		location = daoWD.fetch(id);
-		daoWD.close();
-		if (location != null)
-			return location;
-
-		// Fetch CellLocation
-		DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context, CellNetworkLocation.class,
-				CellNetworkLocation.tableName);
-		daoC.open();
-		location = daoC.fetch(id);
-		daoC.close();
-		if (location != null)
-			return location;
-
-		// Fetch CoordinatesLocation
-		DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context, CoordinatesLocation.class,
-				CoordinatesLocation.tableName);
-		daoCo.open();
-		location = daoCo.fetch(id);
-		daoCo.close();
-		if (location != null)
-			return location;
-
+		switch (type) {
+		case CellNetworkLocation:
+			DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context, CellNetworkLocation.class,
+					CellNetworkLocation.tableName);
+			daoC.open();
+			location = daoC.fetch(id);
+			daoC.close();
+			break;
+		case WifiConnectedLocation:
+			DefaultDAO<WifiConnectedLocation> daoWC = DatabaseManager.getDAOInstance(context,
+					WifiConnectedLocation.class, WifiConnectedLocation.tableName);
+			daoWC.open();
+			location = daoWC.fetch(id);
+			daoWC.close();
+			break;
+		case WifisDetectedLocation:
+			DefaultDAO<WifisDetectedLocation> daoWD = DatabaseManager.getDAOInstance(context,
+					WifisDetectedLocation.class, WifisDetectedLocation.tableName);
+			daoWD.open();
+			location = daoWD.fetch(id);
+			daoWD.close();
+			break;
+		case GeoCoordinatesLocation:
+			DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context, CoordinatesLocation.class,
+					CoordinatesLocation.tableName);
+			daoCo.open();
+			location = daoCo.fetch(id);
+			daoCo.close();
+			break;
+		}
 		return location;
 	}
 

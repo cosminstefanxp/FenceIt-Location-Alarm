@@ -27,7 +27,7 @@ import com.fenceit.alarm.locations.AbstractAlarmLocation;
 public abstract class AbstractLocationActivity extends DefaultActivity {
 
 	/** The Constant DIALOG_LOCATION_NAME. */
-	private static final int DIALOG_LOCATION_NAME = 0;
+	private static final int DIALOG_LOCATION_NAME = 999;
 
 	/**
 	 * Checks if the instance of the Activity forces the location to be favorite. This is the case,

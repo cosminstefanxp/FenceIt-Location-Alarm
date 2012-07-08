@@ -39,6 +39,9 @@
             android:name=".ui.LocationPanelActivity"
             android:theme="@style/Theme" />
         <activity
+            android:name=".ui.AboutActivity"
+            android:theme="@style/Theme" />
+        <activity
             android:name=".ui.AlarmActivity"
             android:theme="@style/Theme" />
         <activity

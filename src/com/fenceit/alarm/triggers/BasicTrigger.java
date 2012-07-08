@@ -34,9 +34,12 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	@ReferenceField
 	private AlarmLocation location;
 
-	/** The type of location to which this trigger corresponds. Only stored the location type id, to save storage. */
-	// TODO: to repair implementation
-	private int locationType;
+	/**
+	 * The type of location to which this trigger corresponds. Only stored the location type id, to
+	 * save storage.
+	 */
+	@DatabaseField
+	private LocationType locationType;
 
 	/** The type of the triggering. */
 	@DatabaseField
@@ -138,9 +141,10 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	public String toString() {
 		if (alarm != null)
 			return "BasicTrigger [id=" + id + ", alarm=" + alarm.getId() + ", type=" + type + ", location=" + location
-					+ "]";
+					+ ",locationType=" + locationType + "]";
 		else
-			return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", location=" + location + "]";
+			return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", location=" + location
+					+ ",locationType=" + locationType + "]";
 	}
 
 	/* (non-Javadoc)
@@ -167,11 +171,11 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	}
 
 	/**
-	 * Gets the location type id.
+	 * Gets the location type.
 	 * 
 	 * @return the locationType
 	 */
-	public int getLocationTypeId() {
+	public LocationType getLocationType() {
 		return locationType;
 	}
 
@@ -181,7 +185,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 * @param locationType the locationType to set
 	 */
 	public void setLocationType(LocationType locationType) {
-		this.locationType = locationType.getId();
+		this.locationType = locationType;
 	}
 
 }

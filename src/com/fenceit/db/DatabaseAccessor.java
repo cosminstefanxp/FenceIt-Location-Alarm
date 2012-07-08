@@ -94,7 +94,7 @@ public class DatabaseAccessor {
 
 			// Fill the trigger with the corresponding location
 			long locationID = dao.getReferenceId(cursor, "location");
-			trigger.setLocation(AlarmLocationBroker.fetchLocation(ctx, locationID));
+			trigger.setLocation(AlarmLocationBroker.fetchLocation(ctx, locationID, trigger.getLocationType()));
 
 			// Advance the cursor
 			cursor.moveToNext();

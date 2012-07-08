@@ -13,7 +13,6 @@ import org.androwrapee.db.IdField;
 import org.androwrapee.db.ReferenceField;
 
 import com.fenceit.alarm.Alarm;
-import com.fenceit.provider.ContextData;
 
 /**
  * The Class AbstractAlarmTrigger that is a basic abstract implementation for an AlarmTrigger.

@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TableLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    style="@style/BasicActivity"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:background="@color/background"
     android:orientation="vertical" >
 
     <!-- Title Bar -->
@@ -72,141 +72,112 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
-    <TableRow
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content" >
+    <RelativeLayout
+        style="@style/SectionHeaderSmall"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:baselineAligned="true" >
 
-        <RelativeLayout
-            style="@style/SectionHeader"
+        <ImageButton
+            android:id="@+id/alarm.addTriggerButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="Add a new Trigger"
+            android:src="@android:drawable/ic_menu_add" />
+
+        <TextView
+            android:id="@+id/alarm.triggersText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_span="2"
-            android:layout_weight="1"
-            android:baselineAligned="true" >
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Triggers"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </RelativeLayout>
 
-            <ImageButton
-                android:id="@+id/alarm.addTriggerButton"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:contentDescription="Add a new Trigger"
-                android:src="@android:drawable/ic_menu_add" />
-
-            <TextView
-                android:id="@+id/alarm.triggersText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="Triggers"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-        </RelativeLayout>
-    </TableRow>
-
-    <TableRow
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_weight="1"
         android:background="@color/delimiter"
-        android:paddingBottom="2dp" >
+        android:paddingBottom="1dp" >
 
-        <FrameLayout
+        <TextView
+            android:id="@+id/alarm.noTrigggersText"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_span="2"
-            android:layout_weight="1"
-            android:background="@color/background" >
+            android:layout_height="fill_parent"
+            android:padding="3dp"
+            android:text="No triggers yet."
+            android:background="@color/delimiter"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <TextView
-                android:id="@+id/alarm.noTrigggersText"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="3dp"
-                android:text="No triggers yet."
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+        <ListView
+            android:id="@+id/alarm.triggersListView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/background"
+            android:cacheColorHint="#00000000"
+            android:padding="1dp"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="vertical" >
 
-            <ListView
-                android:id="@+id/alarm.triggersListView"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/background"
-                android:cacheColorHint="#00000000"
-                android:padding="1dp"
-                android:scrollbarStyle="insideOverlay"
-                android:scrollbars="vertical" >
-            </ListView>
-        </FrameLayout>
-    </TableRow>
+            <!-- Preview: listitem=@layout/alarm_trigger_list -->
+        </ListView>
+    </FrameLayout>
 
-    <TableRow
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        style="@style/SectionHeaderSmall"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="15dp" >
+        android:baselineAligned="true" >
 
-        <RelativeLayout
-            style="@style/SectionHeader"
+        <ImageButton
+            android:id="@+id/alarm.addActionButton"
+            android:layout_width="48dp"
+            android:layout_height="48dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:contentDescription="Add a new Action"
+            android:src="@android:drawable/ic_menu_add" />
+
+        <TextView
+            android:id="@+id/alarm.actionsText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_span="2"
-            android:layout_weight="1"
-            android:baselineAligned="true" >
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:text="Actions"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+    </RelativeLayout>
 
-            <ImageButton
-                android:id="@+id/alarm.addActionButton"
-                android:layout_width="52dp"
-                android:layout_height="52dp"
-                android:layout_alignParentRight="true"
-                android:layout_alignParentTop="true"
-                android:contentDescription="Add a new Action"
-                android:src="@android:drawable/ic_menu_add" />
-
-            <TextView
-                android:id="@+id/alarm.actionsText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="Actions"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
-        </RelativeLayout>
-    </TableRow>
-
-    <TableRow
-        android:layout_width="wrap_content"
+    <FrameLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="5dp"
-        android:layout_marginRight="5dp"
+        android:layout_weight="1"
         android:background="@color/delimiter"
-        android:paddingBottom="2dp" >
+        android:paddingBottom="1dp" >
 
-        <FrameLayout
+        <TextView
+            android:id="@+id/alarm.noActionsText"
             android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:layout_span="2"
-            android:layout_weight="1"
-            android:background="@color/background" >
+            android:layout_height="fill_parent"
+            android:background="@color/background" 
+            android:padding="3dp"
+            android:text="No actions yet."
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-            <TextView
-                android:id="@+id/alarm.noActionsText"
-                android:layout_width="fill_parent"
-                android:layout_height="fill_parent"
-                android:padding="3dp"
-                android:text="No actions yet."
-                android:textAppearance="?android:attr/textAppearanceSmall" />
+        <ListView
+            android:id="@+id/alarm.actionsListView"
+            android:layout_width="fill_parent"
+            android:layout_height="fill_parent"
+            android:background="@color/background"
+            android:cacheColorHint="#00000000"
+            android:padding="1dp"
+            android:scrollbarStyle="insideOverlay"
+            android:scrollbars="vertical" >
+        </ListView>
+    </FrameLayout>
 
-            <ListView
-                android:id="@+id/alarm.actionsListView"
-                android:layout_width="fill_parent"
-                android:layout_height="wrap_content"
-                android:background="@color/background"
-                android:cacheColorHint="#00000000"
-                android:padding="1dp"
-                android:scrollbarStyle="insideOverlay"
-                android:scrollbars="vertical" >
-            </ListView>
-        </FrameLayout>
-    </TableRow>
-
-</TableLayout>
+</LinearLayout>

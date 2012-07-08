@@ -249,6 +249,7 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 			}
 			Intent intent = new Intent();
 			intent.putExtra("id", location.getId());
+			intent.putExtra("type", location.getType().toString());
 			setResult(RESULT_OK, intent);
 			finish();
 			return;
