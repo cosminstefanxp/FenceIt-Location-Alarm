@@ -13,7 +13,6 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.database.sqlite.SQLiteOpenHelper;
 import android.net.wifi.WifiInfo;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -40,9 +39,6 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 
 	/** The Constant DIALOG_ENABLE_WIFI. */
 	private static final int DIALOG_ENABLE_WIFI = 0;
-
-	/** The database helper. */
-	private static SQLiteOpenHelper dbHelper = null;
 
 	/** The data access object. */
 	private DefaultDAO<WifiConnectedLocation> dao = null;
@@ -71,11 +67,8 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 		((TextView) findViewById(R.id.title_titleText)).setText("Edit Location");
 
 		// Prepare database connection
-		if (dbHelper == null)
-			dbHelper = DatabaseManager.getDBHelper(getApplicationContext());
 		if (dao == null)
-			dao = new DefaultDAO<WifiConnectedLocation>(WifiConnectedLocation.class, dbHelper,
-					DatabaseManager.getReflectionManagerInstance(WifiConnectedLocation.class),
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), WifiConnectedLocation.class,
 					WifiConnectedLocation.tableName);
 
 		// If it's a new activity
@@ -156,7 +149,7 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 		log.info("Creating new WifiConnectedLocation...");
 		location = new WifiConnectedLocation();
 		newEntity = true;
-		if(isForcedFavorite)
+		if (isForcedFavorite)
 			location.setFavorite(true);
 	}
 

@@ -37,7 +37,7 @@ public class DatabaseManager {
 	public static final int DATABASE_VERSION = 1;
 
 	/** The db helper. */
-	private static SQLiteOpenHelper dbHelper = null;
+	private static DefaultDatabaseHelper dbHelper = null;
 
 	/** The singleton reflection managers map. */
 	@SuppressWarnings("rawtypes")
@@ -51,7 +51,7 @@ public class DatabaseManager {
 	 * 
 	 * @return the dB helper
 	 */
-	public static SQLiteOpenHelper getDBHelper(Context context) {
+	public static DefaultDatabaseHelper getDBHelper(Context context) {
 		if (dbHelper == null)
 			dbHelper = new DefaultDatabaseHelper(context, DATABASE_NAME, DATABASE_VERSION, new Class[] { Alarm.class,
 					BasicTrigger.class, WifiConnectedLocation.class, WifisDetectedLocation.class,
@@ -91,7 +91,7 @@ public class DatabaseManager {
 	 * @return the DAO instance
 	 */
 	@SuppressWarnings("unchecked")
-	public static <T> DefaultDAO<T> getDAOInstance(Context context, Class<T> cls, String tableName) {
+	public static synchronized <T> DefaultDAO<T> getDAOInstance(Context context, Class<T> cls, String tableName) {
 		if (daoMap.containsKey(cls))
 			return daoMap.get(cls);
 		DefaultDAO<T> dao = new DefaultDAO<T>(cls, DatabaseManager.getDBHelper(context),

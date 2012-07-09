@@ -129,6 +129,8 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 		CoordinatesContextData cData = (CoordinatesContextData) data;
 		// The GeoCoordinates has a larger factor from the beginning
 		Float factor = 2.0f;
+		if (cData == null)
+			return factor;
 		// If in the same position for a lot of time, increase the factor, but up to 500%
 		if (cData.countStaticLocation > 30)
 			factor += 3.0f;
