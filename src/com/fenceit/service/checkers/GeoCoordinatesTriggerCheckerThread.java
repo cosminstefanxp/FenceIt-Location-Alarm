@@ -20,6 +20,7 @@ import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.provider.ContextData;
+import com.fenceit.provider.CoordinatesContextData;
 import com.fenceit.provider.CoordinatesDataProvider;
 import com.fenceit.provider.CoordinatesLocationDataListener;
 import com.fenceit.service.BackgroundServiceHandler;
@@ -120,13 +121,22 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 	 * 
 	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime() */
 	@Override
-	protected Long computeNextCheckTime(List<AlarmTrigger> triggers) {
+	protected Float computeDelayFactor(List<AlarmTrigger> triggers, ContextData data) {
 
 		if (triggers.isEmpty())
 			return null;
 
-		// TODO: Temporary, fixed check time
-		return 30000L;
+		CoordinatesContextData cData = (CoordinatesContextData) data;
+		// The GeoCoordinates has a larger factor from the beginning
+		Float factor = 2.0f;
+		// If in the same position for a lot of time, increase the factor, but up to 500%
+		if (cData.countStaticLocation > 30)
+			factor += 3.0f;
+		else
+			factor += cData.countStaticLocation * 0.10f;
+		log.debug("Computed factor: " + factor);
+
+		return factor;
 	}
 
 	/**

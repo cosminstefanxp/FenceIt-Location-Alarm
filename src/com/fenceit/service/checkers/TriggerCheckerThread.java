@@ -125,13 +125,16 @@ public abstract class TriggerCheckerThread extends Thread {
 			}
 
 		// Compute the next time when the thread should be run
-		Long delay = computeNextCheckTime(triggers);
-		if (log.isInfoEnabled())
-			log.info("Scheduling next check in (ms): " + delay);
-
+		Float delayFactor = computeDelayFactor(triggers, contextData);
 		// Set a system alarm for the next time, if any
-		if (delay != null)
+		if (delayFactor != null) {
+			int defaultValue = sp.getInt("service_minimum_check_time_val", 30) * 1000;
+			long delay = (long) (defaultValue * delayFactor);
+			if (log.isInfoEnabled())
+				log.info("Scheduling next check in (ms): " + delay);
 			mParentHandler.getService().dispatchAlarm(System.currentTimeMillis() + delay, mEventType);
+		} else
+			log.info("Not scheduling next check time");
 
 		// Release the Wake Lock
 		WakeLockManager.releaseWakeLock();
@@ -190,12 +193,12 @@ public abstract class TriggerCheckerThread extends Thread {
 	protected abstract boolean isPreconditionValid();
 
 	/**
-	 * Computes the next wait time until a check, when the checker thread should run and verify all
-	 * the triggering conditions.
+	 * Computes the delay factor that is applied to the default time between checks and results the
+	 * next check time, when the checker thread should run and verify all the triggering conditions.
 	 * 
 	 * @param triggers the current triggers, as returned by the <code>fetchData</code> method.
-	 * @return the number of milliseconds to wait until the next check time, or null, if a next
-	 *         check should not be scheduled
+	 * @param data the current context data
+	 * @return delay factor, larger than 1, or null, if a next check should not be scheduled
 	 */
-	protected abstract Long computeNextCheckTime(List<AlarmTrigger> triggers);
+	protected abstract Float computeDelayFactor(List<AlarmTrigger> triggers, ContextData data);
 }

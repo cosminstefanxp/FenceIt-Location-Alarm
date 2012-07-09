@@ -22,6 +22,12 @@ public class CoordinatesContextData implements ContextData {
 	/** The prev longitude. */
 	public double prevLongitude;
 
+	/** The count static location. */
+	public int countStaticLocation;
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "CoordinatesContextData [location=" + location + "]";

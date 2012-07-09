@@ -12,6 +12,7 @@ import android.content.SharedPreferences.Editor;
 import android.net.wifi.WifiInfo;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * The WifiConnectedDataProvider gathers information about the Wifi Network currently connected to.
@@ -20,6 +21,8 @@ public class WifiConnectedDataProvider {
 
 	/** The Constant PREV_CONNECTED_WIFI_PREF. */
 	private static final String PREV_CONNECTED_WIFI_PREF = "connected_wifi";
+
+	private static final String PREV_CONNECTED_WIFI_STATIC = "connected_wifi_static";
 
 	/**
 	 * Gets the currently connected wifi info.
@@ -52,8 +55,20 @@ public class WifiConnectedDataProvider {
 
 		// Save current conditions for later
 		if (storeLast) {
+			// Count how many times the device stayed in the same position
+			int count = sp.getInt(PREV_CONNECTED_WIFI_STATIC, 0);
+			if (data.connectedWifiInfo.getBSSID() != null
+					&& data.connectedWifiInfo.getBSSID().equals(data.prevConnectedBSSID))
+				count++;
+			else
+				count = 0;
+			data.countStaticLocation = count;
+			Log.d("WifiConnectedDataProvider", "In same position for: " + count);
+
+			// Store
 			Editor ed = sp.edit();
 			ed.putString(PREV_CONNECTED_WIFI_PREF, data.connectedWifiInfo.getBSSID());
+			ed.putInt(PREV_CONNECTED_WIFI_STATIC, count);
 			ed.commit();
 		}
 

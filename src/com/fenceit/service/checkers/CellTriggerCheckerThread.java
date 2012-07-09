@@ -18,6 +18,7 @@ import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.db.DatabaseAccessor;
+import com.fenceit.provider.CellContextData;
 import com.fenceit.provider.CellDataProvider;
 import com.fenceit.provider.ContextData;
 import com.fenceit.service.BackgroundServiceHandler;
@@ -95,12 +96,20 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 	 * 
 	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime() */
 	@Override
-	protected Long computeNextCheckTime(List<AlarmTrigger> triggers) {
+	protected Float computeDelayFactor(List<AlarmTrigger> triggers, ContextData data) {
 
 		if (triggers.isEmpty())
 			return null;
 
-		// TODO: Temporary, fixed check time
-		return 30000L;
+		CellContextData cData = (CellContextData) data;
+		Float factor = 1.0f;
+		// If in the same position for a lot of time, increase the factor, but up to 300%
+		if (cData.countStaticLocation > 40)
+			factor += 2.0f;
+		else
+			factor += cData.countStaticLocation * 0.05f;
+		log.debug("Computed factor: " + factor);
+
+		return factor;
 	}
 }

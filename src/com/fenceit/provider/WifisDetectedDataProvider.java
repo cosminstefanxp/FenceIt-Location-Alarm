@@ -14,6 +14,7 @@ import android.content.SharedPreferences.Editor;
 import android.net.wifi.ScanResult;
 import android.net.wifi.WifiManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * The WifisDetectedDataProvider gathers information about the Wifi Networks in range.
@@ -25,6 +26,8 @@ public class WifisDetectedDataProvider {
 
 	/** The Constant SPLITTER. */
 	private static final String SPLITTER = ";";
+
+	private static final String PREV_WIFIS_DETECTED_STATIC = "detected_static";
 
 	/**
 	 * Start a scan.
@@ -63,16 +66,30 @@ public class WifisDetectedDataProvider {
 
 		// Get previous conditions
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-		data.prevScanBSSIDs = sp.getString(PREV_DETECTED_WIFIS_PREF, "").split(SPLITTER);
+		String prevScanBSSIDsS = sp.getString(PREV_DETECTED_WIFIS_PREF, "");
+		data.prevScanBSSIDs = prevScanBSSIDsS.split(SPLITTER);
 
 		// Save current conditions for later
 		if (storeLast) {
-			Editor ed = sp.edit();
 			StringBuilder out = new StringBuilder();
 			for (ScanResult res : data.scanResults) {
 				out.append(res.BSSID);
 				out.append(SPLITTER);
 			}
+
+			// Count how many times the device stayed in the same position
+			int count = sp.getInt(PREV_WIFIS_DETECTED_STATIC, 0);
+			if (prevScanBSSIDsS.equals(out))
+				count++;
+			else
+				count = 0;
+			data.countStaticLocation = count;
+			Log.d("WifisDetectedDataProvider", "In same position for: " + count);
+
+			// Store
+
+			Editor ed = sp.edit();
+
 			ed.putString(PREV_DETECTED_WIFIS_PREF, out.toString());
 
 			ed.commit();

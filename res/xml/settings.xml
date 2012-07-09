@@ -3,12 +3,21 @@
 
     <PreferenceCategory android:title="General Settings" >
         <CheckBoxPreference
+            android:defaultValue="true"
             android:key="service_status"
             android:summary="Is the background service disabled?"
             android:summaryOff="Background Service is Forced Off"
             android:summaryOn="Background Service is On"
-            android:title="Background Service Enabled"
-            android:defaultValue="true" />
+            android:title="Background Service Enabled" />
+
+        <EditTextPreference
+            android:name="Minimum check time"
+            android:defaultValue="30"
+            android:key="service_minimum_check_time"
+            android:numeric="decimal"
+            android:summary="Select the minimum time interval between service checks (in seconds)."
+            android:title="Minimum check time (s)" />
+
     </PreferenceCategory>
 
 </PreferenceScreen>

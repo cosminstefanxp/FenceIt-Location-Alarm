@@ -12,6 +12,7 @@ import android.content.SharedPreferences.Editor;
 import android.preference.PreferenceManager;
 import android.telephony.TelephonyManager;
 import android.telephony.gsm.GsmCellLocation;
+import android.util.Log;
 
 /**
  * The Class CellContextProvider gathers information from the context regarding the cell network.
@@ -26,6 +27,9 @@ public class CellDataProvider {
 
 	/** The Constant PREV_NETWORK_OPERATOR. */
 	private static final String PREV_NETWORK_OPERATOR = "cell_network_operator";
+
+	/** The Constant PREV_CELL_STATIC. */
+	private static final String PREV_CELL_STATIC = "cell_static";
 
 	/**
 	 * Gets the cell context data.
@@ -56,10 +60,22 @@ public class CellDataProvider {
 
 			// Save current conditions for later
 			if (storeLast) {
+				// Count how many times the device stayed in the same position
+				int count = sp.getInt(PREV_CELL_STATIC, 0);
+				if (data.cellId == data.prevCellId && data.lac == data.prevLac
+						&& data.networkOperator.equals(data.prevNetworkOperator))
+					count++;
+				else
+					count = 0;
+				data.countStaticLocation = count;
+				Log.d("CellDataProvider", "In same position for: " + count);
+
+				// Store
 				Editor ed = sp.edit();
 				ed.putString(PREV_NETWORK_OPERATOR, data.networkOperator);
 				ed.putInt(PREV_CELL_ID, data.cellId);
 				ed.putInt(PREV_LAC, data.lac);
+				ed.putInt(PREV_CELL_STATIC, count);
 				ed.commit();
 			}
 

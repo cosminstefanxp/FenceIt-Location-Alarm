@@ -19,6 +19,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.preference.PreferenceManager;
+import android.util.Log;
 
 /**
  * The Class LocationDataProvider.
@@ -43,6 +44,9 @@ public class CoordinatesDataProvider implements LocationListener {
 
 	/** The Constant PREV_LONGITUDE_PREF. */
 	private static final String PREV_LONGITUDE_PREF = "prev_longitude";
+
+	/** The Constant PREV_COORDINATES_STATIC. */
+	private static final String PREV_COORDINATES_STATIC = "coordinates_static";
 
 	/** The listeners. */
 	private HashSet<CoordinatesLocationDataListener> listeners = new HashSet<CoordinatesLocationDataListener>();
@@ -288,9 +292,21 @@ public class CoordinatesDataProvider implements LocationListener {
 
 		// Save current conditions for later
 		if (storeLast) {
+			// Count how many times the device stayed in the same position
+			int count = sp.getInt(PREV_COORDINATES_STATIC, 0);
+			if (Math.abs(data.location.getLatitude() - data.prevLatitude) < 0.00001
+					&& Math.abs(data.location.getLongitude() - data.prevLongitude) < 0.00001)
+				count++;
+			else
+				count = 0;
+			data.countStaticLocation = count;
+			Log.d("CoordinatesDataProvider", "In same position for: " + count);
+
+			// Store
 			Editor ed = sp.edit();
 			ed.putFloat(PREV_LATITUDE_PREF, (float) data.location.getLatitude());
 			ed.putFloat(PREV_LONGITUDE_PREF, (float) data.location.getLongitude());
+			ed.putInt(PREV_COORDINATES_STATIC, count);
 			ed.commit();
 		}
 

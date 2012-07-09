@@ -19,6 +19,9 @@ public class WifiConnectedContextData implements ContextData {
 
 	/** The last connected bssid. */
 	public String prevConnectedBSSID;
+	
+	/** The count static location. */
+	public int countStaticLocation;
 
 	/* (non-Javadoc)
 	 * 

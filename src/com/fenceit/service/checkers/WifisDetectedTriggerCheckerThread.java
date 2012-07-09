@@ -21,6 +21,7 @@ import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.WifiConnectedDataProvider;
+import com.fenceit.provider.WifisDetectedContextData;
 import com.fenceit.provider.WifisDetectedDataProvider;
 import com.fenceit.service.BackgroundServiceHandler;
 
@@ -41,7 +42,7 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 	 * The Constant minDelay that defines the minimum time between two runs of this Checker (in
 	 * milliseconds).
 	 */
-	private static final int MIN_DELAY_BETWEEN_CHECKS = 20000;
+	private static final int MIN_DELAY_BETWEEN_CHECKS = 10000;
 
 	/**
 	 * Instantiates a new wifi service checker thread.
@@ -118,12 +119,20 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 	 * 
 	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime() */
 	@Override
-	protected Long computeNextCheckTime(List<AlarmTrigger> triggers) {
+	protected Float computeDelayFactor(List<AlarmTrigger> triggers, ContextData data) {
 
-		// If no triggers of this type, no rescheduling
-		if (triggers == null || triggers.isEmpty())
+		if (triggers.isEmpty())
 			return null;
 
-		return 30000L;
+		WifisDetectedContextData cData = (WifisDetectedContextData) data;
+		Float factor = 1.0f;
+		// If in the same position for a lot of time, increase the factor, but up to 300%
+		if (cData.countStaticLocation > 40)
+			factor += 2.0f;
+		else
+			factor += cData.countStaticLocation * 0.05f;
+		log.debug("Computed factor: " + factor);
+
+		return factor;
 	}
 }

@@ -28,6 +28,12 @@ public class CellContextData implements ContextData {
 	/** The previous network operator. */
 	public String prevNetworkOperator;
 
+	/** The count static location. */
+	public int countStaticLocation;
+
+	/* (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "CellContextData [cellId=" + cellId + ", lac=" + lac + ", networkOperator=" + networkOperator

@@ -9,8 +9,7 @@ package com.fenceit.alarm.triggers;
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 import org.androwrapee.db.ReferenceField;
-
-import android.util.Log;
+import org.apache.log4j.Logger;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
@@ -33,6 +32,9 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	/** The location. */
 	@ReferenceField
 	private AlarmLocation location;
+
+	/** The log. */
+	private transient Logger log = Logger.getLogger(BasicTrigger.class);
 
 	/**
 	 * The type of location to which this trigger corresponds. Only stored the location type id, to
@@ -80,7 +82,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	@Override
 	public boolean shouldTrigger(ContextData data) {
 		Status status = location.checkStatus(data);
-		Log.d("Trigger", "New Trigger Status: " + status);
+		log.debug("New Trigger Status: " + status);
 		if (this.type == TriggerType.ON_ENTER && status == Status.ENTERED)
 			return true;
 		if (this.type == TriggerType.ON_EXIT && status == Status.LEFT)

@@ -7,9 +7,12 @@
 package com.fenceit.ui;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.preference.CheckBoxPreference;
+import android.preference.EditTextPreference;
 import android.preference.Preference;
+import android.preference.PreferenceManager;
 import android.preference.Preference.OnPreferenceChangeListener;
 import android.preference.PreferenceActivity;
 import android.widget.Toast;
@@ -24,6 +27,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
 	/** The service status. */
 	private CheckBoxPreference forceServiceOff;
+	private EditTextPreference minCheckTime;
 
 	/* (non-Javadoc)
 	 * 
@@ -35,6 +39,9 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 
 		forceServiceOff = (CheckBoxPreference) findPreference("service_status");
 		forceServiceOff.setOnPreferenceChangeListener(this);
+
+		minCheckTime = (EditTextPreference) findPreference("service_minimum_check_time");
+		minCheckTime.setOnPreferenceChangeListener(this);
 	}
 
 	/* (non-Javadoc)
@@ -52,7 +59,15 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 			if ((Boolean) newValue == false) {
 				stopService(intent);
 			}
-
+		} else if (preference == minCheckTime) {
+			minCheckTime.setText((String) newValue);
+			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+			int val;
+			val = Integer.parseInt((String) newValue);
+			if (val < 5)
+				val = 5;
+			sp.edit().putInt("service_minimum_check_time_val", val).commit();
+			Toast.makeText(this, "New minimum check time: " + val, Toast.LENGTH_SHORT).show();
 		}
 		return false;
 	}

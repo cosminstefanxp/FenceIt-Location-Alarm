@@ -23,6 +23,9 @@ public class WifisDetectedContextData implements ContextData {
 	/** The previous scan's BSSIDs. */
 	public String[] prevScanBSSIDs;
 
+	/** The count static location. */
+	public int countStaticLocation;
+
 	/* (non-Javadoc)
 	 * 
 	 * @see java.lang.Object#toString() */
