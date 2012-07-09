@@ -37,7 +37,8 @@ import com.fenceit.alarm.locations.AbstractAlarmLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation.Wifi;
 import com.fenceit.db.DatabaseManager;
-import com.fenceit.provider.WifiDataProvider;
+import com.fenceit.provider.WifiConnectedDataProvider;
+import com.fenceit.provider.WifisDetectedDataProvider;
 import com.fenceit.ui.adapters.WifisDetectedAdapter;
 
 /**
@@ -206,7 +207,7 @@ public class WifisDetectedActivity extends AbstractLocationActivity implements O
 		location = new WifisDetectedLocation();
 		wifis = new ArrayList<WifisDetectedLocation.Wifi>();
 		newEntity = true;
-		if(isForcedFavorite)
+		if (isForcedFavorite)
 			location.setFavorite(true);
 	}
 
@@ -273,7 +274,7 @@ public class WifisDetectedActivity extends AbstractLocationActivity implements O
 		} else if (v == refreshButton) {
 			log.info("Refreshing the list of Wifis in range. Starting scan...");
 			// Check for availability;
-			if (!WifiDataProvider.isWifiAvailable(this)) {
+			if (!WifiConnectedDataProvider.isWifiAvailable(this)) {
 				Toast.makeText(this, "Wifi network is not available", Toast.LENGTH_SHORT);
 				showDialog(DIALOG_ENABLE_WIFI);
 				return;
@@ -287,7 +288,7 @@ public class WifisDetectedActivity extends AbstractLocationActivity implements O
 			}
 
 			// Start the scan
-			WifiDataProvider.startScan(getApplicationContext());
+			WifisDetectedDataProvider.startScan(getApplicationContext());
 			progressBar.setVisibility(View.VISIBLE);
 			progressBar.setProgress(0);
 			refreshButton.setVisibility(View.INVISIBLE);
@@ -333,7 +334,7 @@ public class WifisDetectedActivity extends AbstractLocationActivity implements O
 	 */
 	private void gatherContextInfo() {
 
-		List<ScanResult> wifiScanResults = WifiDataProvider.getScanResults(this);
+		List<ScanResult> wifiScanResults = WifisDetectedDataProvider.getScanResults(this);
 		if (log.isInfoEnabled())
 			log.info("Wifi Scan Results: " + wifiScanResults);
 		// Update the Wifis

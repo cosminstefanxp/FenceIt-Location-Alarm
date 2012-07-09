@@ -26,8 +26,8 @@ import com.fenceit.provider.WifisDetectedContextData;
 public class WifisDetectedLocation extends AbstractAlarmLocation implements Serializable {
 
 	/** The Constant MATCH_PERCENT. */
-	private static final float MATCH_PERCENT=0.75f;
-	
+	private static final float MATCH_PERCENT = 0.75f;
+
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 780851849280998988L;
 
@@ -70,7 +70,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 
 		// Check previous status
 		boolean wasInside = false;
-		if (data.prevConnectedBSSID != null) {
+		if (data.prevScanBSSIDs != null) {
 			int count = 0;
 			for (String b : data.prevScanBSSIDs)
 				if (bssids.contains(b))
@@ -172,7 +172,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	public String toString() {
 		return "WifisDetectedLocation [id=" + id + ", name=" + name + ", serializedBSSIDs=" + serializedBSSIDs + "]";
 	}
-	
+
 	@Override
 	public int getTypeImageResource() {
 		return android.R.drawable.ic_menu_preferences;

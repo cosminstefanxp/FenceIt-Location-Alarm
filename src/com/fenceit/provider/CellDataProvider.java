@@ -31,6 +31,7 @@ public class CellDataProvider {
 	 * Gets the cell context data.
 	 * 
 	 * @param context the context
+	 * @param storeLast whether to store the current context as "last" for previous queries.
 	 * @return the cell context data
 	 */
 	public static CellContextData getCellContextData(Context context, boolean storeLast) {

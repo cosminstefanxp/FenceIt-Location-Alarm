@@ -19,7 +19,6 @@ import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.db.DatabaseAccessor;
-import com.fenceit.provider.CellDataProvider;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.CoordinatesDataProvider;
 import com.fenceit.provider.CoordinatesLocationDataListener;

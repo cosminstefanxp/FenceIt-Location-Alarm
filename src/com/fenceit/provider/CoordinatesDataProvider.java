@@ -270,7 +270,7 @@ public class CoordinatesDataProvider implements LocationListener {
 	 * Gets the context data containing the best location found so far.
 	 * 
 	 * @param context the context
-	 * @param storeLast the store last
+	 * @param whether to store the current context as "last" for previous queries.
 	 * @return the context data
 	 */
 	public ContextData getContextData(Context context, boolean storeLast) {

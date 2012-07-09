@@ -6,6 +6,7 @@
  */
 package com.fenceit.service.checkers;
 
+import java.util.HashSet;
 import java.util.List;
 
 import org.apache.log4j.Logger;
@@ -30,6 +31,9 @@ import com.fenceit.service.WakeLockManager;
  * it should have a WakeLock acquired and should handle the clearing process.
  */
 public abstract class TriggerCheckerThread extends Thread {
+
+	/** The triggered alarms. */
+	private HashSet<Long> triggeredAlarms;
 
 	/** The context. */
 	protected Context mContext;
@@ -63,7 +67,8 @@ public abstract class TriggerCheckerThread extends Thread {
 	@Override
 	public void run() {
 		super.run();
-		log.info("Starting trigger checker thread of type: " + this.getClass().getSimpleName());
+		if (log.isInfoEnabled())
+			log.info("Starting trigger checker thread of type: " + this.getClass().getSimpleName());
 
 		// Check if service is enabled
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
@@ -102,6 +107,14 @@ public abstract class TriggerCheckerThread extends Thread {
 			log.debug("Checking if any of the alarms can be triggered with the contextual data: " + contextData);
 		for (AlarmTrigger t : triggers)
 			if (t.shouldTrigger(contextData)) {
+
+				// Check if the alarm was already triggered
+				if (checkIfTriggeredAndStore(t.getAlarm().getId())) {
+					log.info("Alarm with id: " + t.getAlarm().getId()
+							+ " already triggered before, so not executing actions again.");
+					continue;
+				}
+
 				// Get the reason why the alarm was triggered and send a message to the main thread
 				// to handle action execution
 				String triggerReason = getTriggerMessage(t);
@@ -122,6 +135,25 @@ public abstract class TriggerCheckerThread extends Thread {
 
 		// Release the Wake Lock
 		WakeLockManager.releaseWakeLock();
+	}
+
+	/**
+	 * Checks if an alarm was already triggered and, if not, mark it for future checks.
+	 * 
+	 * @param id the id
+	 * @return true, if successful
+	 */
+	private boolean checkIfTriggeredAndStore(long id) {
+		// Is triggered already
+		if (triggeredAlarms != null && triggeredAlarms.contains(id))
+			return true;
+
+		// Not triggered, so mark
+		if (triggeredAlarms == null)
+			triggeredAlarms = new HashSet<Long>();
+		triggeredAlarms.add(id);
+		return false;
+
 	}
 
 	/**

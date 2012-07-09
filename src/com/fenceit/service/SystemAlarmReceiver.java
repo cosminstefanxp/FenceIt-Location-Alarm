@@ -13,7 +13,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.fenceit.provider.WifiDataProvider;
+import com.fenceit.provider.WifisDetectedDataProvider;
 
 /**
  * The Class SystemAlarmReceiver handles broadcasts that arrive from the System {@link AlarmManager}
@@ -42,7 +42,7 @@ public class SystemAlarmReceiver extends BroadcastReceiver {
 		// WifiBroadcastReceiver, which will start the Background service accordingly.
 		if (message == BackgroundService.SERVICE_EVENT_WIFIS_DETECTED) {
 			log.debug("Starting WifiScan");
-			WifiDataProvider.startScan(context);
+			WifisDetectedDataProvider.startScan(context);
 			return;
 		}
 

@@ -19,7 +19,7 @@ import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.provider.ContextData;
-import com.fenceit.provider.WifiDataProvider;
+import com.fenceit.provider.WifiConnectedDataProvider;
 import com.fenceit.service.BackgroundServiceHandler;
 
 /**
@@ -73,7 +73,7 @@ public class WifiConnectedTriggerCheckerThread extends TriggerCheckerThread {
 	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData() */
 	@Override
 	protected ContextData acquireContextData() {
-		ContextData data = WifiDataProvider.getWifiContextData(mContext, true, false);
+		ContextData data = WifiConnectedDataProvider.getWifiContextData(mContext, true);
 		return data;
 	}
 
@@ -84,7 +84,7 @@ public class WifiConnectedTriggerCheckerThread extends TriggerCheckerThread {
 	protected boolean isPreconditionValid() {
 
 		// Check for availability;
-		if (!WifiDataProvider.isWifiAvailable(mContext)) {
+		if (!WifiConnectedDataProvider.isWifiAvailable(mContext)) {
 			log.warn("Wifi is not enabled. Cannot check if the triggering conditions are met for locations requiring Wifi contextual data.");
 			return false;
 		}

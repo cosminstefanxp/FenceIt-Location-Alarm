@@ -10,7 +10,6 @@ import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 import org.apache.log4j.Logger;
 
-import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 

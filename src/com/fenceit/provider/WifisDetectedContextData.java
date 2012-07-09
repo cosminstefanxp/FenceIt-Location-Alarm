@@ -10,33 +10,26 @@ import java.util.Arrays;
 import java.util.List;
 
 import android.net.wifi.ScanResult;
-import android.net.wifi.WifiInfo;
 
 /**
- * The WifiContextData contains info regarding the Wireless interface and the Wifi networks
- * (connected and in range).
+ * The WifisDetectedContextData contains info regarding the Wireless interface and the Wifi networks
+ * in range.
  */
 public class WifisDetectedContextData implements ContextData {
-
-	/** The wifi info for the connected Wifi network. */
-	public WifiInfo connectedWifiInfo;
-
-	/** The last connected bssid. */
-	public String prevConnectedBSSID;
 
 	/** The scan results of the Wireless networks in range. */
 	public List<ScanResult> scanResults;
 
-	/** The prev scan bssi ds. */
+	/** The previous scan's BSSIDs. */
 	public String[] prevScanBSSIDs;
 
 	/* (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
+	 * 
+	 * @see java.lang.Object#toString() */
 	@Override
 	public String toString() {
-		return "WifiContextData [connectedWifiInfo=" + connectedWifiInfo + ", prevConnectedBSSID=" + prevConnectedBSSID
-				+ ", scanResults=" + scanResults + ", prevScanBSSIDs=" + Arrays.toString(prevScanBSSIDs) + "]";
+		return "WifisDetectedContextData [scanResults=" + scanResults + ", prevScanBSSIDs="
+				+ Arrays.toString(prevScanBSSIDs) + "]";
 	}
 
 }

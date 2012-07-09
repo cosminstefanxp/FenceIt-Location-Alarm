@@ -28,7 +28,7 @@ import com.fenceit.R;
 import com.fenceit.alarm.locations.AbstractAlarmLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.db.DatabaseManager;
-import com.fenceit.provider.WifiDataProvider;
+import com.fenceit.provider.WifiConnectedDataProvider;
 
 /**
  * The Class WifiConnectedActivity.
@@ -254,13 +254,13 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	 */
 	private void gatherContextInfo() {
 		// Check for availability;
-		if (!WifiDataProvider.isWifiAvailable(this)) {
+		if (!WifiConnectedDataProvider.isWifiAvailable(this)) {
 			Toast.makeText(this, "Wifi network is not available", Toast.LENGTH_SHORT);
 			showDialog(DIALOG_ENABLE_WIFI);
 			return;
 		}
 
-		WifiInfo wifiInfo = WifiDataProvider.getConnectionWifiInfo(this);
+		WifiInfo wifiInfo = WifiConnectedDataProvider.getConnectionWifiInfo(this);
 		log.info("Wifi Connection info: " + wifiInfo);
 		// Update the view
 		((TextView) findViewById(R.id.wificonn_bssidText)).setText(wifiInfo.getBSSID());
