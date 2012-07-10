@@ -214,7 +214,6 @@ public class BackgroundService extends Service {
 		super.onDestroy();
 
 		log.warn("Destroying background service...");
-		Toast.makeText(this, "Service stopping", Toast.LENGTH_SHORT).show();
 
 		// If the service is disabled, shutdown and cancel all pending alarms
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);

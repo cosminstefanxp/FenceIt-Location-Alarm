@@ -60,7 +60,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	/**
 	 * Instantiates a new basic trigger.
 	 * 
-	 * @param alarm the alarm
+	 * @param alarm the alarm 
 	 */
 	public BasicTrigger(Alarm alarm) {
 		super(alarm);
