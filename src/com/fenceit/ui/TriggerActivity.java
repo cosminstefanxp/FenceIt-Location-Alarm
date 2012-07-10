@@ -18,6 +18,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -134,7 +135,7 @@ public class TriggerActivity extends DefaultActivity implements OnClickListener 
 			((TextView) findViewById(R.id.trigger_locationTypeText)).setText(loc.getTypeDescription()
 					+ " location type");
 			((TextView) findViewById(R.id.trigger_locationDescText)).setText(loc.getDescription());
-			// TODO: change type image
+			((ImageView) findViewById(R.id.trigger_locationTypeImage)).setImageResource(loc.getTypeImageResource());
 		}
 	}
 

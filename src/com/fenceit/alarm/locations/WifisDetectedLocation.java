@@ -175,7 +175,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 
 	@Override
 	public int getTypeImageResource() {
-		return android.R.drawable.ic_menu_preferences;
+		return android.R.drawable.ic_menu_myplaces;
 	}
 
 }
