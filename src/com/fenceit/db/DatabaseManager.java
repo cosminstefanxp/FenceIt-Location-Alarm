@@ -15,7 +15,6 @@ import org.androwrapee.db.ReflectionManager;
 import org.apache.log4j.Logger;
 
 import android.content.Context;
-import android.database.sqlite.SQLiteOpenHelper;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.actions.NotificationAction;

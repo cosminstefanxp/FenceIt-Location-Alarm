@@ -129,9 +129,10 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 		refreshActivity();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -163,9 +164,10 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 		((TextView) findViewById(R.id.coordinates_radiusText)).setText(location.getActivationDistance() + " m");
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onDestroy() */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onDestroy()
+	 */
 	@Override
 	protected void onDestroy() {
 		super.onDestroy();
@@ -176,8 +178,7 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 	}
 
 	/**
-	 * Fetches the associated location from the database, or builds a new one, if no id was
-	 * provided.
+	 * Fetches the associated location from the database, or builds a new one, if no id was provided.
 	 * 
 	 * @param locationID the location id
 	 */
@@ -222,7 +223,7 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 		log.info("Saving location in database...");
 		dao.open();
 		if (newEntity) {
-			long id = dao.insert(location);
+			long id = dao.insert(location, true);
 			if (id == -1)
 				return false;
 			log.info("Successfully saved new location with id: " + id);
@@ -236,9 +237,10 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -279,9 +281,10 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 	// TODO: Cool:
 	// http://stackoverflow.com/questions/7709030/get-gps-location-in-a-broadcast-receiver-or-service-to-broadcast-receiver-data-t/7709140#7709140
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onCreateDialog(int) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onCreateDialog(int)
+	 */
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
@@ -330,13 +333,10 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 		return dialog;
 	}
 
-	/* Called when a new location is available from the LocationProvider
-	 * 
-	 * (non-Javadoc)
-	 * 
-	 * @see
-	 * com.fenceit.provider.CoordinatesLocationDataListener#onLocationUpdate(android.location.Location
-	 * ) */
+	/*
+	 * Called when a new location is available from the LocationProvider (non-Javadoc)
+	 * @see com.fenceit.provider.CoordinatesLocationDataListener#onLocationUpdate(android.location.Location )
+	 */
 	@Override
 	public void onLocationUpdate(Location location) {
 		if (log.isInfoEnabled())
@@ -354,7 +354,8 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 		this.refreshButton.setVisibility(View.VISIBLE);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 */
 	@Override
@@ -373,9 +374,10 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 		}
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onStop() */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onStop()
+	 */
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -386,9 +388,10 @@ public class CoordinatesActivity extends AbstractLocationActivity implements OnC
 
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.ui.AbstractLocationActivity#getLocation() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.ui.AbstractLocationActivity#getLocation()
+	 */
 	@Override
 	protected AbstractAlarmLocation getLocation() {
 		return location;

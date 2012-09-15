@@ -93,9 +93,10 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 		refreshActivity();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
+	 */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -125,8 +126,7 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 	}
 
 	/**
-	 * Fetches the associated location from the database, or builds a new one, if no id was
-	 * provided.
+	 * Fetches the associated location from the database, or builds a new one, if no id was provided.
 	 * 
 	 * @param locationID the location id
 	 */
@@ -171,7 +171,7 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 		log.info("Saving location in database...");
 		dao.open();
 		if (newEntity) {
-			long id = dao.insert(location);
+			long id = dao.insert(location, true);
 			if (id == -1)
 				return false;
 			log.info("Successfully saved new location with id: " + id);
@@ -185,9 +185,10 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -211,9 +212,10 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 		}
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onCreateDialog(int) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onCreateDialog(int)
+	 */
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
@@ -252,7 +254,7 @@ public class CellNetworkActivity extends AbstractLocationActivity implements OnC
 	private void gatherContextInfo() {
 		// Check for availability;
 		if (!CellDataProvider.isCellNetworkConnected(this)) {
-			Toast.makeText(this, "Cell network is not available", Toast.LENGTH_SHORT);
+			Toast.makeText(this, "Cell network is not available", Toast.LENGTH_SHORT).show();
 			showDialog(DIALOG_ENABLE_NETWORK);
 			return;
 		}

@@ -245,7 +245,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		log.info("Saving alarm in database...");
 		dao.open();
 		if (newAlarm) {
-			long id = dao.insert(alarm);
+			long id = dao.insert(alarm, true); 
 			if (id == -1)
 				return false;
 			log.info("Successfully saved new alarm with id: " + id);

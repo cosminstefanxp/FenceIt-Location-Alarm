@@ -161,7 +161,7 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 		log.info("Saving action in database...");
 		dao.open();
 		if (newEntity) {
-			long id = dao.insert(action);
+			long id = dao.insert(action, true);
 			if (id == -1)
 				return false;
 			log.info("Successfully saved new action with id: " + id);

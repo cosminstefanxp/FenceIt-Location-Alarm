@@ -130,8 +130,7 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	}
 
 	/**
-	 * Fetches the associated location from the database, or builds a new one, if no id was
-	 * provided.
+	 * Fetches the associated location from the database, or builds a new one, if no id was provided.
 	 * 
 	 * @param locationID the location id
 	 */
@@ -176,7 +175,7 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 		log.info("Saving location in database...");
 		dao.open();
 		if (newEntity) {
-			long id = dao.insert(location);
+			long id = dao.insert(location, true);
 			if (id == -1)
 				return false;
 			log.info("Successfully saved new location with id: " + id);
@@ -248,7 +247,7 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	private void gatherContextInfo() {
 		// Check for availability;
 		if (!WifiConnectedDataProvider.isWifiAvailable(this)) {
-			Toast.makeText(this, "Wifi network is not available", Toast.LENGTH_SHORT);
+			Toast.makeText(this, "Wifi network is not available", Toast.LENGTH_SHORT).show();
 			showDialog(DIALOG_ENABLE_WIFI);
 			return;
 		}

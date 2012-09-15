@@ -197,7 +197,7 @@ public class TriggerActivity extends DefaultActivity implements OnClickListener 
 		log.info("Saving trigger in database...");
 		dao.open();
 		if (newEntity) {
-			long id = dao.insert(trigger);
+			long id = dao.insert(trigger, true);
 			if (id == -1)
 				return false;
 			log.info("Successfully saved new trigger with id: " + id);
