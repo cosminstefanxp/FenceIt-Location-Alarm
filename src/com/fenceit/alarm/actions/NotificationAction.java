@@ -58,7 +58,7 @@ public class NotificationAction extends AbstractAlarmAction {
 	 * @see com.fenceit.alarm.AlarmAction#execute() */
 	@Override
 	public void execute(Context context) {
-		log.warn("Notification alarm triggered: " + this);
+		log.warn("Notification action triggered: " + this);
 		Intent intent = new Intent(context, NotificationTriggeredActivity.class);
 		intent.putExtra("message", message);
 		intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);

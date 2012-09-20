@@ -12,7 +12,7 @@ package com.fenceit.alarm.actions;
 public enum ActionType {
 
 	/** The Notification Action, that displays a message on a screen and plays an alarm sound. */
-	NotificationAction(0);
+	NotificationAction(0), RingerModeAction(1);
 
 	/** The id. */
 	private int id;
