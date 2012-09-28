@@ -6,6 +6,8 @@
  */
 package com.fenceit.alarm.actions;
 
+import org.androwrapee.db.DatabaseClass;
+import org.androwrapee.db.DatabaseField;
 import org.apache.log4j.Logger;
 
 import android.content.Context;
@@ -16,20 +18,29 @@ import com.fenceit.alarm.Alarm;
 /**
  * The Class RingerModeAction.
  */
+@DatabaseClass
 public class RingerModeAction extends AbstractAlarmAction {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = -1486486315419529215L;
 
 	/** The Constant tableName. */
-	public static final String tableName = "notification_actions";
+	public static final String tableName = "ringer_mode_actions";
 
 	/** The logger. */
 	private static Logger log = Logger.getLogger(RingerModeAction.class);
 
 	/** The target ringer mode. */
-	int targetRingerMode = -1;
+	@DatabaseField
+	private int targetRingerMode = AudioManager.RINGER_MODE_NORMAL;
 
+	/**
+	 * Instantiates a new ringer mode action.
+	 */
+	public RingerModeAction() {
+		super(null);
+	}
+	
 	/**
 	 * Instantiates a new ringer mode action.
 	 * 
@@ -120,5 +131,14 @@ public class RingerModeAction extends AbstractAlarmAction {
 	public String toString() {
 		return "RingerModeAction [" + getDescription() + "]";
 	}
+
+	public int getTargetRingerMode() {
+		return targetRingerMode;
+	}
+
+	public void setTargetRingerMode(int targetRingerMode) {
+		this.targetRingerMode = targetRingerMode;
+	}
+	
 
 }

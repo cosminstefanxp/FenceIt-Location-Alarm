@@ -18,6 +18,7 @@ import android.content.Context;
 
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.actions.NotificationAction;
+import com.fenceit.alarm.actions.RingerModeAction;
 import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
@@ -54,10 +55,10 @@ public class DatabaseManager {
 		if (dbHelper == null)
 			dbHelper = new DefaultDatabaseHelper(context, DATABASE_NAME, DATABASE_VERSION, new Class[] { Alarm.class,
 					BasicTrigger.class, WifiConnectedLocation.class, WifisDetectedLocation.class,
-					CellNetworkLocation.class, CoordinatesLocation.class, NotificationAction.class }, new String[] {
-					Alarm.tableName, BasicTrigger.tableName, WifiConnectedLocation.tableName,
-					WifisDetectedLocation.tableName, CellNetworkLocation.tableName, CoordinatesLocation.tableName,
-					NotificationAction.tableName });
+					CellNetworkLocation.class, CoordinatesLocation.class, NotificationAction.class,
+					RingerModeAction.class }, new String[] { Alarm.tableName, BasicTrigger.tableName,
+					WifiConnectedLocation.tableName, WifisDetectedLocation.tableName, CellNetworkLocation.tableName,
+					CoordinatesLocation.tableName, NotificationAction.tableName, RingerModeAction.tableName });
 		return dbHelper;
 	}
 

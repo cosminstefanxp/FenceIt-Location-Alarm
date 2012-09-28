@@ -17,13 +17,15 @@ import android.content.Intent;
 import com.fenceit.alarm.actions.ActionType;
 import com.fenceit.alarm.actions.AlarmAction;
 import com.fenceit.alarm.actions.NotificationAction;
+import com.fenceit.alarm.actions.RingerModeAction;
 import com.fenceit.ui.NotificationActivity;
+import com.fenceit.ui.RingerModeActivity;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
 /**
- * The AlarmActionBroker is a class that is aware of the implemented activities corresponding to
- * action types. It is used to mediate communication between activities that use AlarmAction and the
- * effective implementations of Activities corresponding to each Alarm Action type.
+ * The AlarmActionBroker is a class that is aware of the implemented activities corresponding to action types.
+ * It is used to mediate communication between activities that use AlarmAction and the effective
+ * implementations of Activities corresponding to each Alarm Action type.
  * <p>
  * It is also used to handle interaction with the database.
  * </p>
@@ -36,8 +38,8 @@ public class AlarmActionBroker {
 	 * @return the action types adapter
 	 */
 	public static SingleChoiceAdapter<ActionType> getActionTypesAdapter() {
-		return new SingleChoiceAdapter<ActionType>(new ActionType[] { ActionType.NotificationAction },
-				new CharSequence[] { "" + "Set up a notification message." });
+		return new SingleChoiceAdapter<ActionType>(new ActionType[] { ActionType.NotificationAction, ActionType.RingerModeAction },
+				new CharSequence[] { "Set up a notification message.", "Switch to a new ringer mode." });
 	}
 
 	/**
@@ -53,6 +55,8 @@ public class AlarmActionBroker {
 		case NotificationAction:
 			intent = new Intent(context, NotificationActivity.class);
 			break;
+		case RingerModeAction:
+			intent = new Intent(context, RingerModeActivity.class);
 		}
 		return intent;
 	}
@@ -75,6 +79,14 @@ public class AlarmActionBroker {
 		daoNA.close();
 		actions.addAll(actionsNA);
 
+		// Fetch RingerMode Actions
+		DefaultDAO<RingerModeAction> daoRMA = DatabaseManager.getDAOInstance(context, RingerModeAction.class,
+				RingerModeAction.tableName);
+		daoRMA.open();
+		List<RingerModeAction> actionsRMA = daoRMA.fetchAll(where);
+		daoRMA.close();
+		actions.addAll(actionsRMA);
+
 		return actions;
 	}
 
@@ -92,6 +104,12 @@ public class AlarmActionBroker {
 			daoNA.open();
 			daoNA.delete(action.getId());
 			daoNA.close();
+		case RingerModeAction:
+			DefaultDAO<RingerModeAction> daoRMA = DatabaseManager.getDAOInstance(context, RingerModeAction.class,
+					RingerModeAction.tableName);
+			daoRMA.open();
+			daoRMA.delete(action.getId());
+			daoRMA.close();
 		}
 	}
 }

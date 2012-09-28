@@ -12,5 +12,8 @@
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_picker_title">Choose a number</string>
     <string name="trigger.whenSectionTitle">Triggered when ...</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="menu_settings">Settings</string>
+    <string name="title_activity_main">MainActivity</string>
 
 </resources>

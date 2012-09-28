@@ -294,7 +294,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 				storeAlarm();
 
 			// Launch the Activity to define the action
-			Intent addActionActivityIntent = new Intent(this, NotificationActivity.class);
+			Intent addActionActivityIntent = new Intent(this, RingerModeActivity.class);
 			addActionActivityIntent.putExtra("alarm", alarm);
 			startActivityForResult(addActionActivityIntent, REQ_CODE_ADD_ACTION);
 			break;
@@ -432,14 +432,14 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		switch (parent.getId()) {
 		case R.id.alarm_triggersListView:
 			log.info("ListView item click for editing trigger with id " + id);
-			Intent editActivityIntent = new Intent(this, TriggerActivity.class);
-			editActivityIntent.putExtra("id", id);
-			startActivityForResult(editActivityIntent, REQ_CODE_EDIT_TRIGGER);
+			Intent editTriggerActivityIntent = new Intent(this, TriggerActivity.class);
+			editTriggerActivityIntent.putExtra("id", id);
+			startActivityForResult(editTriggerActivityIntent, REQ_CODE_EDIT_TRIGGER);
 			break;
 		case R.id.alarm_actionsListView:
 			log.info("ListView item click for editing action with id " + id);
 			Intent editActionActivityIntent = AlarmActionBroker.getActivityIntent(getApplicationContext(),
-					ActionType.NotificationAction);
+					ActionType.RingerModeAction);
 			editActionActivityIntent.putExtra("id", id);
 			startActivityForResult(editActionActivityIntent, REQ_CODE_EDIT_ACTION);
 			break;
