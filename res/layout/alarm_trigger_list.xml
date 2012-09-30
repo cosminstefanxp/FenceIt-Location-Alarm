@@ -10,7 +10,7 @@
         android:layout_height="wrap_content"
         android:layout_marginRight="7dp"
         android:padding="7dp"
-        android:src="@android:drawable/ic_menu_edit" />
+        android:src="@drawable/ic_trigger" />
 
     <TextView
         android:id="@+id/alarm.triggersListMainDesc"

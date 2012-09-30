@@ -14,6 +14,7 @@ import org.androwrapee.db.DatabaseField;
 import android.location.Location;
 import android.location.LocationManager;
 
+import com.fenceit.R;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.CoordinatesContextData;
 
@@ -181,7 +182,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 	}
 	@Override
 	public int getTypeImageResource() {
-		return android.R.drawable.ic_menu_mapmode;
+		return R.drawable.ic_location_coord;
 	}
 
 }

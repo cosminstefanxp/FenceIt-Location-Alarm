@@ -11,6 +11,7 @@ import java.io.Serializable;
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
+import com.fenceit.R;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.WifiConnectedContextData;
 
@@ -150,6 +151,6 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 
 	@Override
 	public int getTypeImageResource() {
-		return android.R.drawable.ic_menu_preferences;
+		return R.drawable.ic_location_wifi_connected;
 	}
 }

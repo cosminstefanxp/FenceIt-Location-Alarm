@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import android.content.Context;
 import android.content.Intent;
 
+import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.ui.NotificationTriggeredActivity;
 
@@ -107,8 +108,9 @@ public class NotificationAction extends AbstractAlarmAction {
 	}
 
 	@Override
-	public int getTypeImageResource() {
-		return android.R.drawable.ic_menu_view;
+	public int getTypeImageResource() { 
+		return R.drawable.ic_action_notification;
+		
 	}
 
 	@Override

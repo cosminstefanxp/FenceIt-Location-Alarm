@@ -13,6 +13,7 @@ import org.apache.log4j.Logger;
 import android.content.Context;
 import android.media.AudioManager;
 
+import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 
 /**
@@ -40,7 +41,7 @@ public class RingerModeAction extends AbstractAlarmAction {
 	public RingerModeAction() {
 		super(null);
 	}
-	
+
 	/**
 	 * Instantiates a new ringer mode action.
 	 * 
@@ -120,7 +121,7 @@ public class RingerModeAction extends AbstractAlarmAction {
 	 */
 	@Override
 	public int getTypeImageResource() {
-		return android.R.drawable.ic_lock_silent_mode_off;
+		return R.drawable.ic_action_ringer_mode;
 	}
 
 	/*
@@ -139,6 +140,5 @@ public class RingerModeAction extends AbstractAlarmAction {
 	public void setTargetRingerMode(int targetRingerMode) {
 		this.targetRingerMode = targetRingerMode;
 	}
-	
 
 }

@@ -31,8 +31,7 @@ public class ActionsAdapter extends BaseAdapter {
 	private List<AlarmAction> actions;
 
 	/**
-	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for
-	 * quick access.
+	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for quick access.
 	 */
 	private static class ViewHolder {
 
@@ -57,9 +56,10 @@ public class ActionsAdapter extends BaseAdapter {
 		this.actions = actions;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// Try to us a converted view
@@ -103,19 +103,41 @@ public class ActionsAdapter extends BaseAdapter {
 		super.notifyDataSetChanged();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.widget.Adapter#getItem(int)
+	 */
 	@Override
 	public Object getItem(int position) {
 		return actions.get(position);
 	}
 
+	/* (non-Javadoc)
+	 * @see android.widget.Adapter#getItemId(int)
+	 */
 	@Override
 	public long getItemId(int position) {
 		return actions.get(position).getId();
 	}
 
+	/* (non-Javadoc)
+	 * @see android.widget.Adapter#getCount()
+	 */
 	@Override
 	public int getCount() {
 		return actions.size();
+	}
+
+	/**
+	 * Gets the action by id.
+	 *
+	 * @param id the id
+	 * @return the action by id
+	 */
+	public AlarmAction getActionById(long id) {
+		for (AlarmAction a : actions)
+			if (a.getId() == id)
+				return a;
+		return null;
 	}
 
 }

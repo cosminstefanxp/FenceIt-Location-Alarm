@@ -15,6 +15,7 @@ import org.androwrapee.db.DatabaseField;
 import android.net.wifi.ScanResult;
 import android.util.Log;
 
+import com.fenceit.R;
 import com.fenceit.provider.ContextData;
 import com.fenceit.provider.WifisDetectedContextData;
 
@@ -175,7 +176,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 
 	@Override
 	public int getTypeImageResource() {
-		return android.R.drawable.ic_menu_myplaces;
+		return R.drawable.ic_location_wifi_detected;
 	}
 
 }

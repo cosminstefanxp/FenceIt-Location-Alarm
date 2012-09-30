@@ -41,6 +41,7 @@ import com.fenceit.db.AlarmActionBroker;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.service.BackgroundService;
 import com.fenceit.ui.adapters.ActionsAdapter;
+import com.fenceit.ui.adapters.SingleChoiceAdapter;
 import com.fenceit.ui.adapters.TriggersAdapter;
 
 /**
@@ -64,10 +65,15 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	private static final int REQ_CODE_EDIT_ACTION = 4;
 
 	/**
-	 * The Constant DIALOG_ALARM_NAME used to identify the dialog that allows the user to set the
-	 * alarm name.
+	 * The Constant DIALOG_ALARM_NAME used to identify the dialog that allows the user to set the alarm name.
 	 */
 	private static final int DIALOG_ALARM_NAME = 1;
+
+	/**
+	 * The Constant DIALOG_NEW_ACTION used to identify the dialog that allows the user to select the type for
+	 * a new action.
+	 */
+	private static final int DIALOG_NEW_ACTION = 2;
 
 	/** The alarm. */
 	private Alarm alarm;
@@ -89,6 +95,9 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 
 	/** The actions adapter. */
 	private ActionsAdapter actionsAdapter;
+
+	/** The action types adapter. */
+	private SingleChoiceAdapter<ActionType> actionTypesAdapter;
 
 	/**
 	 * Called when the activity is first created.
@@ -143,6 +152,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		actionsLV.setOnItemClickListener(this);
 
 		// Refresh the activity
+		actionTypesAdapter = AlarmActionBroker.getActionTypesAdapter();
 		refreshActivity();
 	}
 
@@ -245,7 +255,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		log.info("Saving alarm in database...");
 		dao.open();
 		if (newAlarm) {
-			long id = dao.insert(alarm, true); 
+			long id = dao.insert(alarm, true);
 			if (id == -1)
 				return false;
 			log.info("Successfully saved new alarm with id: " + id);
@@ -257,9 +267,10 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.view.View.OnClickListener#onClick(android.view.View)
+	 */
 	@Override
 	public void onClick(View v) {
 
@@ -288,15 +299,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 			break;
 		case R.id.alarm_addActionButton:
 			log.info("Add action button clicked.");
-			// If it's a new alarm, we have to store it in the database so we can get an id and
-			// connect the action with it
-			if (newAlarm)
-				storeAlarm();
-
-			// Launch the Activity to define the action
-			Intent addActionActivityIntent = new Intent(this, RingerModeActivity.class);
-			addActionActivityIntent.putExtra("alarm", alarm);
-			startActivityForResult(addActionActivityIntent, REQ_CODE_ADD_ACTION);
+			showDialog(DIALOG_NEW_ACTION);
 			break;
 		case R.id.alarm_nameSection:
 			showDialog(DIALOG_ALARM_NAME);
@@ -313,29 +316,31 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		}
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
 		if (resultCode == RESULT_OK && (requestCode == REQ_CODE_ADD_TRIGGER || requestCode == REQ_CODE_EDIT_TRIGGER)) {
-			log.debug("Refreshing alarms...");
+			log.debug("Refreshing triggers...");
 			fetchTriggers();
 			refreshTriggersListView();
 		}
 		if (resultCode == RESULT_OK && (requestCode == REQ_CODE_ADD_ACTION || requestCode == REQ_CODE_EDIT_ACTION)) {
-			log.debug("Refreshing alarms...");
+			log.debug("Refreshing actions...");
 			fetchActions();
 			refreshActionsListView();
 		}
 	}
 
-	/* (non-Javadoc)
-	 * 
+	/*
+	 * (non-Javadoc)
 	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View,
-	 * android.view.ContextMenu.ContextMenuInfo) */
+	 * android.view.ContextMenu.ContextMenuInfo)
+	 */
 	@Override
 	public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
 		super.onCreateContextMenu(menu, v, menuInfo);
@@ -364,9 +369,10 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		}
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
+	 */
 	@Override
 	public boolean onContextItemSelected(MenuItem item) {
 		AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
@@ -422,10 +428,11 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		alarm.getActions().remove(alarmAction);
 	}
 
-	/* (non-Javadoc)
-	 * 
+	/*
+	 * (non-Javadoc)
 	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView,
-	 * android.view.View, int, long) */
+	 * android.view.View, int, long)
+	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		log.debug("On Item click on position " + position + " for view: " + view);
@@ -438,22 +445,48 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 			break;
 		case R.id.alarm_actionsListView:
 			log.info("ListView item click for editing action with id " + id);
+			AlarmAction selectedAction = (AlarmAction) actionsAdapter.getItem(position);
+			if (selectedAction == null) {
+				log.warn("Selected action for editing, but no action found for id: " + id);
+				break;
+			}
 			Intent editActionActivityIntent = AlarmActionBroker.getActivityIntent(getApplicationContext(),
-					ActionType.RingerModeAction);
+					selectedAction.getType());
 			editActionActivityIntent.putExtra("id", id);
 			startActivityForResult(editActionActivityIntent, REQ_CODE_EDIT_ACTION);
 			break;
 		}
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onCreateDialog(int) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Activity#onCreateDialog(int)
+	 */
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch (id) {
+		case DIALOG_NEW_ACTION:
+			// Create the dialog associated with creating a new type of action
+			builder.setTitle("New action of type");
+			builder.setItems(actionTypesAdapter.getNames(), new DialogInterface.OnClickListener() {
+				// Process the selection
+				public void onClick(DialogInterface dialog, int item) {
+					log.debug("Creating new action of type: " + actionTypesAdapter.getValues()[item]);
+					// If it's a new alarm, we have to store it in the database so we can get an id and
+					// connect the action with it
+					if (newAlarm)
+						storeAlarm();
+					// Launch the Activity to define the action
+					startActivityForNewAction(actionTypesAdapter.getValues()[item]);
+					dialog.dismiss();
+				}
+			});
+			// Build the dialog
+			dialog = builder.create();
+			break;
+
 		case DIALOG_ALARM_NAME:
 			// Create the dialog associated with setting Alarm name
 			builder.setTitle("Alarm name");
@@ -481,5 +514,14 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 			dialog = null;
 		}
 		return dialog;
+	}
+
+	/**
+	 * Start activity for new action.
+	 */
+	private void startActivityForNewAction(ActionType type) {
+		Intent addActionActivityIntent = AlarmActionBroker.getActivityIntent(this, type);
+		addActionActivityIntent.putExtra("alarm", alarm);
+		startActivityForResult(addActionActivityIntent, REQ_CODE_ADD_ACTION);
 	}
 }

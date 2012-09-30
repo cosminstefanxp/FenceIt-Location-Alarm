@@ -11,6 +11,7 @@ import java.io.Serializable;
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 
+import com.fenceit.R;
 import com.fenceit.provider.CellContextData;
 import com.fenceit.provider.ContextData;
 
@@ -200,7 +201,7 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 
 	@Override
 	public int getTypeImageResource() {
-		return android.R.drawable.ic_menu_compass;
+		return R.drawable.ic_location_cell_network;
 	}
 
 }
