@@ -19,9 +19,13 @@ import android.util.Log;
  */
 public class WifiConnectedDataProvider {
 
-	/** The Constant PREV_CONNECTED_WIFI_PREF. */
-	private static final String PREV_CONNECTED_WIFI_PREF = "connected_wifi";
+	/** The Constant PREV_CONNECTED_WIFI_BSSID. */
+	private static final String PREV_CONNECTED_WIFI_BSSID = "connected_wifi_bssid";
 
+	/** The Constant PREV_CONNECTED_WIFI_SSID. */
+	private static final String PREV_CONNECTED_WIFI_SSID = "connected_wifi_ssid";
+
+	/** The Constant PREV_CONNECTED_WIFI_STATIC. */
 	private static final String PREV_CONNECTED_WIFI_STATIC = "connected_wifi_static";
 
 	/**
@@ -51,11 +55,12 @@ public class WifiConnectedDataProvider {
 
 		// Get previous conditions
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
-		data.prevConnectedBSSID = sp.getString(PREV_CONNECTED_WIFI_PREF, null);
+		data.prevConnectedBSSID = sp.getString(PREV_CONNECTED_WIFI_BSSID, null);
+		data.prevConnectedSSID = sp.getString(PREV_CONNECTED_WIFI_SSID, null);
 
 		// Save current conditions for later
 		if (storeLast) {
-			// Count how many times the device stayed in the same position
+			// Count how many times the device stayed in the same position (the same BSSID)
 			int count = sp.getInt(PREV_CONNECTED_WIFI_STATIC, 0);
 			if (data.connectedWifiInfo.getBSSID() != null
 					&& data.connectedWifiInfo.getBSSID().equals(data.prevConnectedBSSID))
@@ -67,7 +72,8 @@ public class WifiConnectedDataProvider {
 
 			// Store
 			Editor ed = sp.edit();
-			ed.putString(PREV_CONNECTED_WIFI_PREF, data.connectedWifiInfo.getBSSID());
+			ed.putString(PREV_CONNECTED_WIFI_BSSID, data.connectedWifiInfo.getBSSID());
+			ed.putString(PREV_CONNECTED_WIFI_SSID, data.connectedWifiInfo.getSSID());
 			ed.putInt(PREV_CONNECTED_WIFI_STATIC, count);
 			ed.commit();
 		}

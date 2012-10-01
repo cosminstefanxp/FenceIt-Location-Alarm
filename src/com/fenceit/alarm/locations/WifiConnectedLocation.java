@@ -16,7 +16,9 @@ import com.fenceit.provider.ContextData;
 import com.fenceit.provider.WifiConnectedContextData;
 
 /**
- * The Class WifiConnectedLocation.
+ * The Class WifiConnectedLocation that stores information about a location defined on the currently connected
+ * Wi-Fi network. By default, it uses the SSID of a network for matching, but can be configured to use a
+ * networks BSSID, thus identifying a network more accurately.
  */
 @DatabaseClass
 public class WifiConnectedLocation extends AbstractAlarmLocation implements Serializable {
@@ -28,12 +30,22 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 	@DatabaseField
 	private String bssid;
 
-	/** The ssid. */
+	/**
+	 * The ssid. By default this is used for matching, but behaviour can be changed with the
+	 * {@link WifiConnectedLocation#matchWithBssid} field.
+	 */
 	@DatabaseField
 	private String ssid;
 
 	/** The Constant tableName. */
 	public static final String tableName = "wificonn_locations";
+
+	/**
+	 * This field marks whether this location uses the BSSID of a network for identification instead of the
+	 * SSID. Default value is false.
+	 */
+	@DatabaseField
+	private boolean matchWithBssid = false;
 
 	/**
 	 * Instantiates a new wifi connected location.
@@ -78,9 +90,30 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 		this.ssid = ssid;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Checks if this location uses the BSSID of a network for identification instead of the SSID. Default
+	 * value is false.
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#isInside(com.fenceit.alarm.ContextInfo) */
+	 * @return true, if is using BSSID for matching
+	 */
+	public boolean isMatchWithBssid() {
+		return matchWithBssid;
+	}
+
+	/**
+	 * Sets if this location uses the BSSID of a network for identification instead of the SSID. Default value
+	 * is false.
+	 * 
+	 * @param matchWithBssid the new match with BSSID value
+	 */
+	public void setMatchWithBssid(boolean matchWithBssid) {
+		this.matchWithBssid = matchWithBssid;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.alarm.locations.AlarmLocation#isInside(com.fenceit.alarm.ContextInfo)
+	 */
 	@Override
 	public Status checkStatus(ContextData info) {
 		WifiConnectedContextData data = (WifiConnectedContextData) info;
@@ -88,13 +121,23 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 			return Status.UNKNOWN;
 		// Check current status
 		boolean isInside = false;
-		if (data.connectedWifiInfo.getBSSID() != null && data.connectedWifiInfo.getBSSID().equals(this.bssid))
-			isInside = true;
+		if (matchWithBssid) {
+			if (data.connectedWifiInfo.getBSSID() != null && data.connectedWifiInfo.getBSSID().equals(this.bssid))
+				isInside = true;
+		} else {
+			if (data.connectedWifiInfo.getSSID() != null && data.connectedWifiInfo.getSSID().equals(this.ssid))
+				isInside = true;
+		}
 
 		// Check previous status
 		boolean wasInside = false;
-		if (data.prevConnectedBSSID != null && data.prevConnectedBSSID.equals(this.bssid))
-			wasInside = true;
+		if (matchWithBssid) {
+			if (data.prevConnectedBSSID != null && data.prevConnectedBSSID.equals(this.bssid))
+				wasInside = true;
+		} else {
+			if (data.prevConnectedSSID != null && data.prevConnectedSSID.equals(this.ssid))
+				wasInside = true;
+		}
 
 		// Compute the status
 		if (isInside) {
@@ -110,45 +153,60 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 		}
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription()
+	 */
 	@Override
 	public String getDescription() {
-		return "BSSID: " + this.bssid;
+		if (matchWithBssid)
+			return "BSSID: " + this.bssid;
+		else
+			return "SSID: " + this.ssid;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription()
+	 */
 	@Override
 	public String getTypeDescription() {
 		return "Connected Wifi";
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getType() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getType()
+	 */
 	@Override
 	public LocationType getType() {
 		return LocationType.WifiConnectedLocation;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete()
+	 */
 	@Override
 	public boolean isComplete() {
-		if (bssid == null)
+		if ((matchWithBssid && bssid == null) || (!matchWithBssid && ssid == null))
 			return false;
 		return true;
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "WifiConnectedLocation [bssid=" + bssid + ", ssid=" + ssid + "]";
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeImageResource()
+	 */
 	@Override
 	public int getTypeImageResource() {
 		return R.drawable.ic_location_wifi_connected;

@@ -114,6 +114,27 @@
         android:layout_height="wrap_content"
         android:text="Settings"
         android:textAppearance="?android:attr/textAppearanceLarge" />
+    
+    <LinearLayout
+        android:id="@+id/wificonn.matchBssidSection"
+        style="@style/SettingItem"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/wificonn.matchBssidText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Matching on SSID"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Set how the locations are compared." 
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+    
 
     <include layout="@layout/location_common_settings" />
 

@@ -49,12 +49,6 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	/** If it's a new entity. */
 	private boolean newEntity;
 
-	/** The save button. */
-	private Button saveButton;
-
-	/** The refresh button. */
-	private ImageButton refreshButton;
-
 	/**
 	 * Called when the activity is first created.
 	 * 
@@ -93,10 +87,9 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 		}
 
 		// Buttons and others
-		saveButton = (Button) findViewById(R.id.title_saveButton);
-		saveButton.setOnClickListener(this);
-		refreshButton = (ImageButton) findViewById(R.id.wificonn_refreshButton);
-		refreshButton.setOnClickListener(this);
+		((Button) findViewById(R.id.title_saveButton)).setOnClickListener(this);
+		((ImageButton) findViewById(R.id.wificonn_refreshButton)).setOnClickListener(this);
+		findViewById(R.id.wificonn_matchBssidSection).setOnClickListener(this);
 
 		// Fill data
 		refreshActivity();
@@ -117,7 +110,7 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 		refreshAbstractLocationElements();
 
 		// Location Section
-		if (location.getBssid() != null) {
+		if (location.getBssid() != null || location.getSsid() != null) {
 			((TextView) findViewById(R.id.wificonn_bssidText)).setText(location.getBssid());
 			((TextView) findViewById(R.id.wificonn_ssidText)).setText(location.getSsid());
 		} else {
@@ -127,6 +120,11 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 		((TextView) findViewById(R.id.wificonn_macText)).setText("-");
 		((TextView) findViewById(R.id.wificonn_statusText)).setText("-");
 
+		// Settings section
+		if (location.isMatchWithBssid())
+			((TextView) findViewById(R.id.wificonn_matchBssidText)).setText("Match on BSSID");
+		else
+			((TextView) findViewById(R.id.wificonn_matchBssidText)).setText("Match on SSID");
 	}
 
 	/**
@@ -191,7 +189,8 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 
 	@Override
 	public void onClick(View v) {
-		if (v == saveButton) {
+		switch (v.getId()) {
+		case R.id.title_saveButton:
 			log.info("Save button clicked. Storing entity...");
 			if (!storeLocation()) {
 				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
@@ -203,10 +202,18 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 			intent.putExtra("type", location.getType().toString());
 			setResult(RESULT_OK, intent);
 			finish();
-			return;
-		} else if (v == refreshButton) {
+			break;
+		case R.id.wificonn_refreshButton:
 			log.info("Refreshing details regarding Wifi currently connected to.");
 			gatherContextInfo();
+			break;
+		case R.id.wificonn_matchBssidSection:
+			log.debug("Changing the 'Match BSSID' option from " + location.isMatchWithBssid());
+			location.setMatchWithBssid(!location.isMatchWithBssid());
+			if (location.isMatchWithBssid())
+				((TextView) findViewById(R.id.wificonn_matchBssidText)).setText("Match on BSSID");
+			else
+				((TextView) findViewById(R.id.wificonn_matchBssidText)).setText("Match on SSID");
 		}
 	}
 
