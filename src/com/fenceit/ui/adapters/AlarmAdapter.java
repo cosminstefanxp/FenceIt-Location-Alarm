@@ -42,8 +42,7 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 	private DefaultDAO<BasicTrigger> daoTrigger;
 
 	/**
-	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for
-	 * quick access.
+	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for quick access.
 	 */
 	private static class ViewHolder {
 
@@ -70,17 +69,19 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 				BasicTrigger.tableName);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.widget.ArrayAdapter#getCount() */
+	/*
+	 * (non-Javadoc)
+	 * @see android.widget.ArrayAdapter#getCount()
+	 */
 	@Override
 	public int getCount() {
 		return alarms.size();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// Try to us a converted view
@@ -136,20 +137,20 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		return alarms.get(position);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.widget.Adapter#getItemId(int) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.widget.Adapter#getItemId(int)
+	 */
 	@Override
 	public long getItemId(int position) {
 		return alarms.get(position).getId();
 	}
 
-	/* Method called when there is a click on the toggle button.
-	 * 
-	 * (non-Javadoc)
-	 * 
+	/*
+	 * Method called when there is a click on the toggle button. (non-Javadoc)
 	 * @see android.widget.CompoundButton.OnCheckedChangeListener#onCheckedChanged(android.widget.
-	 * CompoundButton, boolean) */
+	 * CompoundButton, boolean)
+	 */
 	@Override
 	public void onClick(View v) {
 
@@ -173,11 +174,14 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 		dao.update(alarm, alarm.getId());
 		dao.close();
 
-		// Notify the background service that a new alarm is now enabled
+		// Notify the background service that a new alarm is now enabled/disabled
+		Intent intent = new Intent(context, BackgroundService.class);
 		if (alarm.isEnabled()) {
-			Intent intent = new Intent(context, BackgroundService.class);
 			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_RESET_ALARMS);
-			context.startService(intent);
+		} else {
+			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_CHECK_SHUTDOWN);
 		}
+		context.startService(intent);
+
 	}
 }

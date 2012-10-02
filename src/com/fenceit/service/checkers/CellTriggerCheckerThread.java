@@ -24,9 +24,9 @@ import com.fenceit.provider.ContextData;
 import com.fenceit.service.BackgroundServiceHandler;
 
 /**
- * The CellTriggerCheckerThread handles the check for conditions regarding the currently connected
- * cell network (the alarm locations of type {@link CellNetworkLocation}. If any of the alarms
- * should be triggered, it handles that.
+ * The CellTriggerCheckerThread handles the check for conditions regarding the currently connected cell
+ * network (the alarm locations of type {@link CellNetworkLocation}. If any of the alarms should be triggered,
+ * it handles that.
  */
 public class CellTriggerCheckerThread extends TriggerCheckerThread {
 
@@ -40,9 +40,10 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 		super(context, handler, eventType);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.TriggerCheckerThread#fetchData() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#fetchData()
+	 */
 	@Override
 	protected List<AlarmTrigger> fetchData() {
 		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='"
@@ -57,30 +58,30 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 		return triggers;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger
-	 * ) */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger )
+	 */
 	@Override
 	protected String getTriggerMessage(AlarmTrigger trigger) {
 		log.warn("An alarm was triggered because of: " + trigger);
-		return "The alarm '" + trigger.getAlarm().getName() + "' was triggered because of a "
-				+ trigger.getSecondaryDescription();
+		return "'" + trigger.getAlarm().getName() + "' triggered by " + trigger.getSecondaryDescription();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData()
+	 */
 	@Override
 	protected ContextData acquireContextData() {
 		ContextData data = CellDataProvider.getCellContextData(mContext, true);
 		return data;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.TriggerCheckerThread#isPreconditionValid() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#isPreconditionValid()
+	 */
 	@Override
 	protected boolean isPreconditionValid() {
 		// Check for availability;
@@ -92,9 +93,10 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime()
+	 */
 	@Override
 	protected Float computeDelayFactor(List<AlarmTrigger> triggers, ContextData data) {
 

@@ -6,6 +6,7 @@
  */
 package com.fenceit.service;
 
+import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
 import android.app.Notification;
@@ -23,17 +24,19 @@ import android.widget.Toast;
 
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
+import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
+import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.CoordinatesDataProvider;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
 import com.fenceit.ui.AlarmPanelActivity;
 
 /**
- * The Class BackgroundService is the background service that is indefinitely runnning in the
- * background, scanning for any events that could trigger any of the alarms.
+ * The Class BackgroundService is the background service that is indefinitely runnning in the background,
+ * scanning for any events that could trigger any of the alarms.
  */
 public class BackgroundService extends Service {
 
@@ -55,33 +58,39 @@ public class BackgroundService extends Service {
 	public static final int SERVICE_EVENT_SHUTDOWN = 1;
 
 	/**
-	 * The Constant SERVICE_EVENT_RESET_ALARMS used to define an event which appears when a check
-	 * should be done for all location types.
+	 * The Constant SERVICE_EVENT_RESET_ALARMS used to define an event which appears when a check should be
+	 * done for all location types.
 	 */
 	public static final int SERVICE_EVENT_RESET_ALARMS = 2;
+
+	/**
+	 * The Constant SERVICE_EVENT_CHECK_SHUTDOWN used to define an event which appears when a check should be
+	 * done whether there aren't anymore enabled alarms and the service should shutdown.
+	 */
+	public static final int SERVICE_EVENT_CHECK_SHUTDOWN = 3;
 
 	/**
 	 * The Constant SERVICE_EVENT_WIFI_CONNECTED used for defining the event related to
 	 * {@link WifiConnectedLocation}.
 	 */
-	public static final int SERVICE_EVENT_WIFI_CONNECTED = 3;
+	public static final int SERVICE_EVENT_WIFI_CONNECTED = 4;
 	/**
 	 * The Constant SERVICE_EVENT_WIFIS_DETECTED used for defining the event related to
 	 * {@link WifisDetectedLocation}.
 	 */
-	public static final int SERVICE_EVENT_WIFIS_DETECTED = 4;
+	public static final int SERVICE_EVENT_WIFIS_DETECTED = 5;
 
 	/**
 	 * The Constant SERVICE_EVENT_WIFIS_CELL_NETWORK used for defining the event related to
 	 * {@link CellNetworkLocation}.
 	 */
-	public static final int SERVICE_EVENT_CELL_NETWORK = 5;
+	public static final int SERVICE_EVENT_CELL_NETWORK = 6;
 
 	/**
 	 * The Constant SERVICE_EVENT_GEO_COORDINATES used for defining the event related to
 	 * {@link CoordinatesLocation}..
 	 */
-	public static final int SERVICE_EVENT_GEO_COORDINATES = 6;
+	public static final int SERVICE_EVENT_GEO_COORDINATES = 7;
 
 	/** The Constant SERVICE_EVENT_FIELD_NAME used to store the event in the intents. */
 	public static final String SERVICE_EVENT_FIELD_NAME = "event";
@@ -95,17 +104,19 @@ public class BackgroundService extends Service {
 	/** The notification manager. */
 	private NotificationManager notificationManager;
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Service#onCreate() */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Service#onCreate()
+	 */
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		// Check if the background service is disabled
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sp.getBoolean("service_status", true) == false)
+		// Check whether it should start
+		if (!shouldStart()) {
 			stopSelf();
+			return;
+		}
 
 		// Making sure the Log4J is configured, even if the main application process is not started
 		new Log4jConfiguration();
@@ -124,14 +135,37 @@ public class BackgroundService extends Service {
 		handler = new BackgroundServiceHandler(this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
-		forceFullScan();
+		forceFullCheck();
 		CoordinatesDataProvider.mHandler = new Handler();
+	}
+
+	private boolean shouldStart() {
+		// Check if the background service is disabled
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
+		if (sp.getBoolean("service_status", true) == false) {
+			log.info("Background service is disabled, so service not starting...");
+			return false;
+		}
+
+		// Check if there is any active alarm
+		DefaultDAO<Alarm> alarmsDAO = DatabaseManager.getDAOInstance(getApplicationContext(), Alarm.class,
+				Alarm.tableName);
+		alarmsDAO.open();
+		int activeAlarmsCount = alarmsDAO.countEntries("enabled='" + DefaultDAO.BOOLEAN_TRUE_VALUE + "'");
+		alarmsDAO.close();
+		if (activeAlarmsCount == 0) {
+			log.info("No active alarms, so service not starting...");
+			return false;
+		}
+
+		return true;
+
 	}
 
 	/**
 	 * Force a full scan for all type of locations.
 	 */
-	private void forceFullScan() {
+	private void forceFullCheck() {
 		// Check if the background service is disabled
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sp.getBoolean("service_status", true) == false)
@@ -173,13 +207,25 @@ public class BackgroundService extends Service {
 
 		// If the service should shutdown
 		if (event == SERVICE_EVENT_SHUTDOWN) {
-			shutdown();
+			stopSelf();
 			return;
 		}
 
 		// If a scan with all the locations types should be scheduled
 		if (event == SERVICE_EVENT_RESET_ALARMS) {
-			forceFullScan();
+			if (!shouldStart()) {
+				stopSelf();
+			} else
+				forceFullCheck();
+			return;
+		}
+
+		// If a check for shutdown should be made {
+		if (event == SERVICE_EVENT_CHECK_SHUTDOWN) {
+			if (!shouldStart()) {
+				stopSelf();
+				return;
+			}
 		}
 
 		// Run the trigger checker thread
@@ -194,10 +240,12 @@ public class BackgroundService extends Service {
 	protected void shutdown() {
 		log.info("Shutting down service definitively.");
 		// Stop any pending system alarms
-		alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFI_CONNECTED);
-		alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFIS_DETECTED);
-		alarmDispatcher.cancelAlarm(SERVICE_EVENT_CELL_NETWORK);
-		alarmDispatcher.cancelAlarm(SERVICE_EVENT_GEO_COORDINATES);
+		if (alarmDispatcher != null) {
+			alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFI_CONNECTED);
+			alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFIS_DETECTED);
+			alarmDispatcher.cancelAlarm(SERVICE_EVENT_CELL_NETWORK);
+			alarmDispatcher.cancelAlarm(SERVICE_EVENT_GEO_COORDINATES);
+		}
 
 		// Unregister for intents
 		ComponentName component = new ComponentName(this, WifiBroadcastReceiver.class);
@@ -206,19 +254,18 @@ public class BackgroundService extends Service {
 
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Service#onDestroy() */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Service#onDestroy()
+	 */
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
 
 		log.warn("Destroying background service...");
 
-		// If the service is disabled, shutdown and cancel all pending alarms
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sp.getBoolean("service_status", true) == false)
-			shutdown();
+		// Clear all details and cancel all pending alarms
+		shutdown();
 
 		// If somehow the wakelock is still locked, release it
 		WakeLockManager.releaseWakeLock();
@@ -226,8 +273,8 @@ public class BackgroundService extends Service {
 	}
 
 	/**
-	 * Prepares the ongoing notification that is showing in the notification area while the service
-	 * is running.
+	 * Prepares the ongoing notification that is showing in the notification area while the service is
+	 * running.
 	 * 
 	 * @return the notification
 	 */
@@ -241,7 +288,7 @@ public class BackgroundService extends Service {
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
 		notification.setLatestEventInfo(getApplicationContext(), "FenceIt",
-				"The application is constantly searching for triggers.", pendingIntent);
+				"Constantly searching for triggering conditions...", pendingIntent);
 		notification.flags |= Notification.FLAG_NO_CLEAR;
 		return notification;
 	}
@@ -269,9 +316,10 @@ public class BackgroundService extends Service {
 		notificationManager.notify(ALARM_TRIGGERED_NOTIFICATION, notification);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Service#onBind(android.content.Intent) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.app.Service#onBind(android.content.Intent)
+	 */
 	@Override
 	public IBinder onBind(Intent intent) {
 		// Not allowing binding

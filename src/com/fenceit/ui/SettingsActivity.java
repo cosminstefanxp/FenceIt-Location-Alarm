@@ -29,9 +29,10 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 	private CheckBoxPreference forceServiceOff;
 	private EditTextPreference minCheckTime;
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.preference.PreferenceActivity#onCreate(android.os.Bundle) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.preference.PreferenceActivity#onCreate(android.os.Bundle)
+	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -44,21 +45,27 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 		minCheckTime.setOnPreferenceChangeListener(this);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * android.preference.Preference.OnPreferenceChangeListener#onPreferenceChange(android.preference
-	 * .Preference, java.lang.Object) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.preference.Preference.OnPreferenceChangeListener#onPreferenceChange(android.preference
+	 * .Preference, java.lang.Object)
+	 */
 	@Override
 	public boolean onPreferenceChange(Preference preference, Object newValue) {
 		// Handle status change for the Service
 		if (preference == forceServiceOff) {
 			forceServiceOff.setChecked((Boolean) newValue);
 			Toast.makeText(this, "New service status: " + newValue, Toast.LENGTH_SHORT).show();
-			Intent intent = new Intent(this, BackgroundService.class);
+			Intent serviceIntent = new Intent(this, BackgroundService.class);
+			// If the new status of the service is OFF, stop it, otherwise, start a scan for all alarms
 			if ((Boolean) newValue == false) {
-				stopService(intent);
+				stopService(serviceIntent);
+			} else {
+				serviceIntent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
+						BackgroundService.SERVICE_EVENT_RESET_ALARMS);
+				startService(serviceIntent);
 			}
+
 		} else if (preference == minCheckTime) {
 			minCheckTime.setText((String) newValue);
 			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
