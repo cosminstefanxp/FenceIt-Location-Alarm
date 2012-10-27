@@ -1,3 +1,4 @@
-/gen/*
 *.class
-bin/*
+/bin
+/assets
+/gen

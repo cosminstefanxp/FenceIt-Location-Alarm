@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
-	<classpathentry exported="true" kind="lib" path="lib/log4j-1.2.16.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/android-logging-log4j-1.0.2.jar"/>
-	<classpathentry exported="true" kind="lib" path="lib/androwrapee.jar" sourcepath="/home/cosmin/licenta/androwrapee/dist/androwrapee.jar"/>
-	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="lib" path="lib/log4j-1.2.16.jar"/>
+	<classpathentry kind="lib" path="lib/android-logging-log4j-1.0.2.jar"/>
+	<classpathentry kind="lib" path="lib/androwrapee.jar" sourcepath="/home/cosmin/licenta/androwrapee/dist/androwrapee.jar"/>
 	<classpathentry kind="src" path="gen"/>
+	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="com.android.ide.eclipse.adt.ANDROID_FRAMEWORK"/>
 	<classpathentry exported="true" kind="con" path="com.android.ide.eclipse.adt.LIBRARIES"/>
 	<classpathentry kind="output" path="bin/classes"/>
