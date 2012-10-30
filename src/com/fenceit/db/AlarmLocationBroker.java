@@ -28,14 +28,27 @@ import com.fenceit.ui.WifisDetectedActivity;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
 /**
- * The AlarmLocationBroker is a class that is aware of the implemented activities corresponding to
- * location types. It is used to mediate communication between activities that use AlarmLocation and
- * the effective implementations of Activities corresponding to each Alarm Location type.
+ * The AlarmLocationBroker is a class that is aware of the implemented activities corresponding to location
+ * types. It is used to mediate communication between activities that use AlarmLocation and the effective
+ * implementations of Activities corresponding to each Alarm Location type.
  * <p>
  * It is also used to handle interaction with the database.
  * </p>
  */
 public class AlarmLocationBroker {
+
+	/** The Constant locationTypes. */
+	private static final LocationType[] locationTypes = new LocationType[] { LocationType.WifiConnectedLocation,
+			LocationType.WifisDetectedLocation, LocationType.CellNetworkLocation, LocationType.GeoCoordinatesLocation };
+
+	/**
+	 * Gets the location types. The LocationType array returned is final and should not be modified.
+	 * 
+	 * @return the location types
+	 */
+	public static final LocationType[] getLocationTypes() {
+		return locationTypes;
+	}
 
 	/**
 	 * Gets the location types adapter.
@@ -43,10 +56,9 @@ public class AlarmLocationBroker {
 	 * @return the location types adapter
 	 */
 	public static SingleChoiceAdapter<LocationType> getLocationTypesAdapter() {
-		return new SingleChoiceAdapter<LocationType>(new LocationType[] { LocationType.WifiConnectedLocation,
-				LocationType.WifisDetectedLocation, LocationType.CellNetworkLocation,
-				LocationType.GeoCoordinatesLocation }, new CharSequence[] { "Based on the connected Wifi",
-				"Based on the detected Wifis", "Based on Cell Network", "Based on Geographical Coordinates" });
+		return new SingleChoiceAdapter<LocationType>(getLocationTypes(), new CharSequence[] {
+				"Based on the connected Wifi", "Based on the detected Wifis", "Based on Cell Network",
+				"Based on Geographical Coordinates" });
 	}
 
 	/**
@@ -165,17 +177,16 @@ public class AlarmLocationBroker {
 	}
 
 	/**
-	 * Start the background service from an activity and issues a trigger check for a particular
-	 * location type.
+	 * Start the background service from an activity and issues a trigger check for a particular location
+	 * type.
 	 * <p>
-	 * The purpose is to notify the background service, if running (otherwise start it), that some
-	 * triggers with this particular location type has been modified and that at a trigger check
-	 * should be scheduled soon.
+	 * The purpose is to notify the background service, if running (otherwise start it), that some triggers
+	 * with this particular location type has been modified and that at a trigger check should be scheduled
+	 * soon.
 	 * </p>
 	 * 
 	 * @param context the context
-	 * @param type the type of location, or null if the service should schedule a check for all
-	 *            location types
+	 * @param type the type of location, or null if the service should schedule a check for all location types
 	 */
 	public static void startServiceFromActivity(Context context, LocationType type) {
 		Intent intent = new Intent(context, BackgroundService.class);

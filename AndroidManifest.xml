@@ -87,7 +87,8 @@
         <receiver android:name=".service.SystemAlarmReceiver" />
         <receiver
             android:name=".service.WifiBroadcastReceiver"
-            android:enabled="false" >
+            android:enabled="false"
+            android:exported="false" >
             <intent-filter>
                 <action android:name="android.net.wifi.SCAN_RESULTS" />
             </intent-filter>

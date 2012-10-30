@@ -13,10 +13,8 @@ import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.content.pm.PackageManager;
 import android.os.Handler;
 import android.os.IBinder;
 import android.preference.PreferenceManager;
@@ -104,6 +102,9 @@ public class BackgroundService extends Service {
 	/** The notification manager. */
 	private NotificationManager notificationManager;
 
+	/** The service state manager. */
+	private ServiceStateManager serviceStateManager;
+
 	/*
 	 * (non-Javadoc)
 	 * @see android.app.Service#onCreate()
@@ -111,6 +112,10 @@ public class BackgroundService extends Service {
 	@Override
 	public void onCreate() {
 		super.onCreate();
+
+		// Initialize the Service state manager
+		serviceStateManager = new ServiceStateManager();
+		serviceStateManager.updateState(this);
 
 		// Check whether it should start
 		if (!shouldStart()) {
@@ -126,10 +131,6 @@ public class BackgroundService extends Service {
 		Notification notification = prepareOngoingNotification();
 		startForeground(ONGOING_NOTIFICATION, notification);
 
-		// Register for intents
-		ComponentName component = new ComponentName(this, WifiBroadcastReceiver.class);
-		this.getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
-				PackageManager.DONT_KILL_APP);
 		// Initialize the WakeLock Manager and acquire a lock here, as the OS might pre-empt between the
 		// return from this method and the actual start of the service and the device might go to sleep.
 		// Setup other stuff
@@ -145,6 +146,7 @@ public class BackgroundService extends Service {
 		// If more than one service of this type is running.
 		// Knowing the number will allow us to clean up the locks in onDestroy().
 		LightedGreenRoomWakeLockManager.registerClient();
+		serviceStateManager.setRegisteredToWakeLock(true);
 
 	}
 
@@ -179,6 +181,9 @@ public class BackgroundService extends Service {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
 		if (sp.getBoolean("service_status", true) == false)
 			return;
+
+		serviceStateManager.updateState(this);
+
 		// Force a scan of all location types
 		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(1).getTimeInMillis(), SERVICE_EVENT_WIFI_CONNECTED);
 		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(2).getTimeInMillis(), SERVICE_EVENT_CELL_NETWORK);
@@ -257,9 +262,7 @@ public class BackgroundService extends Service {
 		}
 
 		// Unregister for intents
-		ComponentName component = new ComponentName(this, WifiBroadcastReceiver.class);
-		this.getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_DISABLED,
-				PackageManager.DONT_KILL_APP);
+		serviceStateManager.unregisterReceivers(this);
 
 	}
 
@@ -276,8 +279,9 @@ public class BackgroundService extends Service {
 		// Clear all details and cancel all pending alarms
 		shutdown();
 
-		// If somehow the wakelock is still locked, release it
-		LightedGreenRoomWakeLockManager.unRegisterClient();
+		// If somehow the WakeLock is still locked, release it
+		if (serviceStateManager.isRegisteredToWakeLock())
+			LightedGreenRoomWakeLockManager.unRegisterClient();
 	}
 
 	/**
