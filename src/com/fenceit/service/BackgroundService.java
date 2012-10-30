@@ -130,13 +130,22 @@ public class BackgroundService extends Service {
 		ComponentName component = new ComponentName(this, WifiBroadcastReceiver.class);
 		this.getPackageManager().setComponentEnabledSetting(component, PackageManager.COMPONENT_ENABLED_STATE_ENABLED,
 				PackageManager.DONT_KILL_APP);
-
+		// Initialize the WakeLock Manager and acquire a lock here, as the OS might pre-empt between the
+		// return from this method and the actual start of the service and the device might go to sleep.
 		// Setup other stuff
 		handler = new BackgroundServiceHandler(this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
 		forceFullCheck();
 		CoordinatesDataProvider.mHandler = new Handler();
+
+		// Manage wakeLocks
+		// Set up the green room - The setup is capable of getting called multiple times.
+		LightedGreenRoomWakeLockManager.setup(this.getApplicationContext());
+		// If more than one service of this type is running.
+		// Knowing the number will allow us to clean up the locks in onDestroy().
+		LightedGreenRoomWakeLockManager.registerClient();
+
 	}
 
 	private boolean shouldStart() {
@@ -172,9 +181,9 @@ public class BackgroundService extends Service {
 			return;
 		// Force a scan of all location types
 		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(1).getTimeInMillis(), SERVICE_EVENT_WIFI_CONNECTED);
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(3).getTimeInMillis(), SERVICE_EVENT_CELL_NETWORK);
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(5).getTimeInMillis(), SERVICE_EVENT_WIFIS_DETECTED);
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(7).getTimeInMillis(), SERVICE_EVENT_GEO_COORDINATES);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(2).getTimeInMillis(), SERVICE_EVENT_CELL_NETWORK);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(3).getTimeInMillis(), SERVICE_EVENT_WIFIS_DETECTED);
+		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(4).getTimeInMillis(), SERVICE_EVENT_GEO_COORDINATES);
 	}
 
 	@Override
@@ -268,8 +277,7 @@ public class BackgroundService extends Service {
 		shutdown();
 
 		// If somehow the wakelock is still locked, release it
-		WakeLockManager.releaseWakeLock();
-
+		LightedGreenRoomWakeLockManager.unRegisterClient();
 	}
 
 	/**

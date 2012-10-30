@@ -20,13 +20,20 @@ public class WifiBroadcastReceiver extends BroadcastReceiver {
 	/** The logger. */
 	Logger log = Logger.getLogger(WifiBroadcastReceiver.class);
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context,
-	 * android.content.Intent) */
+	/*
+	 * (non-Javadoc)
+	 * @see android.content.BroadcastReceiver#onReceive(android.content.Context, android.content.Intent)
+	 */
 	@Override
 	public void onReceive(Context context, Intent intent) {
 		log.debug("Broadcast for Wifi Received");
+
+		// Initialize the WakeLock Manager and acquire a lock here, as the OS might pre-empt between the
+		// return from this method and the actual start of the service and the device might go to sleep. The
+		// device cannot go to sleep while this method is running, but the same thing is not true right after
+		// it is finished.
+		LightedGreenRoomWakeLockManager.setup(context);
+		LightedGreenRoomWakeLockManager.acquireLock();
 
 		// Build the intent for the service
 		Intent serviceIntent = new Intent(context, BackgroundService.class);

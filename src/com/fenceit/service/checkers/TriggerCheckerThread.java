@@ -21,7 +21,7 @@ import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.provider.ContextData;
 import com.fenceit.service.BackgroundServiceHandler;
-import com.fenceit.service.WakeLockManager;
+import com.fenceit.service.LightedGreenRoomWakeLockManager;
 
 /**
  * The TriggerCheckerThread handles the check for conditions regarding the one type of
@@ -67,6 +67,7 @@ public abstract class TriggerCheckerThread extends Thread {
 	@Override
 	public void run() {
 		super.run();
+
 		if (log.isInfoEnabled())
 			log.info("Starting trigger checker thread of type: " + this.getClass().getSimpleName());
 
@@ -74,7 +75,7 @@ public abstract class TriggerCheckerThread extends Thread {
 		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(mContext);
 		if (sp.getBoolean("service_status", true) == false) {
 			// Release the Wake Lock
-			WakeLockManager.releaseWakeLock();
+			LightedGreenRoomWakeLockManager.releaseLock();
 			log.info("Skipping trigger checking because service is off.");
 			return;
 		}
@@ -82,7 +83,8 @@ public abstract class TriggerCheckerThread extends Thread {
 		// Process the triggers, but only if all the requirements (preconditions) are met
 		if (!isPreconditionValid()) {
 			// Release the Wake Lock
-			WakeLockManager.releaseWakeLock();
+			LightedGreenRoomWakeLockManager.releaseLock();
+
 			return;
 		}
 
@@ -95,7 +97,7 @@ public abstract class TriggerCheckerThread extends Thread {
 		if (triggers.isEmpty()) {
 			// Release the Wake Lock
 			log.info("No triggers of this type. Skipping check and no future scheduling of check.");
-			WakeLockManager.releaseWakeLock();
+			LightedGreenRoomWakeLockManager.releaseLock();
 			return;
 		}
 
@@ -137,7 +139,7 @@ public abstract class TriggerCheckerThread extends Thread {
 			log.info("Not scheduling next check time");
 
 		// Release the Wake Lock
-		WakeLockManager.releaseWakeLock();
+		LightedGreenRoomWakeLockManager.releaseLock();;
 	}
 
 	/**
