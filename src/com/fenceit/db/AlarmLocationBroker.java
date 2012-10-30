@@ -191,7 +191,7 @@ public class AlarmLocationBroker {
 	public static void startServiceFromActivity(Context context, LocationType type) {
 		Intent intent = new Intent(context, BackgroundService.class);
 		if (type == null)
-			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_RESET_ALARMS);
+			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_FORCE_RECHECK);
 		else
 			switch (type) {
 			case WifiConnectedLocation:

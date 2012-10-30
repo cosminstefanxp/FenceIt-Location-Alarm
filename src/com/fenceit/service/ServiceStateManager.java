@@ -13,7 +13,9 @@ import org.apache.log4j.Logger;
 
 import android.content.ComponentName;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.preference.PreferenceManager;
 
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.db.DatabaseAccessor;
@@ -105,6 +107,29 @@ public class ServiceStateManager {
 			context.getPackageManager().setComponentEnabledSetting(component,
 					PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);
 		}
+	}
+
+	/**
+	 * Checks whether the service should run.
+	 * 
+	 * @param context the context
+	 * @return true, if should run
+	 */
+	public boolean shouldServiceRun(Context context) {
+		// Check if the background service is forcedly disabled
+		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
+		if (sp.getBoolean("service_status", true) == false) {
+			log.info("Background service is disabled, so it should not run...");
+			return false;
+		}
+
+		// Check if there are any location types enabled
+		if (this.locationTypesEnabled.isEmpty()) {
+			log.info("No location types enabled, so Background Service should not run...");
+			return false;
+		}
+
+		return true;
 	}
 
 	/**

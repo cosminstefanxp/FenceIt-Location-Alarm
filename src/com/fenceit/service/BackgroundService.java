@@ -6,7 +6,6 @@
  */
 package com.fenceit.service;
 
-import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
 import android.app.Notification;
@@ -22,12 +21,10 @@ import android.widget.Toast;
 
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
-import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
-import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.CoordinatesDataProvider;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
 import com.fenceit.ui.AlarmPanelActivity;
@@ -47,50 +44,41 @@ public class BackgroundService extends Service {
 	/** The Constant ALARM_TRIGGERED_NOTIFICATION used for identifying notifications. */
 	private static final int ALARM_TRIGGERED_NOTIFICATION = 102;
 
-	/** The Constant SERVICE_EVENT_NONE used to define a non-existing event. */
+	/** The Constant used to define a non-existing event. */
 	public static final int SERVICE_EVENT_NONE = 0;
 
-	/**
-	 * The Constant SERVICE_EVENT_SHUTDOWN used to notify the service that service should shut down.
-	 */
+	/** The Constant used to notify the service that service should shut down. */
 	public static final int SERVICE_EVENT_SHUTDOWN = 1;
 
 	/**
-	 * The Constant SERVICE_EVENT_RESET_ALARMS used to define an event which appears when a check should be
-	 * done for all location types.
+	 * The Constant to define an event which appears when a check should be done for all location types.
 	 */
-	public static final int SERVICE_EVENT_RESET_ALARMS = 2;
+	public static final int SERVICE_EVENT_FORCE_RECHECK = 2;
 
 	/**
-	 * The Constant SERVICE_EVENT_CHECK_SHUTDOWN used to define an event which appears when a check should be
-	 * done whether there aren't anymore enabled alarms and the service should shutdown.
-	 */
-	public static final int SERVICE_EVENT_CHECK_SHUTDOWN = 3;
-
-	/**
-	 * The Constant SERVICE_EVENT_WIFI_CONNECTED used for defining the event related to
+	 * This Constant is used to define an event which initiates a check for triggers related to a
 	 * {@link WifiConnectedLocation}.
 	 */
 	public static final int SERVICE_EVENT_WIFI_CONNECTED = 4;
 	/**
-	 * The Constant SERVICE_EVENT_WIFIS_DETECTED used for defining the event related to
+	 * This Constant is used to define an event which initiates a check for triggers related to a
 	 * {@link WifisDetectedLocation}.
 	 */
 	public static final int SERVICE_EVENT_WIFIS_DETECTED = 5;
 
 	/**
-	 * The Constant SERVICE_EVENT_WIFIS_CELL_NETWORK used for defining the event related to
+	 * This Constant is used to define an event which initiates a check for triggers related to a
 	 * {@link CellNetworkLocation}.
 	 */
 	public static final int SERVICE_EVENT_CELL_NETWORK = 6;
 
 	/**
-	 * The Constant SERVICE_EVENT_GEO_COORDINATES used for defining the event related to
+	 * This Constant is used to define an event which initiates a check for triggers related to a
 	 * {@link CoordinatesLocation}..
 	 */
 	public static final int SERVICE_EVENT_GEO_COORDINATES = 7;
 
-	/** The Constant SERVICE_EVENT_FIELD_NAME used to store the event in the intents. */
+	/** This Constant is used to name the field used to store the event in the intents. */
 	public static final String SERVICE_EVENT_FIELD_NAME = "event";
 
 	/** The handler. */
@@ -113,19 +101,19 @@ public class BackgroundService extends Service {
 	public void onCreate() {
 		super.onCreate();
 
+		// Making sure the Log4J is configured, even if the main application process is not started
+		new Log4jConfiguration();
+		log.warn("Creating a new instance of the Background Service...");
+
 		// Initialize the Service state manager
 		serviceStateManager = new ServiceStateManager();
 		serviceStateManager.updateState(this);
 
 		// Check whether it should start
-		if (!shouldStart()) {
+		if (!serviceStateManager.shouldServiceRun(this)) {
 			stopSelf();
 			return;
 		}
-
-		// Making sure the Log4J is configured, even if the main application process is not started
-		new Log4jConfiguration();
-		log.warn("Creating the Background Service...");
 
 		// Setup the notification and start the service as foreground service
 		Notification notification = prepareOngoingNotification();
@@ -147,29 +135,6 @@ public class BackgroundService extends Service {
 		// Knowing the number will allow us to clean up the locks in onDestroy().
 		LightedGreenRoomWakeLockManager.registerClient();
 		serviceStateManager.setRegisteredToWakeLock(true);
-
-	}
-
-	private boolean shouldStart() {
-		// Check if the background service is disabled
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sp.getBoolean("service_status", true) == false) {
-			log.info("Background service is disabled, so service not starting...");
-			return false;
-		}
-
-		// Check if there is any active alarm
-		DefaultDAO<Alarm> alarmsDAO = DatabaseManager.getDAOInstance(getApplicationContext(), Alarm.class,
-				Alarm.tableName);
-		alarmsDAO.open();
-		int activeAlarmsCount = alarmsDAO.countEntries("enabled='" + DefaultDAO.BOOLEAN_TRUE_VALUE + "'");
-		alarmsDAO.close();
-		if (activeAlarmsCount == 0) {
-			log.info("No active alarms, so service not starting...");
-			return false;
-		}
-
-		return true;
 
 	}
 
@@ -225,21 +190,13 @@ public class BackgroundService extends Service {
 			return;
 		}
 
-		// If a scan with all the locations types should be scheduled
-		if (event == SERVICE_EVENT_RESET_ALARMS) {
-			if (!shouldStart()) {
+		// If a scan with all the locations types should be scheduled or the service should be shutdown
+		if (event == SERVICE_EVENT_FORCE_RECHECK) {
+			if (!serviceStateManager.shouldServiceRun(this)) {
 				stopSelf();
 			} else
 				forceFullCheck();
 			return;
-		}
-
-		// If a check for shutdown should be made {
-		if (event == SERVICE_EVENT_CHECK_SHUTDOWN) {
-			if (!shouldStart()) {
-				stopSelf();
-				return;
-			}
 		}
 
 		// Run the trigger checker thread

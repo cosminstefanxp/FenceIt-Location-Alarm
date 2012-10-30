@@ -247,7 +247,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		// Notify the background service that a change has been done on an enabled alarm
 		if (alarm.isEnabled()) {
 			Intent intent = new Intent(this, BackgroundService.class);
-			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_RESET_ALARMS);
+			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_FORCE_RECHECK);
 			startService(intent);
 		}
 

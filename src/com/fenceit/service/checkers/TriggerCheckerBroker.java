@@ -13,8 +13,8 @@ import com.fenceit.service.BackgroundService;
 import com.fenceit.service.BackgroundServiceHandler;
 
 /**
- * The TriggerCheckerBroker is used as a broker to add an abstraction layer between the background
- * service implementation and the different types of {@link AlarmLocation}.
+ * The TriggerCheckerBroker is used as a broker to add an abstraction layer between the background service
+ * implementation and the different types of {@link AlarmLocation}.
  */
 public class TriggerCheckerBroker {
 
@@ -30,16 +30,13 @@ public class TriggerCheckerBroker {
 			int eventType) {
 		switch (eventType) {
 		case BackgroundService.SERVICE_EVENT_WIFI_CONNECTED:
-			return new WifiConnectedTriggerCheckerThread(context, handler,
-					BackgroundService.SERVICE_EVENT_WIFI_CONNECTED);
+			return new WifiConnectedTriggerCheckerThread(context, handler, eventType);
 		case BackgroundService.SERVICE_EVENT_WIFIS_DETECTED:
-			return new WifisDetectedTriggerCheckerThread(context, handler,
-					BackgroundService.SERVICE_EVENT_WIFIS_DETECTED);
+			return new WifisDetectedTriggerCheckerThread(context, handler, eventType);
 		case BackgroundService.SERVICE_EVENT_CELL_NETWORK:
-			return new CellTriggerCheckerThread(context, handler, BackgroundService.SERVICE_EVENT_CELL_NETWORK);
+			return new CellTriggerCheckerThread(context, handler, eventType);
 		case BackgroundService.SERVICE_EVENT_GEO_COORDINATES:
-			return new GeoCoordinatesTriggerCheckerThread(context, handler,
-					BackgroundService.SERVICE_EVENT_GEO_COORDINATES);
+			return new GeoCoordinatesTriggerCheckerThread(context, handler, eventType);
 		default:
 			return null;
 		}

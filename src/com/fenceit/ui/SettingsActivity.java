@@ -62,7 +62,7 @@ public class SettingsActivity extends PreferenceActivity implements OnPreference
 				stopService(serviceIntent);
 			} else {
 				serviceIntent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
-						BackgroundService.SERVICE_EVENT_RESET_ALARMS);
+						BackgroundService.SERVICE_EVENT_FORCE_RECHECK);
 				startService(serviceIntent);
 			}
 

@@ -176,11 +176,12 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 
 		// Notify the background service that a new alarm is now enabled/disabled
 		Intent intent = new Intent(context, BackgroundService.class);
-		if (alarm.isEnabled()) {
-			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_RESET_ALARMS);
-		} else {
-			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_CHECK_SHUTDOWN);
-		}
+		// if (alarm.isEnabled()) {
+		intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_FORCE_RECHECK);
+		// } else {
+		// intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
+		// BackgroundService.SERVICE_EVENT_CHECK_SHUTDOWN);
+		// }
 		context.startService(intent);
 
 	}
