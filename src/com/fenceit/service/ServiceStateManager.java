@@ -102,7 +102,7 @@ public class ServiceStateManager {
 	public void unregisterReceivers(Context context) {
 
 		if (wifiScanBroadcastReceiverEnabled) {
-			log.info("Disabling WifiScanBroadcastReceiver...");
+			log.info("Forcedly disabling WifiScanBroadcastReceiver...");
 			ComponentName component = new ComponentName(context, WifiBroadcastReceiver.class);
 			context.getPackageManager().setComponentEnabledSetting(component,
 					PackageManager.COMPONENT_ENABLED_STATE_DISABLED, PackageManager.DONT_KILL_APP);

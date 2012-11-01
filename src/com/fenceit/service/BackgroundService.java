@@ -13,25 +13,25 @@ import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.IBinder;
-import android.preference.PreferenceManager;
 import android.widget.Toast;
 
 import com.fenceit.Log4jConfiguration;
 import com.fenceit.R;
 import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
+import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
+import com.fenceit.db.AlarmLocationBroker;
 import com.fenceit.provider.CoordinatesDataProvider;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
 import com.fenceit.ui.AlarmPanelActivity;
 
 /**
  * The Class BackgroundService is the background service that is indefinitely runnning in the background,
- * scanning for any events that could trigger any of the alarms.
+ * scanning for any events that could trigger any of the enabled alarms.
  */
 public class BackgroundService extends Service {
 
@@ -119,53 +119,54 @@ public class BackgroundService extends Service {
 		Notification notification = prepareOngoingNotification();
 		startForeground(ONGOING_NOTIFICATION, notification);
 
-		// Initialize the WakeLock Manager and acquire a lock here, as the OS might pre-empt between the
-		// return from this method and the actual start of the service and the device might go to sleep.
 		// Setup other stuff
 		handler = new BackgroundServiceHandler(this);
 		notificationManager = (NotificationManager) getSystemService(NOTIFICATION_SERVICE);
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
-		forceFullCheck();
 		CoordinatesDataProvider.mHandler = new Handler();
 
-		// Manage wakeLocks
-		// Set up the green room - The setup is capable of getting called multiple times.
+		// Manage wakeLocks - Set up the green room - The setup is capable of getting called multiple times.
 		LightedGreenRoomWakeLockManager.setup(this.getApplicationContext());
-		// If more than one service of this type is running.
-		// Knowing the number will allow us to clean up the locks in onDestroy().
+		// Register the service as a client to allow safe release of wake locks when destroying the service
 		LightedGreenRoomWakeLockManager.registerClient();
 		serviceStateManager.setRegisteredToWakeLock(true);
 
+		// Force a full check for enabled alarms
+		forceFullCheck();
 	}
 
 	/**
-	 * Force a full scan for all type of locations.
+	 * Force a full scan for all types of locations. The ServiceStateManager should be updated before calling
+	 * this method.
 	 */
 	private void forceFullCheck() {
-		// Check if the background service is disabled
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sp.getBoolean("service_status", true) == false)
-			return;
 
-		serviceStateManager.updateState(this);
-
-		// Force a scan of all location types
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(1).getTimeInMillis(), SERVICE_EVENT_WIFI_CONNECTED);
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(2).getTimeInMillis(), SERVICE_EVENT_CELL_NETWORK);
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(3).getTimeInMillis(), SERVICE_EVENT_WIFIS_DETECTED);
-		alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(4).getTimeInMillis(), SERVICE_EVENT_GEO_COORDINATES);
+		// Force a scan of triggers for the locations that are associated to an enabled alarm
+		short delay = 1;
+		for (LocationType type : AlarmLocationBroker.getLocationTypes()) {
+			if (serviceStateManager.isLocationTypeEnabled(type)) {
+				if (log.isDebugEnabled())
+					log.debug("Forcing a check for triggers for location type: " + type);
+				alarmDispatcher.dispatchAlarm(Utils.getTimeAfterInSecs(delay).getTimeInMillis(),
+						TriggerCheckerBroker.getServiceEvent(type));
+				delay += 1;
+			}
+		}
 	}
 
 	@Override
 	public int onStartCommand(Intent intent, int flags, int startId) {
 		super.onStartCommand(intent, flags, startId);
 
-		// Check if the background service is disabled
-		SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(this);
-		if (sp.getBoolean("service_status", true) == false)
+		// Check if the service should be running...
+		if (!serviceStateManager.shouldServiceRun(this)) {
+			log.warn("Received intent, but service should not run: "
+					+ intent.getIntExtra(SERVICE_EVENT_FIELD_NAME, SERVICE_EVENT_NONE));
 			return START_NOT_STICKY;
+		}
 
-		log.info("Starting Background Service with intent: " + intent);
+		if (log.isInfoEnabled())
+			log.info("Starting Background Service with intent: " + intent);
 		Toast.makeText(this, "Background Service Started...", Toast.LENGTH_SHORT).show();
 
 		// Process the extras
@@ -192,6 +193,9 @@ public class BackgroundService extends Service {
 
 		// If a scan with all the locations types should be scheduled or the service should be shutdown
 		if (event == SERVICE_EVENT_FORCE_RECHECK) {
+			// Update the state of the ServiceStateManager
+			serviceStateManager.updateState(this);
+			// Check whether we should stop the service
 			if (!serviceStateManager.shouldServiceRun(this)) {
 				stopSelf();
 			} else
@@ -212,10 +216,9 @@ public class BackgroundService extends Service {
 		log.info("Shutting down service definitively.");
 		// Stop any pending system alarms
 		if (alarmDispatcher != null) {
-			alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFI_CONNECTED);
-			alarmDispatcher.cancelAlarm(SERVICE_EVENT_WIFIS_DETECTED);
-			alarmDispatcher.cancelAlarm(SERVICE_EVENT_CELL_NETWORK);
-			alarmDispatcher.cancelAlarm(SERVICE_EVENT_GEO_COORDINATES);
+			for (LocationType type : AlarmLocationBroker.getLocationTypes())
+				//TODO: Aparent nu se anuleaza alarmele...
+				alarmDispatcher.cancelAlarm(TriggerCheckerBroker.getServiceEvent(type));
 		}
 
 		// Unregister for intents
@@ -256,7 +259,7 @@ public class BackgroundService extends Service {
 		Intent notificationIntent = new Intent(getApplicationContext(), AlarmPanelActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
-		notification.setLatestEventInfo(getApplicationContext(), "FenceIt",
+		notification.setLatestEventInfo(getApplicationContext(), "FenceIt - Location-based Alarms",
 				"Constantly searching for triggering conditions...", pendingIntent);
 		notification.flags |= Notification.FLAG_NO_CLEAR;
 		return notification;

@@ -9,6 +9,7 @@ package com.fenceit.service.checkers;
 import android.content.Context;
 
 import com.fenceit.alarm.locations.AlarmLocation;
+import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.service.BackgroundService;
 import com.fenceit.service.BackgroundServiceHandler;
 
@@ -39,6 +40,27 @@ public class TriggerCheckerBroker {
 			return new GeoCoordinatesTriggerCheckerThread(context, handler, eventType);
 		default:
 			return null;
+		}
+	}
+
+	/**
+	 * Gets the service event that is required to start a check for a given location type.
+	 * 
+	 * @param type the location type
+	 * @return the service event
+	 */
+	public static int getServiceEvent(LocationType type) {
+		switch (type) {
+		case WifiConnectedLocation:
+			return BackgroundService.SERVICE_EVENT_WIFI_CONNECTED;
+		case WifisDetectedLocation:
+			return BackgroundService.SERVICE_EVENT_WIFIS_DETECTED;
+		case CellNetworkLocation:
+			return BackgroundService.SERVICE_EVENT_CELL_NETWORK;
+		case GeoCoordinatesLocation:
+			return BackgroundService.SERVICE_EVENT_GEO_COORDINATES;
+		default:
+			return BackgroundService.SERVICE_EVENT_NONE;
 		}
 	}
 }
