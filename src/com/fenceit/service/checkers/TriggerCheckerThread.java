@@ -16,19 +16,19 @@ import android.content.SharedPreferences;
 import android.os.Message;
 import android.preference.PreferenceManager;
 
-import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
+import com.fenceit.alarm.triggers.BasicTrigger;
+import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.provider.ContextData;
 import com.fenceit.service.BackgroundServiceHandler;
 import com.fenceit.service.LightedGreenRoomWakeLockManager;
 
 /**
- * The TriggerCheckerThread handles the check for conditions regarding the one type of
- * {@link AlarmLocation}. If any of the alarms should be triggered, it handles the execution of the
- * alarms.<br/>
- * If the Thread is started from the background service after it was invoked by a BroadcastReceiver,
- * it should have a WakeLock acquired and should handle the clearing process.
+ * The TriggerCheckerThread handles the check for conditions regarding the one type of {@link AlarmLocation}.
+ * If any of the alarms should be triggered, it handles the execution of the alarms.<br/>
+ * If the Thread is started from the background service after it was invoked by a BroadcastReceiver, it should
+ * have a WakeLock acquired and should handle the clearing process.
  */
 public abstract class TriggerCheckerThread extends Thread {
 
@@ -61,9 +61,10 @@ public abstract class TriggerCheckerThread extends Thread {
 		this.mEventType = eventType;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see java.lang.Thread#run() */
+	/*
+	 * (non-Javadoc)
+	 * @see java.lang.Thread#run()
+	 */
 	@Override
 	public void run() {
 		super.run();
@@ -89,7 +90,7 @@ public abstract class TriggerCheckerThread extends Thread {
 		}
 
 		// Fetch the required triggers corresponding to this Location Type
-		List<AlarmTrigger> triggers = fetchData();
+		List<? extends AlarmTrigger> triggers = fetchData();
 		if (log.isDebugEnabled())
 			log.debug("Fetched triggers: " + triggers);
 
@@ -110,10 +111,13 @@ public abstract class TriggerCheckerThread extends Thread {
 		for (AlarmTrigger t : triggers)
 			if (t.shouldTrigger(contextData)) {
 
+				// Fill in the alarm for the trigger, as it will be used to get alarm name or other info
+				DatabaseAccessor.fillAlarmForTrigger(mContext, (BasicTrigger) t);
+
 				// Check if the alarm was already triggered
-				if (checkIfTriggeredAndStore(t.getAlarm().getId())) {
-					log.info("Alarm with id: " + t.getAlarm().getId()
-							+ " already triggered before, so not executing actions again.");
+				long alarmId = t.getAlarm().getId();
+				if (checkIfTriggeredAndStore(alarmId)) {
+					log.info("Alarm with id: " + alarmId + " already triggered before, so not executing actions again.");
 					continue;
 				}
 
@@ -122,7 +126,7 @@ public abstract class TriggerCheckerThread extends Thread {
 				String triggerReason = getTriggerMessage(t);
 				Message m = mParentHandler.obtainMessage(BackgroundServiceHandler.HANDLER_ALARM_TRIGGERED);
 				m.obj = triggerReason;
-				m.arg1 = (int) t.getAlarm().getId();
+				m.arg1 = (int) alarmId;
 				mParentHandler.sendMessage(m);
 			}
 
@@ -139,44 +143,44 @@ public abstract class TriggerCheckerThread extends Thread {
 			log.info("Not scheduling next check time");
 
 		// Release the Wake Lock
-		LightedGreenRoomWakeLockManager.releaseLock();;
+		LightedGreenRoomWakeLockManager.releaseLock();
+		;
 	}
 
 	/**
 	 * Checks if an alarm was already triggered and, if not, mark it for future checks.
 	 * 
-	 * @param id the id
+	 * @param id the alarm id
 	 * @return true, if successful
 	 */
-	private boolean checkIfTriggeredAndStore(long id) {
+	private boolean checkIfTriggeredAndStore(long alarmId) {
 		// Is triggered already
-		if (triggeredAlarms != null && triggeredAlarms.contains(id))
+		if (triggeredAlarms != null && triggeredAlarms.contains(alarmId))
 			return true;
 
 		// Not triggered, so mark
 		if (triggeredAlarms == null)
 			triggeredAlarms = new HashSet<Long>();
-		triggeredAlarms.add(id);
+		triggeredAlarms.add(alarmId);
 		return false;
 
 	}
 
 	/**
-	 * Get the message describing the triggering of the of the alarm. The corresponding
-	 * {@link Alarm} is available from the trigger. The actual triggering of the Actions is done on
-	 * the main thread.
+	 * Get the message describing the triggering of the of the alarm. The corresponding {@link Alarm} is
+	 * available from the trigger. The actual triggering of the Actions is done on the main thread.
 	 * 
 	 * @param trigger the trigger whose conditions were satisfied.
 	 */
 	protected abstract String getTriggerMessage(AlarmTrigger trigger);
 
 	/**
-	 * Fetches the fully populated triggers from the database. Only the triggers that can be checked
-	 * using this type of Checker must be retrieved.
+	 * Fetches the fully populated triggers from the database. Only the triggers that can be checked using
+	 * this type of Checker must be retrieved.
 	 * 
 	 * @return the list
 	 */
-	protected abstract List<AlarmTrigger> fetchData();
+	protected abstract List<? extends AlarmTrigger> fetchData();
 
 	/**
 	 * Acquires the context data necessary to check the conditions of the trigger.
@@ -186,21 +190,21 @@ public abstract class TriggerCheckerThread extends Thread {
 	protected abstract ContextData acquireContextData();
 
 	/**
-	 * Checks if the preconditions for starting this thread are valid. For example, if all the
-	 * required hardware is enabled. If not, the thread should exit right away, without fetching
-	 * unnecessary data from the database.
+	 * Checks if the preconditions for starting this thread are valid. For example, if all the required
+	 * hardware is enabled. If not, the thread should exit right away, without fetching unnecessary data from
+	 * the database.
 	 * 
 	 * @return true, if the preconditions are valid
 	 */
 	protected abstract boolean isPreconditionValid();
 
 	/**
-	 * Computes the delay factor that is applied to the default time between checks and results the
-	 * next check time, when the checker thread should run and verify all the triggering conditions.
+	 * Computes the delay factor that is applied to the default time between checks and results the next check
+	 * time, when the checker thread should run and verify all the triggering conditions.
 	 * 
 	 * @param triggers the current triggers, as returned by the <code>fetchData</code> method.
 	 * @param data the current context data
 	 * @return delay factor, larger than 1, or null, if a next check should not be scheduled
 	 */
-	protected abstract Float computeDelayFactor(List<AlarmTrigger> triggers, ContextData data);
+	protected abstract Float computeDelayFactor(List<? extends AlarmTrigger> triggers, ContextData data);
 }

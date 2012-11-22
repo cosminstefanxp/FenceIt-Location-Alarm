@@ -24,6 +24,7 @@ import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
+import com.fenceit.alarm.triggers.BasicTrigger.TriggerType;
 import com.fenceit.db.AlarmLocationBroker;
 import com.fenceit.provider.CoordinatesDataProvider;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
@@ -203,10 +204,17 @@ public class BackgroundService extends Service {
 			return;
 		}
 
-		// Run the trigger checker thread
-		Thread thread = TriggerCheckerBroker.getTriggerCheckerThread(getApplicationContext(), handler, event);
-		if (thread != null)
-			thread.start();
+		// Run the trigger checker thread, if enabled for the given location type
+		LocationType type = TriggerCheckerBroker.getLocationType(event);
+		if (serviceStateManager.isLocationTypeEnabled(type)) {
+			Thread thread = TriggerCheckerBroker.getTriggerCheckerThread(getApplicationContext(), handler, event);
+			if (thread != null)
+				thread.start();
+		} else {
+			// This point can be reached as, when a location type becomes disabled, for optimization reasons,
+			// pending system alarms are not disabled
+			log.warn("Request to start trigger checker thread, but location type is disabled: " + type);
+		}
 	}
 
 	/**
@@ -217,7 +225,6 @@ public class BackgroundService extends Service {
 		// Stop any pending system alarms
 		if (alarmDispatcher != null) {
 			for (LocationType type : AlarmLocationBroker.getLocationTypes())
-				//TODO: Aparent nu se anuleaza alarmele...
 				alarmDispatcher.cancelAlarm(TriggerCheckerBroker.getServiceEvent(type));
 		}
 

@@ -69,6 +69,7 @@ public class SystemAlarmDispatcher {
 	public synchronized void cancelAlarm(int eventType) {
 		// Build the intent
 		Intent intent = new Intent(mContext, SystemAlarmReceiver.class);
+		intent.setAction("com.fenceit.dummy");
 
 		// Create the identical pending intent that is necessary to cancel
 		PendingIntent pi = PendingIntent.getBroadcast(mContext, // context, or activity, or service

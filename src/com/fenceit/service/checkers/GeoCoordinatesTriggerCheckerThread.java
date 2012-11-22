@@ -6,15 +6,11 @@
  */
 package com.fenceit.service.checkers;
 
-import java.util.LinkedList;
 import java.util.List;
-
-import org.androwrapee.db.DefaultDAO;
 
 import android.content.Context;
 import android.location.Location;
 
-import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.AlarmTrigger;
@@ -26,9 +22,9 @@ import com.fenceit.provider.CoordinatesLocationDataListener;
 import com.fenceit.service.BackgroundServiceHandler;
 
 /**
- * The GeoCoordinatesTriggerCheckerThread handles the check for conditions regarding the
- * geographical global position -GPS coordinates- of the device (the alarm locations of type
- * {@link CoordinatesLocation}. If any of the alarms should be triggered, it handles that.
+ * The GeoCoordinatesTriggerCheckerThread handles the check for conditions regarding the geographical global
+ * position -GPS coordinates- of the device (the alarm locations of type {@link CoordinatesLocation}. If any
+ * of the alarms should be triggered, it handles that.
  */
 public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread implements CoordinatesLocationDataListener {
 
@@ -48,28 +44,19 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 		super(context, handler, eventType);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.TriggerCheckerThread#fetchData() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#fetchData()
+	 */
 	@Override
-	protected List<AlarmTrigger> fetchData() {
-		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='"
-				+ DefaultDAO.BOOLEAN_TRUE_VALUE + "'");
-		List<AlarmTrigger> triggers = new LinkedList<AlarmTrigger>();
-		// Prepare only the triggers that have locations of the required type
-		for (Alarm a : alarms) {
-			for (AlarmTrigger t : a.getTriggers())
-				if (t.getLocation().getType() == LocationType.GeoCoordinatesLocation)
-					triggers.add(t);
-		}
-		return triggers;
+	protected List<? extends AlarmTrigger> fetchData() {
+		return DatabaseAccessor.buildFullTriggersForEnabledLocationType(mContext, LocationType.GeoCoordinatesLocation);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger
-	 * ) */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger )
+	 */
 	@Override
 	protected String getTriggerMessage(AlarmTrigger trigger) {
 		log.warn("An alarm was triggered because of: " + trigger);
@@ -77,9 +64,10 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 				+ trigger.getSecondaryDescription();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData()
+	 */
 	@Override
 	protected ContextData acquireContextData() {
 
@@ -108,20 +96,22 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 		return data;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.TriggerCheckerThread#isPreconditionValid() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#isPreconditionValid()
+	 */
 	@Override
 	protected boolean isPreconditionValid() {
 
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime()
+	 */
 	@Override
-	protected Float computeDelayFactor(List<AlarmTrigger> triggers, ContextData data) {
+	protected Float computeDelayFactor(List<? extends AlarmTrigger> triggers, ContextData data) {
 
 		if (triggers.isEmpty())
 			return null;

@@ -6,14 +6,10 @@
  */
 package com.fenceit.service.checkers;
 
-import java.util.LinkedList;
 import java.util.List;
-
-import org.androwrapee.db.DefaultDAO;
 
 import android.content.Context;
 
-import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.AlarmTrigger;
@@ -45,17 +41,8 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 	 * @see com.fenceit.service.TriggerCheckerThread#fetchData()
 	 */
 	@Override
-	protected List<AlarmTrigger> fetchData() {
-		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='"
-				+ DefaultDAO.BOOLEAN_TRUE_VALUE + "'");
-		List<AlarmTrigger> triggers = new LinkedList<AlarmTrigger>();
-		// Prepare only the triggers that have locations of the required type
-		for (Alarm a : alarms) {
-			for (AlarmTrigger t : a.getTriggers())
-				if (t.getLocation().getType() == LocationType.CellNetworkLocation)
-					triggers.add(t);
-		}
-		return triggers;
+	protected List<? extends AlarmTrigger> fetchData() {
+		return DatabaseAccessor.buildFullTriggersForEnabledLocationType(mContext, LocationType.CellNetworkLocation);
 	}
 
 	/*
@@ -98,7 +85,7 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime()
 	 */
 	@Override
-	protected Float computeDelayFactor(List<AlarmTrigger> triggers, ContextData data) {
+	protected Float computeDelayFactor(List<? extends AlarmTrigger> triggers, ContextData data) {
 
 		if (triggers.isEmpty())
 			return null;

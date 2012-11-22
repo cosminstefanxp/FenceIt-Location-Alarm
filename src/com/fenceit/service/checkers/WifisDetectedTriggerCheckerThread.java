@@ -7,14 +7,10 @@
 package com.fenceit.service.checkers;
 
 import java.util.Calendar;
-import java.util.LinkedList;
 import java.util.List;
-
-import org.androwrapee.db.DefaultDAO;
 
 import android.content.Context;
 
-import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
@@ -26,9 +22,9 @@ import com.fenceit.provider.WifisDetectedDataProvider;
 import com.fenceit.service.BackgroundServiceHandler;
 
 /**
- * The WifisDetectedTriggerCheckerThread handles the check for conditions regarding the Wifi
- * networks in range (detected) - the alarm locations of types {@link WifisDetectedLocation}. If any
- * of the alarms should be triggered, it also handles the triggering.
+ * The WifisDetectedTriggerCheckerThread handles the check for conditions regarding the Wifi networks in range
+ * (detected) - the alarm locations of types {@link WifisDetectedLocation}. If any of the alarms should be
+ * triggered, it also handles the triggering.
  */
 public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 
@@ -39,8 +35,7 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 	private static long lastRun = 0;
 
 	/**
-	 * The Constant minDelay that defines the minimum time between two runs of this Checker (in
-	 * milliseconds).
+	 * The Constant minDelay that defines the minimum time between two runs of this Checker (in milliseconds).
 	 */
 	private static final int MIN_DELAY_BETWEEN_CHECKS = 10000;
 
@@ -54,28 +49,19 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 		super(context, handler, eventType);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.TriggerCheckerThread#fetchData() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#fetchData()
+	 */
 	@Override
-	protected List<AlarmTrigger> fetchData() {
-		List<Alarm> alarms = DatabaseAccessor.buildFullAlarms(mContext.getApplicationContext(), "enabled='"
-				+ DefaultDAO.BOOLEAN_TRUE_VALUE + "'");
-		List<AlarmTrigger> triggers = new LinkedList<AlarmTrigger>();
-		// Prepare only the triggers that have locations of the required type
-		for (Alarm a : alarms) {
-			for (AlarmTrigger t : a.getTriggers())
-				if (t.getLocation().getType() == LocationType.WifisDetectedLocation)
-					triggers.add(t);
-		}
-		return triggers;
+	protected List<? extends AlarmTrigger> fetchData() {
+		return DatabaseAccessor.buildFullTriggersForEnabledLocationType(mContext, LocationType.WifisDetectedLocation);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see
-	 * com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger
-	 * ) */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger )
+	 */
 	@Override
 	protected String getTriggerMessage(AlarmTrigger trigger) {
 		log.warn("An alarm was triggered because of: " + trigger);
@@ -83,18 +69,20 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 				+ trigger.getSecondaryDescription();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData()
+	 */
 	@Override
 	protected ContextData acquireContextData() {
 		ContextData data = WifisDetectedDataProvider.getWifiContextData(mContext, true);
 		return data;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.TriggerCheckerThread#isPreconditionValid() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.TriggerCheckerThread#isPreconditionValid()
+	 */
 	@Override
 	protected boolean isPreconditionValid() {
 		// Check if it is not run too often
@@ -105,7 +93,7 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 			return false;
 		}
 
-		// Check for availability;
+		// Check for Wifi availability;
 		if (!WifiConnectedDataProvider.isWifiAvailable(mContext)) {
 			log.warn("Wifi is not enabled. Cannot check if the triggering conditions are met for locations requiring Wifi contextual data.");
 			return false;
@@ -115,11 +103,12 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime() */
+	/*
+	 * (non-Javadoc)
+	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime()
+	 */
 	@Override
-	protected Float computeDelayFactor(List<AlarmTrigger> triggers, ContextData data) {
+	protected Float computeDelayFactor(List<? extends AlarmTrigger> triggers, ContextData data) {
 
 		if (triggers.isEmpty())
 			return null;

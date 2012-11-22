@@ -63,4 +63,25 @@ public class TriggerCheckerBroker {
 			return BackgroundService.SERVICE_EVENT_NONE;
 		}
 	}
+
+	/**
+	 * Gets the location type that corresponds to a particular BackgroundService event.
+	 * 
+	 * @param serviceEvent the service event
+	 * @return the location type, or null, if it doesn't correspond to a check for a particular location type.
+	 */
+	public static LocationType getLocationType(int serviceEvent) {
+		switch (serviceEvent) {
+		case BackgroundService.SERVICE_EVENT_WIFI_CONNECTED:
+			return LocationType.WifiConnectedLocation;
+		case BackgroundService.SERVICE_EVENT_WIFIS_DETECTED:
+			return LocationType.WifisDetectedLocation;
+		case BackgroundService.SERVICE_EVENT_CELL_NETWORK:
+			return LocationType.CellNetworkLocation;
+		case BackgroundService.SERVICE_EVENT_GEO_COORDINATES:
+			return LocationType.GeoCoordinatesLocation;
+		default:
+			return null;
+		}
+	}
 }
