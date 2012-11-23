@@ -72,10 +72,11 @@ public class WifisDetectedDataProvider {
 		// Save current conditions for later
 		if (storeLast) {
 			StringBuilder out = new StringBuilder();
-			for (ScanResult res : data.scanResults) {
-				out.append(res.BSSID);
-				out.append(SPLITTER);
-			}
+			if (data.scanResults != null)
+				for (ScanResult res : data.scanResults) {
+					out.append(res.BSSID);
+					out.append(SPLITTER);
+				}
 
 			// Count how many times the device stayed in the same position
 			int count = sp.getInt(PREV_WIFIS_DETECTED_STATIC, 0);

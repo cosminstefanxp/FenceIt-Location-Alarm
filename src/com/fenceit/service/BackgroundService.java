@@ -24,7 +24,6 @@ import com.fenceit.alarm.locations.CoordinatesLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
-import com.fenceit.alarm.triggers.BasicTrigger.TriggerType;
 import com.fenceit.db.AlarmLocationBroker;
 import com.fenceit.provider.CoordinatesDataProvider;
 import com.fenceit.service.checkers.TriggerCheckerBroker;
