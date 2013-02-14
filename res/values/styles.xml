@@ -145,7 +145,6 @@
 
     <style name="BasicActivity">
         <item name="android:windowNoTitle">true</item>
-        <item name="android:background">@color/background</item>
     </style>
 
     <style name="Button">

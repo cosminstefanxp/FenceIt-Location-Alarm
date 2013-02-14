@@ -4,24 +4,6 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent" >
 
-    <LinearLayout style="@style/TitleBar" >
-
-        <ImageButton
-            style="@style/TitleBarAction"
-            android:clickable="false"
-            android:contentDescription="@string/description_home"
-            android:src="@drawable/title_home" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-
-        <TextView
-            style="@style/TitleBarText"
-            android:text="FenceIt - Home" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-    </LinearLayout>
-    <!-- End of Title Bar -->
-
     <TableRow
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
