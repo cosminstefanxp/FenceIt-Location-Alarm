@@ -4,12 +4,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <ImageButton
-        android:id="@+id/main.addAlarmButton"
-        style="@style/TitleBarAction"
-        android:contentDescription="@string/description_action"
-        android:src="@drawable/title_add" />
-
     <ListView
         android:id="@+id/alarmPanel.alarmList"
         android:layout_width="fill_parent"
