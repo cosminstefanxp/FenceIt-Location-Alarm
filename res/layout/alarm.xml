@@ -5,30 +5,10 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!-- Title Bar -->
-
-    <LinearLayout style="@style/TitleBar" >
-
-        <ImageButton
-            style="@style/TitleBarAction"
-            android:contentDescription="@string/description_home"
-            android:onClick="onClickHome"
-            android:src="@drawable/title_home" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-
-        <TextView
-            style="@style/TitleBarText"
-            android:text="Alarm Edit" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-
-        <Button
-            android:id="@+id/alarm.saveButton"
-            style="@style/TitleBarAction.Text"
-            android:text="@string/button_save" />
-    </LinearLayout>
-    <!-- End of Title Bar -->
+    <Button
+        android:id="@+id/alarm.saveButton"
+        style="@style/TitleBarAction.Text"
+        android:text="@string/button_save" />
 
     <LinearLayout
         android:id="@+id/alarm.nameSection"

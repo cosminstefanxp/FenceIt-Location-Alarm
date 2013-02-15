@@ -58,7 +58,7 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_conn_location);
-		((TextView) findViewById(R.id.title_titleText)).setText("Edit Location");
+//		((TextView) findViewById(R.id.title_titleText)).setText("Edit Location");
 
 		// Prepare database connection
 		if (dao == null)

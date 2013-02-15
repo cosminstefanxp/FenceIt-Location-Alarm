@@ -58,7 +58,7 @@ public class RingerModeActivity extends DefaultActivity implements OnClickListen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ringer_mode_action);
-		((TextView) findViewById(R.id.title_titleText)).setText("Edit Action");
+//		((TextView) findViewById(R.id.title_titleText)).setText("Edit Action");
 
 		// Prepare database connection
 		if (dao == null)

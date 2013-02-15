@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <style name="Theme.FenceIt" parent="Theme.Sherlock.Light">
+        <item name="android:editTextStyle">@style/EditTextStyle.Light</item>
+    </style>
+
+    <style name="Theme.FenceIt.Dark" parent="Theme.Sherlock">
+        <item name="android:editTextStyle">@style/EditTextStyle.Dark</item>
+    </style>
+
+</resources>

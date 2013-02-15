@@ -67,6 +67,7 @@ public class AlarmPanelActivity extends DefaultActivity implements OnClickListen
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getSupportActionBar().setHomeButtonEnabled(true);
 
 		setContentView(R.layout.alarm_panel);
 
@@ -159,7 +160,8 @@ public class AlarmPanelActivity extends DefaultActivity implements OnClickListen
 		// The button to add a new alarm was clicked
 		case R.id.main_addAlarmButton:
 			log.debug("Add alarm button clicked.");
-			Intent addAlarmActivityIntent = new Intent(this, AlarmActivity.class);
+			Intent addAlarmActivityIntent = new Intent(this,
+					AlarmActivity.class);
 			startActivityForResult(addAlarmActivityIntent, REQ_CODE_ADD_ALARM);
 			break;
 		}

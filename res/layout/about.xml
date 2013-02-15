@@ -6,28 +6,6 @@
     android:layout_height="fill_parent"
     android:orientation="vertical" >
 
-    <!-- Title Bar -->
-
-    <LinearLayout
-        android:id="@+id/linearLayout1"
-        style="@style/TitleBar" >
-
-        <ImageButton
-            style="@style/TitleBarAction"
-            android:contentDescription="@string/description_home"
-            android:onClick="onClickHome"
-            android:src="@drawable/title_home" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-
-        <TextView
-            style="@style/TitleBarText"
-            android:text="About" />
-
-        <ImageView style="@style/TitleBarSeparator" />
-    </LinearLayout>
-    <!-- End of Title Bar -->
-
     <ImageView
         android:id="@+id/about.logoImage"
         android:layout_width="wrap_content"

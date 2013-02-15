@@ -58,7 +58,7 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notification_action);
-		((TextView) findViewById(R.id.title_titleText)).setText("Edit Action");
+//		((TextView) findViewById(R.id.title_titleText)).setText("Edit Action");
 
 		// Prepare database connection
 		if (dao == null)
