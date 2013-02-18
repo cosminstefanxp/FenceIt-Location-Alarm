@@ -6,8 +6,6 @@
  */
 package com.fenceit.ui.helpers;
 
-import android.util.Log;
-
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.ActionMode.Callback;
 import com.actionbarsherlock.view.Menu;
@@ -28,7 +26,6 @@ public abstract class EditItemActionMode implements Callback {
 
 	@Override
 	public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
-		Log.d("d", "aici");
 		switch (item.getItemId()) {
 		case R.id.menu_edit_item:
 			onEditItem(mode);

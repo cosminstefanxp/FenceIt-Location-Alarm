@@ -3,13 +3,13 @@ package com.fenceit.ui;
 import android.content.Intent;
 import android.view.View;
 
-import com.actionbarsherlock.app.SherlockActivity;
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.actionbarsherlock.view.Menu;
 import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.fenceit.R;
 
-public class DefaultActivity extends SherlockActivity {
+public class DefaultActivity extends SherlockFragmentActivity {
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {

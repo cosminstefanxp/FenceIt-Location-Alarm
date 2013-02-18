@@ -89,7 +89,7 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 
 		// Set up other controls
 		findViewById(R.id.locationPanel_addButton).setOnClickListener(this);
-		locationTypesAdapter = AlarmLocationBroker.getLocationTypesAdapter();
+		locationTypesAdapter = AlarmLocationBroker.getLocationTypesAdapter(this);
 	}
 
 	/* (non-Javadoc)

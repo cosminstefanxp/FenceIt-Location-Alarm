@@ -102,16 +102,7 @@
 
     <!-- Body and general layouts -->
 
-    <style name="SettingItem">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">5dp</item>
-        <item name="android:layout_marginLeft">5dp</item>
-        <item name="android:layout_marginTop">5dp</item>
-        <item name="android:layout_marginRight">5dp</item>
-        <item name="android:layout_marginBottom">5dp</item>
-        <item name="android:background">@drawable/setting_item</item>
-    </style>
+ 
 
     <style name="SettingItem.Indented">
         <item name="android:layout_marginLeft">35dp</item>
@@ -147,17 +138,19 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">5dp</item>
-        <item name="android:layout_margin">6dp</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:layout_marginTop">5dp</item>
         <item name="android:background">@drawable/bottom_border</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/bright_foreground_disabled_holo_dark</item>
     </style>
 
     <style name="SectionHeaderSmall">
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">1dp</item>
-        <item name="android:layout_margin">5dp</item>
-        <item name="android:layout_marginBottom">1dp</item>
-        <item name="android:layout_marginTop">0dp</item>
+        <item name="android:paddingLeft">15dp</item>
+        <item name="android:paddingBottom">5dp</item>
+        <item name="android:paddingTop">5dp</item>
         <item name="android:background">@drawable/bottom_border</item>
     </style>
 

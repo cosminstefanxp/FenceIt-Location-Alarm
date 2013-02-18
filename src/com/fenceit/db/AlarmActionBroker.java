@@ -38,7 +38,7 @@ public class AlarmActionBroker {
 	 * @return the action types adapter
 	 */
 	public static SingleChoiceAdapter<ActionType> getActionTypesAdapter() {
-		return new SingleChoiceAdapter<ActionType>(new ActionType[] { ActionType.NotificationAction, ActionType.RingerModeAction },
+		return new SingleChoiceAdapter<ActionType>(null, new ActionType[] { ActionType.NotificationAction, ActionType.RingerModeAction },
 				new CharSequence[] { "Set up a notification message.", "Switch to a new ringer mode." });
 	}
 

@@ -30,8 +30,8 @@ import com.fenceit.ui.helpers.EditItemActionMode;
 /**
  * The Class FenceItActivity.
  */
-public class AlarmPanelActivity extends DefaultActivity implements
-		OnItemClickListener, OnItemLongClickListener {
+public class AlarmPanelActivity extends DefaultActivity implements OnItemClickListener,
+		OnItemLongClickListener {
 
 	/** The logger. */
 	private static Logger log = Logger.getRootLogger();
@@ -57,8 +57,7 @@ public class AlarmPanelActivity extends DefaultActivity implements
 	/**
 	 * Called when the activity is first created.
 	 * 
-	 * @param savedInstanceState
-	 *            the saved instance state
+	 * @param savedInstanceState the saved instance state
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -69,8 +68,7 @@ public class AlarmPanelActivity extends DefaultActivity implements
 
 		// Prepare database connection
 		if (dao == null)
-			dao = DatabaseManager.getDAOInstance(getApplicationContext(),
-					Alarm.class, Alarm.tableName);
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), Alarm.class, Alarm.tableName);
 
 		// Get the alarms
 		fetchAlarms();
@@ -93,12 +91,10 @@ public class AlarmPanelActivity extends DefaultActivity implements
 	}
 
 	@Override
-	public boolean onOptionsItemSelected(
-			com.actionbarsherlock.view.MenuItem item) {
+	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
 		if (item.getItemId() == R.id.menu_btn_add_item) {
 			log.debug("Add alarm button clicked.");
-			Intent addAlarmActivityIntent = new Intent(this,
-					AlarmActivity.class);
+			Intent addAlarmActivityIntent = new Intent(this, AlarmActivity.class);
 			startActivityForResult(addAlarmActivityIntent, REQ_CODE_ADD_ALARM);
 			return true;
 		}
@@ -108,8 +104,7 @@ public class AlarmPanelActivity extends DefaultActivity implements
 	/**
 	 * Delete alarm.
 	 * 
-	 * @param alarm
-	 *            the alarm
+	 * @param alarm the alarm
 	 */
 	private void deleteAlarm(Alarm alarm) {
 		log.info("Deleting alarm: " + alarm);
@@ -122,12 +117,10 @@ public class AlarmPanelActivity extends DefaultActivity implements
 	/**
 	 * Starts the edit activity for the alarm.
 	 * 
-	 * @param id
-	 *            the id
+	 * @param id the id
 	 */
 	private void editAlarm(long id) {
-		Intent editAlarmActivityIntent = new Intent(AlarmPanelActivity.this,
-				AlarmActivity.class);
+		Intent editAlarmActivityIntent = new Intent(AlarmPanelActivity.this, AlarmActivity.class);
 		editAlarmActivityIntent.putExtra("id", id);
 		startActivityForResult(editAlarmActivityIntent, REQ_CODE_EDIT_ALARM);
 	}
@@ -145,8 +138,7 @@ public class AlarmPanelActivity extends DefaultActivity implements
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		log.debug("Activity Result received for request " + requestCode
-				+ " with result code: " + resultCode);
+		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
 		// if ((requestCode == REQ_CODE_ADD_ALARM ||
 		// requestCode==REQ_CODE_EDIT_ALARM) && resultCode
 		// == RESULT_OK) {
@@ -170,8 +162,7 @@ public class AlarmPanelActivity extends DefaultActivity implements
 	 * For click on an Alarm item in list.
 	 */
 	@Override
-	public void onItemClick(AdapterView<?> parent, View view, int position,
-			long id) {
+	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		log.info("ListView item click for editing alarm with id " + id);
 		editAlarm(id);
 	}
@@ -180,9 +171,8 @@ public class AlarmPanelActivity extends DefaultActivity implements
 	 * For long click on an Alarm item in the list.
 	 */
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view,
-			final int position, final long id) {
-		//Start an action mode with options regarding the Alarm
+	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
+		// Start an action mode with options regarding the Alarm
 		startActionMode(new EditItemActionMode() {
 			@Override
 			protected void onEditItem(ActionMode mode) {

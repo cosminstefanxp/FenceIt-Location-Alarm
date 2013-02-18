@@ -6,8 +6,6 @@
  */
 package com.fenceit.ui;
 
-import java.util.ArrayList;
-
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
@@ -16,6 +14,9 @@ import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.view.ContextMenu;
 import android.view.ContextMenu.ContextMenuInfo;
 import android.view.LayoutInflater;
@@ -29,20 +30,18 @@ import android.widget.AdapterView.OnItemClickListener;
 import android.widget.EditText;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.actions.ActionType;
 import com.fenceit.alarm.actions.AlarmAction;
 import com.fenceit.alarm.triggers.AlarmTrigger;
-import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.AlarmActionBroker;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.service.BackgroundService;
 import com.fenceit.ui.adapters.ActionsAdapter;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
-import com.fenceit.ui.adapters.TriggersAdapter;
+import com.fenceit.ui.helpers.LoseFocusOnEditorActionListener;
 
 /**
  * The Class AlarmActivity showing the screen for editing an Alarm.
@@ -51,12 +50,6 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(AlarmActivity.class);
-
-	/** The Constant REQ_CODE_ADD_TRIGGER used as a request code when creating a new trigger. */
-	private static final int REQ_CODE_ADD_TRIGGER = 1;
-
-	/** The Constant REQ_CODE_EDIT_TRIGGER used as a request code when editing a trigger. */
-	private static final int REQ_CODE_EDIT_TRIGGER = 2;
 
 	/** The Constant REQ_CODE_ADD_ACTION used as a request code when creating a new action. */
 	private static final int REQ_CODE_ADD_ACTION = 3;
@@ -84,14 +77,8 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	/** The data access object. */
 	private DefaultDAO<Alarm> dao = null;
 
-	/** The DAO for triggers. */
-	private DefaultDAO<BasicTrigger> daoTriggers = null;
-
 	/** The context menu id. */
 	private long contextMenuPosition;
-
-	/** The triggers adapter. */
-	private TriggersAdapter triggersAdapter;
 
 	/** The actions adapter. */
 	private ActionsAdapter actionsAdapter;
@@ -112,9 +99,6 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		// Prepare database connections
 		if (dao == null)
 			dao = DatabaseManager.getDAOInstance(getApplicationContext(), Alarm.class, Alarm.tableName);
-		if (daoTriggers == null)
-			daoTriggers = DatabaseManager.getDAOInstance(getApplicationContext(), BasicTrigger.class,
-					BasicTrigger.tableName);
 
 		// If it's a new activity
 		if (savedInstanceState == null) {
@@ -130,19 +114,16 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 			log.info("Restored saved instance of alarm: " + alarm);
 		}
 
+		// Add the triggers fragment
+		Fragment triggersFragment = TriggersFragment.newInstance(alarm.getId());
+		getSupportFragmentManager().beginTransaction()
+				.add(R.id.alarm_triggersFragmentContainer, triggersFragment).commit();
+
 		// Add OnClickListeners
 		findViewById(R.id.alarm_nameSection).setOnClickListener(this);
-		findViewById(R.id.alarm_enabledSection).setOnClickListener(this);
-		findViewById(R.id.alarm_saveButton).setOnClickListener(this);
-		findViewById(R.id.alarm_addTriggerButton).setOnClickListener(this);
+		((TextView) findViewById(R.id.alarm_nameText))
+				.setOnEditorActionListener(new LoseFocusOnEditorActionListener());
 		findViewById(R.id.alarm_addActionButton).setOnClickListener(this);
-
-		// Set up triggers list view and adapter
-		triggersAdapter = new TriggersAdapter(this, alarm.getTriggers());
-		ListView triggersLV = (ListView) findViewById(R.id.alarm_triggersListView);
-		triggersLV.setAdapter(triggersAdapter);
-		registerForContextMenu(triggersLV);
-		triggersLV.setOnItemClickListener(this);
 
 		// Set up actions list view and adapter
 		actionsAdapter = new ActionsAdapter(this, alarm.getActions());
@@ -166,10 +147,6 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		}
 
 		((TextView) findViewById(R.id.alarm_nameText)).setText(alarm.getName());
-		if (alarm.isEnabled())
-			((TextView) findViewById(R.id.alarm_enabledText)).setText("Alarm ENABLED");
-		else
-			((TextView) findViewById(R.id.alarm_enabledText)).setText("Alarm DISABLED");
 	}
 
 	/**
@@ -201,14 +178,14 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	 * Fetches the associated triggers from the database.
 	 */
 	private void fetchTriggers() {
-		// Get the associated triggers
-		daoTriggers.open();
-		ArrayList<BasicTrigger> triggers = daoTriggers.fetchAll(DefaultDAO.REFERENCE_PREPENDER + "alarm="
-				+ alarm.getId());
-		daoTriggers.close();
-		alarm.getTriggers().clear();
-		if (triggers != null)
-			alarm.getTriggers().addAll(triggers);
+		// // Get the associated triggers
+		// daoTriggers.open();
+		// ArrayList<BasicTrigger> triggers = daoTriggers.fetchAll(DefaultDAO.REFERENCE_PREPENDER + "alarm="
+		// + alarm.getId());
+		// daoTriggers.close();
+		// alarm.getTriggers().clear();
+		// if (triggers != null)
+		// alarm.getTriggers().addAll(triggers);
 	}
 
 	/**
@@ -217,8 +194,8 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	private void fetchActions() {
 		alarm.getActions().clear();
 		alarm.getActions().addAll(
-				AlarmActionBroker.fetchAllActions(getApplicationContext(), DefaultDAO.REFERENCE_PREPENDER + "alarm="
-						+ alarm.getId()));
+				AlarmActionBroker.fetchAllActions(getApplicationContext(), DefaultDAO.REFERENCE_PREPENDER
+						+ "alarm=" + alarm.getId()));
 	}
 
 	@Override
@@ -247,7 +224,8 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		// Notify the background service that a change has been done on an enabled alarm
 		if (alarm.isEnabled()) {
 			Intent intent = new Intent(this, BackgroundService.class);
-			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_FORCE_RECHECK);
+			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
+					BackgroundService.SERVICE_EVENT_FORCE_RECHECK);
 			startService(intent);
 		}
 
@@ -269,34 +247,35 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see android.view.View.OnClickListener#onClick(android.view.View)
 	 */
 	@Override
 	public void onClick(View v) {
 
 		switch (v.getId()) {
-		case R.id.alarm_saveButton:
-			log.info("Save button clicked. Storing alarm...");
-			if (!storeAlarm()) {
-				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
-						Toast.LENGTH_SHORT).show();
-				return;
-			}
-			setResult(RESULT_OK);
-			finish();
-			return;
-		case R.id.alarm_addTriggerButton:
-			log.info("Add trigger button clicked.");
-			// If it's a new alarm, we have to store it in the database so we can get an id and
-			// connect the trigger with it
-			if (newAlarm)
-				storeAlarm();
-
-			// Launch the Activity to define the trigger
-			Intent addTriggerActivityIntent = new Intent(this, TriggerActivity.class);
-			addTriggerActivityIntent.putExtra("alarm", alarm);
-			startActivityForResult(addTriggerActivityIntent, REQ_CODE_ADD_TRIGGER);
-			break;
+		// case R.id.alarm_saveButton:
+		// log.info("Save button clicked. Storing alarm...");
+		// if (!storeAlarm()) {
+		// Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
+		// Toast.LENGTH_SHORT).show();
+		// return;
+		// }
+		// setResult(RESULT_OK);
+		// finish();
+		// return;
+		// case R.id.alarm_addTriggerButton:
+		// log.info("Add trigger button clicked.");
+		// // If it's a new alarm, we have to store it in the database so we can get an id and
+		// // connect the trigger with it
+		// if (newAlarm)
+		// storeAlarm();
+		//
+		// // Launch the Activity to define the trigger
+		// Intent addTriggerActivityIntent = new Intent(this, TriggerActivity.class);
+		// addTriggerActivityIntent.putExtra("alarm", alarm);
+		// startActivityForResult(addTriggerActivityIntent, REQ_CODE_ADD_TRIGGER);
+		// break;
 		case R.id.alarm_addActionButton:
 			log.info("Add action button clicked.");
 			showDialog(DIALOG_NEW_ACTION);
@@ -304,32 +283,26 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		case R.id.alarm_nameSection:
 			showDialog(DIALOG_ALARM_NAME);
 			break;
-		case R.id.alarm_enabledSection:
-			if (alarm.isEnabled()) {
-				alarm.setEnabled(false);
-				((TextView) findViewById(R.id.alarm_enabledText)).setText("Alarm DISABLED");
-			} else {
-				alarm.setEnabled(true);
-				((TextView) findViewById(R.id.alarm_enabledText)).setText("Alarm ENABLED");
-			}
-			break;
 		}
 	}
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
-		if (resultCode == RESULT_OK && (requestCode == REQ_CODE_ADD_TRIGGER || requestCode == REQ_CODE_EDIT_TRIGGER)) {
-			log.debug("Refreshing triggers...");
-			fetchTriggers();
-			refreshTriggersListView();
-		}
-		if (resultCode == RESULT_OK && (requestCode == REQ_CODE_ADD_ACTION || requestCode == REQ_CODE_EDIT_ACTION)) {
+		// if (resultCode == RESULT_OK
+		// && (requestCode == REQ_CODE_ADD_TRIGGER || requestCode == REQ_CODE_EDIT_TRIGGER)) {
+		// log.debug("Refreshing triggers...");
+		// fetchTriggers();
+		// refreshTriggersListView();
+		// }
+		if (resultCode == RESULT_OK
+				&& (requestCode == REQ_CODE_ADD_ACTION || requestCode == REQ_CODE_EDIT_ACTION)) {
 			log.debug("Refreshing actions...");
 			fetchActions();
 			refreshActionsListView();
@@ -338,6 +311,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreateContextMenu(android.view.ContextMenu, android.view.View,
 	 * android.view.ContextMenu.ContextMenuInfo)
 	 */
@@ -346,16 +320,16 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		super.onCreateContextMenu(menu, v, menuInfo);
 
 		switch (v.getId()) {
-		case R.id.alarm_triggersListView:
-			// Check which list item was selected
-			AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
-			contextMenuPosition = info.position;
-			log.debug("Selected Triggers list item on position: " + contextMenuPosition);
-
-			// Inflate the menu
-			MenuInflater inflater = getMenuInflater();
-			inflater.inflate(R.menu.alarm_list_trigger_menu, menu);
-			break;
+		// case R.id.alarm_triggersListView:
+		// // Check which list item was selected
+		// AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) menuInfo;
+		// contextMenuPosition = info.position;
+		// log.debug("Selected Triggers list item on position: " + contextMenuPosition);
+		//
+		// // Inflate the menu
+		// MenuInflater inflater = getMenuInflater();
+		// inflater.inflate(R.menu.alarm_list_trigger_menu, menu);
+		// break;
 		case R.id.alarm_actionsListView:
 			// Check which list item was selected
 			AdapterView.AdapterContextMenuInfo info2 = (AdapterView.AdapterContextMenuInfo) menuInfo;
@@ -371,6 +345,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onContextItemSelected(android.view.MenuItem)
 	 */
 	@Override
@@ -394,7 +369,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	 * Refresh triggers list view.
 	 */
 	private void refreshTriggersListView() {
-		triggersAdapter.setTriggers(alarm.getTriggers());
+		// triggersAdapter.setTriggers(alarm.getTriggers());
 	}
 
 	/**
@@ -410,11 +385,11 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	 * @param alarmTrigger the alarm trigger
 	 */
 	private void deleteTrigger(AlarmTrigger alarmTrigger) {
-		log.info("Deleting trigger: " + alarmTrigger);
-		daoTriggers.open();
-		daoTriggers.delete(alarmTrigger.getId());
-		alarm.getTriggers().remove(alarmTrigger);
-		daoTriggers.close();
+		// log.info("Deleting trigger: " + alarmTrigger);
+		// daoTriggers.open();
+		// daoTriggers.delete(alarmTrigger.getId());
+		// alarm.getTriggers().remove(alarmTrigger);
+		// daoTriggers.close();
 	}
 
 	/**
@@ -430,6 +405,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView,
 	 * android.view.View, int, long)
 	 */
@@ -437,12 +413,12 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		log.debug("On Item click on position " + position + " for view: " + view);
 		switch (parent.getId()) {
-		case R.id.alarm_triggersListView:
-			log.info("ListView item click for editing trigger with id " + id);
-			Intent editTriggerActivityIntent = new Intent(this, TriggerActivity.class);
-			editTriggerActivityIntent.putExtra("id", id);
-			startActivityForResult(editTriggerActivityIntent, REQ_CODE_EDIT_TRIGGER);
-			break;
+		// case R.id.alarm_triggersListView:
+		// log.info("ListView item click for editing trigger with id " + id);
+		// Intent editTriggerActivityIntent = new Intent(this, TriggerActivity.class);
+		// editTriggerActivityIntent.putExtra("id", id);
+		// startActivityForResult(editTriggerActivityIntent, REQ_CODE_EDIT_TRIGGER);
+		// break;
 		case R.id.alarm_actionsListView:
 			log.info("ListView item click for editing action with id " + id);
 			AlarmAction selectedAction = (AlarmAction) actionsAdapter.getItem(position);
@@ -460,6 +436,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see android.app.Activity#onCreateDialog(int)
 	 */
 	@Override

@@ -3,10 +3,15 @@
 
     <style name="Theme.FenceIt" parent="Theme.Sherlock.Light">
         <item name="android:editTextStyle">@style/EditTextStyle.Light</item>
+        <item name="android:buttonStyleToggle">@style/ToggleStyle.Light</item>
+        <item name="android:spinnerStyle">@style/SpinnerStyle.Light</item>
+        <item name="android:dropDownSpinnerStyle">@style/SpinnerStyle.Light.Dropdown</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemStyle.Light</item>
     </style>
 
     <style name="Theme.FenceIt.Dark" parent="Theme.Sherlock">
         <item name="android:editTextStyle">@style/EditTextStyle.Dark</item>
+        <item name="android:buttonStyleToggle">@style/ToggleStyle.Dark</item>
     </style>
 
 </resources>

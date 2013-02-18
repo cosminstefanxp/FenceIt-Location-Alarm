@@ -103,9 +103,9 @@ public class TriggerActivity extends DefaultActivity implements OnClickListener 
 		findViewById(R.id.trigger_locationFavoriteSection).setOnClickListener(this);
 
 		// Fill data
-		typesAdapter = new SingleChoiceAdapter<BasicTrigger.TriggerType>(new TriggerType[] { TriggerType.ON_ENTER,
+		typesAdapter = new SingleChoiceAdapter<BasicTrigger.TriggerType>(this, new TriggerType[] { TriggerType.ON_ENTER,
 				TriggerType.ON_EXIT }, new CharSequence[] { "Arriving at location", "Leaving the location" });
-		locationsAdapter = AlarmLocationBroker.getLocationTypesAdapter();
+		locationsAdapter = AlarmLocationBroker.getLocationTypesAdapter(this);
 		refreshActivity();
 	}
 

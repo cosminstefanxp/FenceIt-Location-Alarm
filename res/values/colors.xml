@@ -1,8 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
+    <color name="section_header_title">#606060</color>
+    
     <color name="background">#222233</color>
-    <color name="delimiter">#33B5E5</color>
+    <color name="delimiter">#808080</color>
     <color name="setting_item">#dddddd</color>
     <color name="setting_item_selected">#0099CC</color>
     <color name="setting_item_border">#1a1a1a</color>

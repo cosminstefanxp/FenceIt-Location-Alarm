@@ -88,7 +88,7 @@ public class RingerModeActivity extends DefaultActivity implements OnClickListen
 		findViewById(R.id.ringer_mode_newModeSection).setOnClickListener(this);
 
 		// Fill data
-		modesAdapter = new SingleChoiceAdapter<Integer>(new Integer[] { AudioManager.RINGER_MODE_NORMAL,
+		modesAdapter = new SingleChoiceAdapter<Integer>(null, new Integer[] { AudioManager.RINGER_MODE_NORMAL,
 				AudioManager.RINGER_MODE_SILENT, AudioManager.RINGER_MODE_VIBRATE }, new CharSequence[] { "Normal",
 				"Silent", "Vibrate" });
 		refreshActivity();

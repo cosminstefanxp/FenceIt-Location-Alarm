@@ -11,6 +11,9 @@ import org.androwrapee.db.DatabaseField;
 import org.androwrapee.db.ReferenceField;
 import org.apache.log4j.Logger;
 
+import android.content.Context;
+
+import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.AlarmLocation.Status;
@@ -37,8 +40,8 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	private transient Logger log = Logger.getLogger(BasicTrigger.class);
 
 	/**
-	 * The type of location to which this trigger corresponds. Only stored the location type id, to
-	 * save storage.
+	 * The type of location to which this trigger corresponds. Only stored the location type id, to save
+	 * storage.
 	 */
 	@DatabaseField
 	private LocationType locationType;
@@ -60,7 +63,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	/**
 	 * Instantiates a new basic trigger.
 	 * 
-	 * @param alarm the alarm 
+	 * @param alarm the alarm
 	 */
 	public BasicTrigger(Alarm alarm) {
 		super(alarm);
@@ -75,10 +78,11 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		super(null);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.triggers.AbstractAlarmTrigger#shouldTrigger(com.fenceit
-	 * .alarm.EnvironmentData ) */
+	 * @see com.fenceit.alarm.triggers.AbstractAlarmTrigger#shouldTrigger(com.fenceit .alarm.EnvironmentData )
+	 */
 	@Override
 	public boolean shouldTrigger(ContextData data) {
 		Status status = location.checkStatus(data);
@@ -126,9 +130,11 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		this.type = type;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.triggers.AlarmTrigger#isComplete() */
+	 * @see com.fenceit.alarm.triggers.AlarmTrigger#isComplete()
+	 */
 	@Override
 	public boolean isComplete() {
 		if (location == null || type == null)
@@ -136,22 +142,26 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		return true;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#toString() */
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		if (alarm != null)
-			return "BasicTrigger [id=" + id + ", alarm=" + alarm.getId() + ", type=" + type + ", location=" + location
-					+ ",locationType=" + locationType + "]";
+			return "BasicTrigger [id=" + id + ", alarm=" + alarm.getId() + ", type=" + type + ", location="
+					+ location + ",locationType=" + locationType + "]";
 		else
-			return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", location=" + location
-					+ ",locationType=" + locationType + "]";
+			return "BasicTrigger [id=" + id + ", alarm=" + alarm + ", type=" + type + ", location="
+					+ location + ",locationType=" + locationType + "]";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getMainDescription() */
+	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getMainDescription()
+	 */
 	@Override
 	public String getMainDescription() {
 		switch (this.type) {
@@ -164,9 +174,11 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getSecondaryDescription() */
+	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getSecondaryDescription()
+	 */
 	@Override
 	public String getSecondaryDescription() {
 		return locationType.toString();
@@ -190,4 +202,22 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 		this.locationType = locationType;
 	}
 
+	/**
+	 * Gets the trigger types.
+	 * 
+	 * @return the trigger types
+	 */
+	public static TriggerType[] getTriggerTypes() {
+		return new TriggerType[] { TriggerType.ON_ENTER, TriggerType.ON_EXIT };
+	}
+
+	/**
+	 * Gets the trigger types names, in the same order as {@link BasicTrigger#getTriggerTypes()}
+	 *
+	 * @param context the context
+	 * @return the trigger types names
+	 */
+	public static String[] getTriggerTypesNames(Context context) {
+		return context.getResources().getStringArray(R.array.trigger_types);
+	}
 }

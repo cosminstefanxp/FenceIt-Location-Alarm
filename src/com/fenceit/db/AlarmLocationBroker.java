@@ -7,6 +7,7 @@
 package com.fenceit.db;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import org.androwrapee.db.DefaultDAO;
@@ -14,6 +15,7 @@ import org.androwrapee.db.DefaultDAO;
 import android.content.Context;
 import android.content.Intent;
 
+import com.fenceit.R;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.CellNetworkLocation;
 import com.fenceit.alarm.locations.CoordinatesLocation;
@@ -38,8 +40,9 @@ import com.fenceit.ui.adapters.SingleChoiceAdapter;
 public class AlarmLocationBroker {
 
 	/** The Constant locationTypes. */
-	private static final LocationType[] locationTypes = new LocationType[] { LocationType.WifiConnectedLocation,
-			LocationType.WifisDetectedLocation, LocationType.CellNetworkLocation, LocationType.GeoCoordinatesLocation };
+	private static final LocationType[] locationTypes = new LocationType[] {
+			LocationType.WifiConnectedLocation, LocationType.WifisDetectedLocation,
+			LocationType.CellNetworkLocation, LocationType.GeoCoordinatesLocation };
 
 	/**
 	 * Gets the location types. The LocationType array returned is final and should not be modified.
@@ -52,13 +55,27 @@ public class AlarmLocationBroker {
 
 	/**
 	 * Gets the location types adapter.
-	 * 
+	 *
+	 * @param ctx the context
 	 * @return the location types adapter
 	 */
-	public static SingleChoiceAdapter<LocationType> getLocationTypesAdapter() {
-		return new SingleChoiceAdapter<LocationType>(getLocationTypes(), new CharSequence[] {
-				"Based on the connected Wifi", "Based on the detected Wifis", "Based on Cell Network",
-				"Based on Geographical Coordinates" });
+	public static SingleChoiceAdapter<LocationType> getLocationTypesAdapter(Context ctx) {
+		return new SingleChoiceAdapter<LocationType>(null, getLocationTypes(), ctx.getResources()
+				.getStringArray(R.array.location_types));
+	}
+
+	/**
+	 * Gets the location types adapter, including the fake {@link LocationType#FavoriteExistingLocation}.
+	 * 
+	 * @param ctx the context
+	 * @return the location types adapter
+	 */
+	public static SingleChoiceAdapter<LocationType> getLocationTypesAdapterWithFavorite(Context ctx) {
+		return new SingleChoiceAdapter<LocationType>(null, new LocationType[] {
+				LocationType.WifiConnectedLocation, LocationType.WifisDetectedLocation,
+				LocationType.CellNetworkLocation, LocationType.GeoCoordinatesLocation,
+				LocationType.FavoriteExistingLocation }, ctx.getResources().getStringArray(
+				R.array.location_types_favorite));
 	}
 
 	/**
@@ -100,8 +117,8 @@ public class AlarmLocationBroker {
 		AlarmLocation location = null;
 		switch (type) {
 		case CellNetworkLocation:
-			DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context, CellNetworkLocation.class,
-					CellNetworkLocation.tableName);
+			DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context,
+					CellNetworkLocation.class, CellNetworkLocation.tableName);
 			daoC.open();
 			location = daoC.fetch(id);
 			daoC.close();
@@ -121,8 +138,8 @@ public class AlarmLocationBroker {
 			daoWD.close();
 			break;
 		case GeoCoordinatesLocation:
-			DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context, CoordinatesLocation.class,
-					CoordinatesLocation.tableName);
+			DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context,
+					CoordinatesLocation.class, CoordinatesLocation.tableName);
 			daoCo.open();
 			location = daoCo.fetch(id);
 			daoCo.close();
@@ -142,32 +159,32 @@ public class AlarmLocationBroker {
 		List<AlarmLocation> locations = new ArrayList<AlarmLocation>();
 
 		// Fetch WifiConnectedLocations
-		DefaultDAO<WifiConnectedLocation> daoWC = DatabaseManager.getDAOInstance(context, WifiConnectedLocation.class,
-				WifiConnectedLocation.tableName);
+		DefaultDAO<WifiConnectedLocation> daoWC = DatabaseManager.getDAOInstance(context,
+				WifiConnectedLocation.class, WifiConnectedLocation.tableName);
 		daoWC.open();
 		List<WifiConnectedLocation> locationsWC = daoWC.fetchAll(where);
 		daoWC.close();
 		locations.addAll(locationsWC);
 
 		// Fetch WifisDetectedLocations
-		DefaultDAO<WifisDetectedLocation> daoWD = DatabaseManager.getDAOInstance(context, WifisDetectedLocation.class,
-				WifisDetectedLocation.tableName);
+		DefaultDAO<WifisDetectedLocation> daoWD = DatabaseManager.getDAOInstance(context,
+				WifisDetectedLocation.class, WifisDetectedLocation.tableName);
 		daoWD.open();
 		List<WifisDetectedLocation> locationsWD = daoWD.fetchAll(where);
 		daoWD.close();
 		locations.addAll(locationsWD);
 
 		// Fetch CellLocations
-		DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context, CellNetworkLocation.class,
-				CellNetworkLocation.tableName);
+		DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context,
+				CellNetworkLocation.class, CellNetworkLocation.tableName);
 		daoC.open();
 		List<CellNetworkLocation> locationsC = daoC.fetchAll(where);
 		daoC.close();
 		locations.addAll(locationsC);
 
 		// Fetch CoordinatesLocations
-		DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context, CoordinatesLocation.class,
-				CoordinatesLocation.tableName);
+		DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context,
+				CoordinatesLocation.class, CoordinatesLocation.tableName);
 		daoCo.open();
 		List<CoordinatesLocation> locationsCo = daoCo.fetchAll(where);
 		daoCo.close();
@@ -191,7 +208,8 @@ public class AlarmLocationBroker {
 	public static void startServiceFromActivity(Context context, LocationType type) {
 		Intent intent = new Intent(context, BackgroundService.class);
 		if (type == null)
-			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME, BackgroundService.SERVICE_EVENT_FORCE_RECHECK);
+			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
+					BackgroundService.SERVICE_EVENT_FORCE_RECHECK);
 		else
 			switch (type) {
 			case WifiConnectedLocation:

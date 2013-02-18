@@ -6,12 +6,18 @@
  */
 package com.fenceit.ui.adapters;
 
+import android.content.Context;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.TextView;
+
 /**
  * An adapter for single choice array of objects.
  * 
  * @param <T> the generic type
  */
-public class SingleChoiceAdapter<T> {
+public class SingleChoiceAdapter<T> extends BaseAdapter {
 
 	/** The values. */
 	private T[] values;
@@ -19,17 +25,21 @@ public class SingleChoiceAdapter<T> {
 	/** The names. */
 	private CharSequence[] names;
 
+	/** The context. */
+	private Context context;
+
 	/**
 	 * Instantiates a new single choice adapter.
 	 * 
 	 * @param values the values
 	 * @param names the names
 	 */
-	public SingleChoiceAdapter(T[] values, CharSequence[] names) {
+	public SingleChoiceAdapter(Context context, T[] values, CharSequence[] names) {
 		super();
 		assert (values.length == names.length);
 		this.values = values;
 		this.names = names;
+		this.context = context;
 	}
 
 	/**
@@ -74,5 +84,29 @@ public class SingleChoiceAdapter<T> {
 			if (values[i].equals(value))
 				return i;
 		return -1;
+	}
+
+	@Override
+	public int getCount() {
+		return values.length;
+	}
+
+	@Override
+	public Object getItem(int position) {
+		return values[position];
+	}
+
+	@Override
+	public long getItemId(int position) {
+		return 0;
+	}
+
+	@Override
+	public View getView(int position, View convertView, ViewGroup parent) {
+		if (convertView == null) {
+			convertView = new TextView(context);
+		}
+		((TextView) convertView).setText(names[position]);
+		return convertView;
 	}
 }

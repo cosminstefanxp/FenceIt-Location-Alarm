@@ -18,7 +18,9 @@ public enum LocationType {
 	/** A location based on the detected Wifi(s) network(s). */
 	WifisDetectedLocation(2),
 	/** A location based on the visible Cell Network Sites and the Cell Site connected to. */
-	CellNetworkLocation(3);
+	CellNetworkLocation(3), 
+	/** A favorite existing location. */
+	FavoriteExistingLocation(-1);
 
 	/** The id. */
 	private int id;
