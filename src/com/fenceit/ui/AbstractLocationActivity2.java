@@ -17,45 +17,67 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.view.MenuItem;
 import com.fenceit.R;
 import com.fenceit.alarm.locations.AbstractAlarmLocation;
 
 /**
  * The Class AbstractLocationActivity is used as a base for implementing Activities for editing
- * AlarmLocations. It handles the click events on options particular to
- * {@link AbstractAlarmLocation}, such as favorite and name.
+ * AlarmLocations. It handles the click events on options particular to {@link AbstractAlarmLocation}, such as
+ * favorite and name.
  */
-public abstract class AbstractLocationActivity extends DefaultActivity {
+public abstract class AbstractLocationActivity2 extends DefaultActivity {
 
 	/** The Constant DIALOG_LOCATION_NAME. */
 	private static final int DIALOG_LOCATION_NAME = 999;
 
 	/**
-	 * Checks if the instance of the Activity forces the location to be favorite. This is the case,
-	 * for example, when the LocationActivity was created from the LocationsPanel, in which case,
-	 * not forcing it to be favorite would be useless.
+	 * Checks if the instance of the Activity forces the location to be favorite. This is the case, for
+	 * example, when the LocationActivity was created from the LocationsPanel, in which case, not forcing it
+	 * to be favorite would be useless.
 	 */
 	protected boolean isForcedFavorite = false;
-	
-	
 
 	@Override
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
-		
-		//Check if this
+
+		// Check if this
 	}
 
-	
-	
-	
-	
-	
-	
-	
-	
-	
-	
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		// Inflate the menu options that are common to all location activities
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.menu_location, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		// Process the menu options that are common to all location activities
+		switch (item.getItemId()) {
+		case R.id.menu_save:
+			saveLocation();
+			return true;
+		case R.id.menu_undo:
+			undoLocation();
+			return true;
+		default:
+			return super.onOptionsItemSelected(item);
+		}
+	}
+
+	protected void saveLocation() {
+
+	}
+
+	protected void undoLocation() {
+
+	}
+
 	/**
 	 * Method triggered when the user clicks on the favorite section.
 	 * 
@@ -64,7 +86,8 @@ public abstract class AbstractLocationActivity extends DefaultActivity {
 	public void onClickFavoriteSection(View v) {
 		// If the location is forced to be a favorite one
 		if (isForcedFavorite) {
-			Toast.makeText(this, "The location can only be favorite, as it is created from the Locations Panel.",
+			Toast.makeText(this,
+					"The location can only be favorite, as it is created from the Locations Panel.",
 					Toast.LENGTH_SHORT).show();
 			return;
 		}
@@ -93,8 +116,7 @@ public abstract class AbstractLocationActivity extends DefaultActivity {
 	protected abstract AbstractAlarmLocation getLocation();
 
 	/**
-	 * Refreshes the graphical elements corresponding to the abstract location's options (favorite,
-	 * name).
+	 * Refreshes the graphical elements corresponding to the abstract location's options (favorite, name).
 	 */
 	protected void refreshAbstractLocationElements() {
 		// Change favorite location image
@@ -115,8 +137,8 @@ public abstract class AbstractLocationActivity extends DefaultActivity {
 	}
 
 	/**
-	 * Creates any abstract location dialog that might be necessary. Returns null if it doesn't
-	 * handle the requested Dialog id.
+	 * Creates any abstract location dialog that might be necessary. Returns null if it doesn't handle the
+	 * requested Dialog id.
 	 * 
 	 * @param id the id of the dialog to generate
 	 * @return the dialog, or null if the id was not recognized

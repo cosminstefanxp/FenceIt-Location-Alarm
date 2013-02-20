@@ -18,6 +18,9 @@
     <string name="menu_add">Add</string>
     <string name="menu_edit">Edit</string>
     <string name="menu_delete">Delete</string>
+    <string name="menu_save">Save</string>
+    <string name="menu_undo">Undo</string>
+    <string name="menu_refresh">Refresh</string>
     <string name="btn_toggle_enabled">Enabled</string>
     <string name="btn_toggle_disabled">Disabled</string>
     <string name="default_alarm_name">Alarm Name</string>
