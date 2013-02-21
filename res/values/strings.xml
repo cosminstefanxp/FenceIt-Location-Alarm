@@ -50,6 +50,7 @@
     </string-array>
 
     <string name="dialog_enable_wifi_title">Wi-Fi Interface not enabled</string>
+    <string name="dialog_enable_cell_title">Mobile Network Interface not enabled</string>
     <string name="dialog_enable_wifi_message">The Wi-Fi interface doesn\'t seem to be enabled. Would you like to enable it now?</string>
     <string name="general_yes">Yes</string>
     <string name="general_no">No</string>
@@ -74,5 +75,13 @@
     <string name="location_detected_wifis_title">Detected Wifi Networks</string>
     <string name="location_detected_wifis_bssid">BSSID:</string>
     <string name="location_detected_wifis_ssid">Name/SSID:</string>
+    <string name="dialog_enable_cell_message">The device does not seem to be connected to any mobile phone networks. Would you like to adjust the settings now?</string>
+    <string name="location_cell_title">Cell Site Info</string>
+    <string name="location_cell_cellid">CellID:</string>
+    <string name="location_cell_lac">Lac:</string>
+    <string name="location_cell_mcc">Mcc</string>
+    <string name="location_cell_mnc">Mnc:</string>
+    <string name="error_acquiring_data">Error acquiring data</string>
+    <string name="location_cell_error_message">An error has occurred while acquiring data from the mobile network interface. Please check that your device is properly connected to a mobile network and try again.</string>
 
 </resources>

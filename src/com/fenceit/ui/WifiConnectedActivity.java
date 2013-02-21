@@ -143,7 +143,7 @@ public class WifiConnectedActivity extends AbstractLocationActivity2<WifiConnect
 			// Use the Builder class for convenient dialog construction
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
-			builder.setMessage(R.string.dialog_enable_wifi_title);
+			builder.setTitle(R.string.dialog_enable_wifi_title);
 			builder.setMessage(R.string.dialog_enable_wifi_message).setCancelable(false)
 					.setPositiveButton(R.string.general_yes, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
