@@ -11,7 +11,7 @@
     <string name="dialog_set_number">Set</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_picker_title">Choose a number</string>
-    <string name="trigger.whenSectionTitle">Triggered when ...</string>
+    <string name="trigger.whenSectionTitle">Triggered when &#8230;</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="menu_settings">Settings</string>
@@ -58,7 +58,7 @@
     <string name="wific_location_ssid">Matching on SSID</string>
     <string name="location_click_refresh">Click on the refresh button.</string>
     <string name="location_favorite_only">The location can only be favorite, as it is created from the Locations Panel.</string>
-    <string name="general_ok">Ok</string>
+    <string name="general_ok">OK</string>
     <string name="dialog_location_name_message">Set the location name:</string>
     <string name="dialog_location_name_title">New Location Name</string>
     <string name="undone_success">Changes undone!</string>
@@ -83,5 +83,11 @@
     <string name="location_cell_mnc">Mnc:</string>
     <string name="error_acquiring_data">Error acquiring data</string>
     <string name="location_cell_error_message">An error has occurred while acquiring data from the mobile network interface. Please check that your device is properly connected to a mobile network and try again.</string>
+    <string name="location_geo_title">Geo Coordinates</string>
+    <string name="location_geo_latitude">Latitude:</string>
+    <string name="location_geo_longitude">Longitude:</string>
+    <string name="location_geo_extra">Extra:</string>
+    <string name="location_geo_view_map">View Map</string>
+    <string name="location_geo_activation_radius">Activation radius:</string>
 
 </resources>
