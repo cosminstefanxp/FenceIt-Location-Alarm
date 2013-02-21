@@ -166,6 +166,9 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 	public class LocationTypeSelectorDialogFragment extends DialogFragment {
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Screen rotation bug fix
+			setRetainInstance(true);
+			
 			final SingleChoiceAdapter<LocationType> adapter = AlarmLocationBroker
 					.getLocationTypesAdapterWithFavorite(getActivity());
 

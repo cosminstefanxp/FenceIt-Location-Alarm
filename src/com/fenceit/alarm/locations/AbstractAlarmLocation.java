@@ -6,6 +6,8 @@
  */
 package com.fenceit.alarm.locations;
 
+import java.io.Serializable;
+
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 import org.androwrapee.db.IdField;
@@ -14,7 +16,10 @@ import org.androwrapee.db.IdField;
  * An abstract implementation of the AlarmLocation.
  */
 @DatabaseClass
-public abstract class AbstractAlarmLocation implements AlarmLocation {
+public abstract class AbstractAlarmLocation implements AlarmLocation, Serializable{
+
+	/** The Constant serialVersionUID. */
+	private static final long serialVersionUID = 5014117271712172420L;
 
 	/** The id. */
 	@IdField
@@ -93,5 +98,12 @@ public abstract class AbstractAlarmLocation implements AlarmLocation {
 	public void setFavorite(boolean favorite) {
 		this.favorite = favorite;
 	}
+	
+	/**
+	 * Creates a copy of the Alarm Location. Must be an actual instance of the extending type.
+	 *
+	 * @return the location
+	 */
+	public abstract AbstractAlarmLocation copy();
 
 }

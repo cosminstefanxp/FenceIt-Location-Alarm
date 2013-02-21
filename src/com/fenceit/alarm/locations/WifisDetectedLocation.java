@@ -20,8 +20,8 @@ import com.fenceit.provider.ContextData;
 import com.fenceit.provider.WifisDetectedContextData;
 
 /**
- * The Class WifisDetectedLocation is an implementation of an AlarmLocation based on the Wifi
- * networks detected by the Wireless interface.
+ * The Class WifisDetectedLocation is an implementation of an AlarmLocation based on the Wifi networks
+ * detected by the Wireless interface.
  */
 @DatabaseClass
 public class WifisDetectedLocation extends AbstractAlarmLocation implements Serializable {
@@ -42,9 +42,11 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	/** The Constant SPLITTER used for the internal serialization of the BSSIDs. */
 	private static final String SPLITTER = ";";
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData) */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData)
+	 */
 	@Override
 	public Status checkStatus(ContextData info) {
 		WifisDetectedContextData data = (WifisDetectedContextData) info;
@@ -94,9 +96,11 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription() */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		if (serializedBSSIDs.length() > 15)
@@ -105,43 +109,51 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 			return serializedBSSIDs;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription() */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription()
+	 */
 	@Override
 	public String getTypeDescription() {
 		return "Detected Wifis";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getType() */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getType()
+	 */
 	@Override
 	public LocationType getType() {
 		return LocationType.WifisDetectedLocation;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete() */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete()
+	 */
 	@Override
 	public boolean isComplete() {
 		return serializedBSSIDs != null && serializedBSSIDs.length() > 0;
 	}
 
 	/**
-	 * Gets the BSSIDs. The BSSIDs are stored serialized and a de-serialization is used for every
-	 * get, so the results of this method should be cached.
+	 * Gets the BSSIDs. The BSSIDs are stored serialized and a de-serialization is used for every get, so the
+	 * results of this method should be cached.
 	 * 
-	 * @return the string
+	 * @return the bssids, as an array of Strings, or null, if there is no data.
 	 */
 	public String[] getBSSIDs() {
+		if(serializedBSSIDs==null)
+			return null;
 		return serializedBSSIDs.split(SPLITTER);
 	}
 
 	/**
-	 * Sets the BSSIDs.The BSSIDs are stored serialized and a serialization is used for every set,
-	 * so it should be used with moderation.
+	 * Sets the BSSIDs.The BSSIDs are stored serialized and a serialization is used for every set, so it
+	 * should be used with moderation.
 	 * 
 	 * @param bssids the new bSSI ds
 	 */
@@ -171,12 +183,23 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 
 	@Override
 	public String toString() {
-		return "WifisDetectedLocation [id=" + id + ", name=" + name + ", serializedBSSIDs=" + serializedBSSIDs + "]";
+		return "WifisDetectedLocation [id=" + id + ", name=" + name + ", serializedBSSIDs="
+				+ serializedBSSIDs + "]";
 	}
 
 	@Override
 	public int getTypeImageResource() {
 		return R.drawable.ic_location_wifi_detected;
+	}
+
+	@Override
+	public AbstractAlarmLocation copy() {
+		WifisDetectedLocation newLocation = new WifisDetectedLocation();
+		newLocation.serializedBSSIDs = this.serializedBSSIDs;
+		newLocation.name = this.name;
+		newLocation.favorite = this.favorite;
+		newLocation.id = this.id;
+		return newLocation;
 	}
 
 }

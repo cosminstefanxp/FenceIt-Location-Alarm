@@ -16,8 +16,8 @@ import com.fenceit.provider.CellContextData;
 import com.fenceit.provider.ContextData;
 
 /**
- * The Class CellLocation is an implementation of an AlarmLocation based on the Cell Tower to which
- * the device is currently connected.
+ * The Class CellLocation is an implementation of an AlarmLocation based on the Cell Tower to which the device
+ * is currently connected.
  */
 @DatabaseClass
 public class CellNetworkLocation extends AbstractAlarmLocation implements Serializable {
@@ -46,9 +46,11 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 	@DatabaseField
 	private int lac = -1;
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData) */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData)
+	 */
 	@Override
 	public Status checkStatus(ContextData info) {
 		CellContextData data = (CellContextData) info;
@@ -61,7 +63,8 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 
 		// Check current status
 		boolean isInside = false;
-		if (data.cellId == this.cellId && data.lac == this.lac && localMcc == this.mcc && localMnc == this.mnc)
+		if (data.cellId == this.cellId && data.lac == this.lac && localMcc == this.mcc
+				&& localMnc == this.mnc)
 			isInside = true;
 
 		// Prepare MNC and MCC
@@ -70,7 +73,8 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 
 		// Check previous status
 		boolean wasInside = false;
-		if (data.prevCellId == this.cellId && data.prevLac == this.lac && localMcc == this.mcc && localMnc == this.mnc)
+		if (data.prevCellId == this.cellId && data.prevLac == this.lac && localMcc == this.mcc
+				&& localMnc == this.mnc)
 			wasInside = true;
 
 		// Compute the status
@@ -87,33 +91,41 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription() */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription()
+	 */
 	@Override
 	public String getDescription() {
 		return mcc + "/" + mnc + "/" + lac + "/" + cellId;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription() */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription()
+	 */
 	@Override
 	public String getTypeDescription() {
 		return "Cell Tower";
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getType() */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#getType()
+	 */
 	@Override
 	public LocationType getType() {
 		return LocationType.CellNetworkLocation;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete() */
+	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete()
+	 */
 	@Override
 	public boolean isComplete() {
 		return cellId != -1 && lac != -1;
@@ -191,9 +203,11 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 		this.lac = lac;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#toString() */
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
 		return "CellLocation [cellId=" + cellId + ", mnc=" + mnc + ", mcc=" + mcc + ", lac=" + lac + "]";
@@ -202,6 +216,19 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 	@Override
 	public int getTypeImageResource() {
 		return R.drawable.ic_location_cell_network;
+	}
+
+	@Override
+	public AbstractAlarmLocation copy() {
+		CellNetworkLocation newLocation = new CellNetworkLocation();
+		newLocation.cellId = this.cellId;
+		newLocation.lac = this.lac;
+		newLocation.mcc = this.mcc;
+		newLocation.mnc = this.mnc;
+		newLocation.name = this.name;
+		newLocation.favorite = this.favorite;
+		newLocation.id = this.id;
+		return newLocation;
 	}
 
 }

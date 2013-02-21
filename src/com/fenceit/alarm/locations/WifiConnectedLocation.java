@@ -211,4 +211,16 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 	public int getTypeImageResource() {
 		return R.drawable.ic_location_wifi_connected;
 	}
+
+	@Override
+	public AbstractAlarmLocation copy() {
+		WifiConnectedLocation newLocation = new WifiConnectedLocation();
+		newLocation.bssid=this.bssid;
+		newLocation.matchWithBssid=this.matchWithBssid;
+		newLocation.ssid=this.ssid;
+		newLocation.name = this.name;
+		newLocation.favorite = this.favorite;
+		newLocation.id = this.id;
+		return newLocation;
+	}
 }

@@ -22,7 +22,7 @@
         android:layout_marginLeft="10dp"
         android:layout_marginTop="6dp"
         android:layout_toRightOf="@+id/wifidetec.list.selectedImage"
-        android:text="Name/SSID:"
+        android:text="@string/location_detected_wifis_ssid"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="15sp" />
 
@@ -32,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/wifidetec.list.ssidLabel"
         android:layout_below="@+id/wifidetec.list.ssidLabel"
-        android:text="BSSID:"
+        android:text="@string/location_detected_wifis_bssid"
         android:textAppearance="?android:attr/textAppearanceMedium"
         android:textSize="15sp" />
 
@@ -44,7 +44,7 @@
         android:layout_alignBottom="@+id/wifidetec.list.ssidLabel"
         android:layout_marginLeft="10dp"
         android:layout_toRightOf="@+id/wifidetec.list.ssidLabel"
-        android:text="TextView" />
+        android:text="@string/default_text" />
 
     <TextView
         android:id="@+id/wifidetec.list.bssidText"
@@ -52,6 +52,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBaseline="@+id/wifidetec.list.bssidLabel"
         android:layout_alignLeft="@+id/wifidetec.list.ssidText"
-        android:text="TextView" />
+        android:text="@string/default_text" />
 
 </RelativeLayout>

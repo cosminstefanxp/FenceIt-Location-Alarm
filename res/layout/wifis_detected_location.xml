@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/BasicActivity"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
-    <include layout="@layout/template_title_bar" />
 
     <RelativeLayout
         style="@style/SectionHeader"
@@ -23,7 +20,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:background="@drawable/title_button"
-                android:contentDescription="Click to gather new info"
+                android:contentDescription="@string/location_click_refresh"
                 android:src="@android:drawable/ic_popup_sync" />
 
             <ProgressBar
@@ -34,12 +31,11 @@
         </FrameLayout>
 
         <TextView
-            android:id="@+id/TextView1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="Detected Wifi Networks"
+            android:text="@string/location_detected_wifis_title"
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>
 
@@ -52,14 +48,14 @@
         android:scrollbarStyle="insideOverlay"
         android:scrollbars="vertical" >
 
-        <!-- Preview: listitem=@layout/wifi_detected_location_list -->
+        <!-- Preview: listitem=@layout/wifis_detected_location_list -->
     </ListView>
 
     <TextView
         style="@style/SectionHeader"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="Settings"
+        android:text="@string/location_settings"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <include layout="@layout/location_common_settings" />

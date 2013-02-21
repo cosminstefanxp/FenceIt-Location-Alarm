@@ -1,141 +1,144 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/BasicActivity"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:isScrollContainer="true" >
 
-	<include layout="@layout/template_title_bar" />
-
-    <RelativeLayout
-        style="@style/SectionHeader"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content" >
-
-        <TextView
-            android:id="@+id/TextView1"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="Connected Wifi"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-
-        <ImageButton
-            android:id="@+id/wificonn.refreshButton"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:layout_centerVertical="true"
-            android:background="@drawable/title_button"
-            android:contentDescription="Click to gather new info"
-            android:src="@android:drawable/ic_popup_sync" />
-
-    </RelativeLayout>
-
-    <RelativeLayout
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/margin_size" >
-
-        <TextView
-            android:id="@+id/wificonn.ssidLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
-            android:text="Name/SSID:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/wificonn.bssidLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/wificonn.ssidLabel"
-            android:text="BSSID:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/wificonn.macLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/wificonn.bssidLabel"
-            android:text="MAC Addr:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/wificonn.statusLabel"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_below="@+id/wificonn.macLabel"
-            android:text="Status:"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/wificonn.ssidText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wificonn.ssidLabel"
-            android:layout_marginLeft="14dp"
-            android:layout_toRightOf="@+id/wificonn.ssidLabel"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/wificonn.bssidText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wificonn.bssidLabel"
-            android:layout_alignLeft="@+id/wificonn.ssidText"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/wificonn.macText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wificonn.macLabel"
-            android:layout_alignLeft="@+id/wificonn.bssidText"
-            android:text="TextView" />
-
-        <TextView
-            android:id="@+id/wificonn.statusText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignBaseline="@+id/wificonn.statusLabel"
-            android:layout_alignLeft="@+id/wificonn.macText"
-            android:text="TextView" />
-    </RelativeLayout>
-
-    <TextView
-        style="@style/SectionHeader"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:text="Settings"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-    
     <LinearLayout
-        android:id="@+id/wificonn.matchBssidSection"
-        style="@style/SettingItem"
-        android:clickable="true"
-        android:focusable="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical" >
 
-        <TextView
-            android:id="@+id/wificonn.matchBssidText"
-            android:layout_width="wrap_content"
+        <RelativeLayout
+            style="@style/SectionHeader"
+            android:layout_width="fill_parent"
+            android:layout_height="wrap_content" >
+
+            <TextView
+                android:id="@+id/TextView1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_centerVertical="true"
+                android:text="@string/location_connected_wifi_title"
+                android:textAppearance="?android:attr/textAppearanceLarge" />
+
+            <ImageButton
+                android:id="@+id/wificonn.refreshButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:background="@drawable/title_button"
+                android:contentDescription="@string/general_refresh"
+                android:src="@android:drawable/ic_popup_sync" />
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Matching on SSID"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
+            android:paddingLeft="@dimen/margin_size" >
+
+            <TextView
+                android:id="@+id/wificonn.ssidLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:text="@string/location_connected_wifi_ssid"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/wificonn.bssidLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/wificonn.ssidLabel"
+                android:text="@string/location_connected_wifi_bssid"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/wificonn.macLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/wificonn.bssidLabel"
+                android:text="@string/location_connected_wifi_mac"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/wificonn.statusLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/wificonn.macLabel"
+                android:text="@string/location_connected_wifi_status"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:id="@+id/wificonn.ssidText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/wificonn.ssidLabel"
+                android:layout_marginLeft="14dp"
+                android:layout_toRightOf="@+id/wificonn.ssidLabel"
+                android:text="@string/default_text" />
+
+            <TextView
+                android:id="@+id/wificonn.bssidText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/wificonn.bssidLabel"
+                android:layout_alignLeft="@+id/wificonn.ssidText"
+                android:text="@string/default_text" />
+
+            <TextView
+                android:id="@+id/wificonn.macText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/wificonn.macLabel"
+                android:layout_alignLeft="@+id/wificonn.bssidText"
+                android:text="@string/default_text" />
+
+            <TextView
+                android:id="@+id/wificonn.statusText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBaseline="@+id/wificonn.statusLabel"
+                android:layout_alignLeft="@+id/wificonn.macText"
+                android:text="@string/default_text" />
+        </RelativeLayout>
+
         <TextView
-            android:layout_width="wrap_content"
+            style="@style/SectionHeader"
+            android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="Set how the locations are compared." 
-            android:textAppearance="?android:attr/textAppearanceSmall" />
+            android:text="@string/location_settings"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
+
+        <LinearLayout
+            android:id="@+id/wificonn.matchBssidSection"
+            style="@style/SettingItem"
+            android:layout_width="match_parent"
+            android:clickable="true"
+            android:focusable="true"
+            android:orientation="vertical" >
+
+            <TextView
+                android:id="@+id/wificonn.matchBssidText"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/default_text"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/location_connected_wifi_match_section"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
+        </LinearLayout>
+
+        <include layout="@layout/location_common_settings" />
     </LinearLayout>
-    
 
-    <include layout="@layout/location_common_settings" />
-
-</LinearLayout>
+</ScrollView>

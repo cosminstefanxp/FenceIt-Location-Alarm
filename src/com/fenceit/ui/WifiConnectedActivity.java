@@ -7,8 +7,8 @@
 package com.fenceit.ui;
 
 import org.androwrapee.db.DefaultDAO;
-import org.apache.log4j.Logger;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
@@ -16,38 +16,28 @@ import android.content.Intent;
 import android.net.wifi.WifiInfo;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.View.OnClickListener;
-import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fenceit.R;
-import com.fenceit.alarm.locations.AbstractAlarmLocation;
 import com.fenceit.alarm.locations.WifiConnectedLocation;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.WifiConnectedDataProvider;
 
 /**
- * The Class WifiConnectedActivity.
+ * The Class WifiConnectedActivity for setting up a {@link WifiConnectedLocation}.
  */
-public class WifiConnectedActivity extends AbstractLocationActivity implements OnClickListener {
-
-	/** The logger. */
-	private static final Logger log = Logger.getLogger(WifiConnectedActivity.class);
+public class WifiConnectedActivity extends AbstractLocationActivity2<WifiConnectedLocation> implements
+		OnClickListener {
 
 	/** The Constant DIALOG_ENABLE_WIFI. */
-	private static final int DIALOG_ENABLE_WIFI = 0;
+	private static final String DIALOG_ENABLE_WIFI = "enable_wifi";
 
 	/** The data access object. */
 	private DefaultDAO<WifiConnectedLocation> dao = null;
-
-	/** The location. */
-	private WifiConnectedLocation location;
-
-	/** If it's a new entity. */
-	private boolean newEntity;
 
 	/**
 	 * Called when the activity is first created.
@@ -58,151 +48,19 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.wifi_conn_location);
-//		((TextView) findViewById(R.id.title_titleText)).setText("Edit Location");
-
-		// Prepare database connection
-		if (dao == null)
-			dao = DatabaseManager.getDAOInstance(getApplicationContext(), WifiConnectedLocation.class,
-					WifiConnectedLocation.tableName);
-
-		// If it's a new activity
-		if (savedInstanceState == null) {
-			// Get the location from the database
-			Bundle extras = getIntent().getExtras();
-			Long locationID = (Long) (extras != null ? extras.get("id") : null);
-			// See if the location is forced to be favorite
-			if (extras != null)
-				isForcedFavorite = extras.getBoolean("forced");
-
-			fetchLocation(locationID);
-		}
-		// If it's a restored instance
-		else {
-			// See if the location is forced to be favorite
-			isForcedFavorite = savedInstanceState.getBoolean("forced");
-
-			// Get the unsaved location from the saved instance
-			location = (WifiConnectedLocation) savedInstanceState.getSerializable("location");
-			log.info("Restored saved instance of location: " + location);
-		}
 
 		// Buttons and others
-		((Button) findViewById(R.id.title_saveButton)).setOnClickListener(this);
 		((ImageButton) findViewById(R.id.wificonn_refreshButton)).setOnClickListener(this);
 		findViewById(R.id.wificonn_matchBssidSection).setOnClickListener(this);
 
 		// Fill data
-		refreshActivity();
-	}
-
-	@Override
-	protected void onSaveInstanceState(Bundle outState) {
-		super.onSaveInstanceState(outState);
-		outState.putSerializable("location", location);
-		outState.putBoolean("forced", isForcedFavorite);
-	}
-
-	/**
-	 * Refresh the activity displayed views using the data from the location.
-	 */
-	private void refreshActivity() {
-		// Refresh options of the AbstractAlarmLocation
-		refreshAbstractLocationElements();
-
-		// Location Section
-		if (location.getBssid() != null || location.getSsid() != null) {
-			((TextView) findViewById(R.id.wificonn_bssidText)).setText(location.getBssid());
-			((TextView) findViewById(R.id.wificonn_ssidText)).setText(location.getSsid());
-		} else {
-			((TextView) findViewById(R.id.wificonn_bssidText)).setText("Click on the refresh button.");
-			((TextView) findViewById(R.id.wificonn_ssidText)).setText("-");
-		}
-		((TextView) findViewById(R.id.wificonn_macText)).setText("-");
-		((TextView) findViewById(R.id.wificonn_statusText)).setText("-");
-
-		// Settings section
-		if (location.isMatchWithBssid())
-			((TextView) findViewById(R.id.wificonn_matchBssidText)).setText("Match on BSSID");
-		else
-			((TextView) findViewById(R.id.wificonn_matchBssidText)).setText("Match on SSID");
-	}
-
-	/**
-	 * Fetches the associated location from the database, or builds a new one, if no id was provided.
-	 * 
-	 * @param locationID the location id
-	 */
-	private void fetchLocation(Long locationID) {
-		if (locationID != null) {
-			log.info("Fetching WifiConnectedLocation from database with id: " + locationID);
-			dao.open();
-			location = dao.fetch(locationID);
-			dao.close();
-			log.debug("Fetched location: " + location);
-			if (location != null)
-				return;
-		}
-		// No entity in database... creating a new one
-		log.info("Creating new WifiConnectedLocation...");
-		location = new WifiConnectedLocation();
-		newEntity = true;
-		if (isForcedFavorite)
-			location.setFavorite(true);
-	}
-
-	/**
-	 * Stores the location in the database.
-	 * 
-	 * @return true, if successful
-	 */
-	private boolean storeLocation() {
-		// Checks
-		if (location == null) {
-			log.error("No location to store in database.");
-			return false;
-		}
-		// Store required data
-
-		// Check if all data is all right
-		if (!location.isComplete()) {
-			log.error("Not all required fields are filled in");
-			return false;
-		}
-
-		// Save the entity to the database
-		log.info("Saving location in database...");
-		dao.open();
-		if (newEntity) {
-			long id = dao.insert(location, true);
-			if (id == -1)
-				return false;
-			log.info("Successfully saved new location with id: " + id);
-			location.setId(id);
-			newEntity = false;
-		} else
-			dao.update(location, location.getId());
-		dao.close();
-
-		return true;
-
+		this.refreshLocationView();
+		this.refreshAbstractLocationView();
 	}
 
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
-		case R.id.title_saveButton:
-			log.info("Save button clicked. Storing entity...");
-			if (!storeLocation()) {
-				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
-						Toast.LENGTH_SHORT).show();
-				return;
-			}
-			Intent intent = new Intent();
-			intent.putExtra("id", location.getId());
-			intent.putExtra("type", location.getType().toString());
-			setResult(RESULT_OK, intent);
-			finish();
-			break;
 		case R.id.wificonn_refreshButton:
 			log.info("Refreshing details regarding Wifi currently connected to.");
 			gatherContextInfo();
@@ -211,41 +69,11 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 			log.debug("Changing the 'Match BSSID' option from " + location.isMatchWithBssid());
 			location.setMatchWithBssid(!location.isMatchWithBssid());
 			if (location.isMatchWithBssid())
-				((TextView) findViewById(R.id.wificonn_matchBssidText)).setText("Match on BSSID");
+				((TextView) findViewById(R.id.wificonn_matchBssidText))
+						.setText(R.string.wific_location_bssid);
 			else
-				((TextView) findViewById(R.id.wificonn_matchBssidText)).setText("Match on SSID");
+				((TextView) findViewById(R.id.wificonn_matchBssidText)).setText(R.string.wific_location_ssid);
 		}
-	}
-
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		Dialog dialog;
-		// Check if the AbstractLocationActivity can handle this type of dialog
-		dialog = createAbstractLocationDialog(id);
-		if (dialog != null)
-			return dialog;
-
-		// Try to handle this type of dialog
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		switch (id) {
-		// Create a dialog asking the user if he wants to go to the Wifi Settings
-		case DIALOG_ENABLE_WIFI:
-			builder.setMessage("The Wifi interface doesn't seem to be enabled. Would you like to enable it now?")
-					.setCancelable(false).setPositiveButton("Yes", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
-						}
-					}).setNegativeButton("No", new DialogInterface.OnClickListener() {
-						public void onClick(DialogInterface dialog, int id) {
-							dialog.cancel();
-						}
-					});
-			dialog = builder.create();
-			break;
-		default:
-			dialog = null;
-		}
-		return dialog;
 	}
 
 	/**
@@ -254,8 +82,8 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	private void gatherContextInfo() {
 		// Check for availability;
 		if (!WifiConnectedDataProvider.isWifiAvailable(this)) {
-			Toast.makeText(this, "Wifi network is not available", Toast.LENGTH_SHORT).show();
-			showDialog(DIALOG_ENABLE_WIFI);
+			EnableWifiDialogFragment dialog = new EnableWifiDialogFragment();
+			dialog.show(this.getSupportFragmentManager(), DIALOG_ENABLE_WIFI);
 			return;
 		}
 
@@ -272,8 +100,72 @@ public class WifiConnectedActivity extends AbstractLocationActivity implements O
 	}
 
 	@Override
-	protected AbstractAlarmLocation getLocation() {
-		return location;
+	protected DefaultDAO<WifiConnectedLocation> getDAO() {
+		// Prepare database connection
+		if (dao == null)
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), WifiConnectedLocation.class,
+					WifiConnectedLocation.tableName);
+		return dao;
 	}
 
+	@Override
+	protected WifiConnectedLocation instantiateLocation() {
+		return new WifiConnectedLocation();
+	}
+
+	@Override
+	protected void refreshLocationView() {
+		// Location Section
+		if (location.getBssid() != null || this.location.getSsid() != null) {
+			((TextView) findViewById(R.id.wificonn_bssidText)).setText(location.getBssid());
+			((TextView) findViewById(R.id.wificonn_ssidText)).setText(location.getSsid());
+		} else {
+			((TextView) findViewById(R.id.wificonn_bssidText)).setText(R.string.location_click_refresh);
+			((TextView) findViewById(R.id.wificonn_ssidText)).setText("-");
+		}
+		((TextView) findViewById(R.id.wificonn_macText)).setText("-");
+		((TextView) findViewById(R.id.wificonn_statusText)).setText("-");
+
+		// Settings section
+		if (location.isMatchWithBssid())
+			((TextView) findViewById(R.id.wificonn_matchBssidText)).setText(R.string.wific_location_bssid);
+		else
+			((TextView) findViewById(R.id.wificonn_matchBssidText)).setText(R.string.wific_location_ssid);
+	}
+
+	@SuppressLint("ValidFragment")
+	public class EnableWifiDialogFragment extends DialogFragment {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Screen rotation bug fix
+			setRetainInstance(true);
+
+			// Use the Builder class for convenient dialog construction
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
+			builder.setMessage(R.string.dialog_enable_wifi_title);
+			builder.setMessage(R.string.dialog_enable_wifi_message).setCancelable(false)
+					.setPositiveButton(R.string.general_yes, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							startActivity(new Intent(Settings.ACTION_WIFI_SETTINGS));
+						}
+					}).setNegativeButton(R.string.general_no, new DialogInterface.OnClickListener() {
+						public void onClick(DialogInterface dialog, int id) {
+							dialog.cancel();
+						}
+					});
+			// Create the AlertDialog object and return it
+			return builder.create();
+		}
+	}
+
+	@Override
+	protected void postFetchLocation() {
+		// Do nothing
+	}
+
+	@Override
+	protected void preStoreLocation() {
+		// Do nothing
+	}
 }

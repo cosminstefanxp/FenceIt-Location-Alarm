@@ -77,7 +77,7 @@ public class WifisDetectedAdapter extends BaseAdapter {
 		if (rowView == null) {
 			// Inflate a new view
 			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.wifi_detected_location_list, null);
+			rowView = inflater.inflate(R.layout.wifis_detected_location_list, null);
 			// Save the fields in the view holder for quick reference
 			holder = new ViewHolder();
 			holder.enabledImage = (ImageView) rowView.findViewById(R.id.wifidetec_list_selectedImage);

@@ -19,8 +19,7 @@ import com.fenceit.provider.ContextData;
 import com.fenceit.provider.CoordinatesContextData;
 
 /**
- * An AlarmLocation implementation that is defined using the geographical coordinates of a point on
- * earth.
+ * An AlarmLocation implementation that is defined using the geographical coordinates of a point on earth.
  */
 @DatabaseClass
 public class CoordinatesLocation extends AbstractAlarmLocation implements Serializable {
@@ -110,13 +109,15 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#toString() */
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "CoordinatesLocation [latitude=" + latitude + ", longitude=" + longitude + ", activationDistance="
-				+ activationDistance + "]";
+		return "CoordinatesLocation [latitude=" + latitude + ", longitude=" + longitude
+				+ ", activationDistance=" + activationDistance + "]";
 	}
 
 	/**
@@ -180,9 +181,23 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 	public void setExtra(String extra) {
 		this.extra = extra;
 	}
+
 	@Override
 	public int getTypeImageResource() {
 		return R.drawable.ic_location_coord;
+	}
+
+	@Override
+	public AbstractAlarmLocation copy() {
+		CoordinatesLocation newLocation = new CoordinatesLocation();
+		newLocation.activationDistance = this.activationDistance;
+		newLocation.extra = this.extra;
+		newLocation.latitude = this.latitude;
+		newLocation.longitude = this.longitude;
+		newLocation.name = this.name;
+		newLocation.favorite = this.favorite;
+		newLocation.id = this.id;
+		return newLocation;
 	}
 
 }
