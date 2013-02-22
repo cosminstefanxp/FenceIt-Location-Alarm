@@ -52,7 +52,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 	public static final String tableName = "coordinates_locations";
 
 	@Override
-	public String getDescription() {
+	public String getDetailedDescription() {
 		return String.format("Lat: %.4f, Long: %.4f", latitude, longitude);
 	}
 

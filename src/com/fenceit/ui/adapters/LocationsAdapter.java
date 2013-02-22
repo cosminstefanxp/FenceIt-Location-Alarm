@@ -89,7 +89,7 @@ public class LocationsAdapter extends BaseAdapter {
 		// Populate the view
 		AlarmLocation location = locations.get(position);
 		holder.nameTextV.setText(location.getName());
-		holder.mainDescriptionTextV.setText(location.getDescription());
+		holder.mainDescriptionTextV.setText(location.getDetailedDescription());
 		holder.typeDescriptionTextV.setText(location.getTypeDescription() + " Location");
 		holder.typeImage.setImageResource(location.getTypeImageResource());
 

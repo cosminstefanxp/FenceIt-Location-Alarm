@@ -39,7 +39,8 @@ public class CellDataProvider {
 	 * @return the cell context data
 	 */
 	public static CellContextData getCellContextData(Context context, boolean storeLast) {
-		final TelephonyManager telephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
+		final TelephonyManager telephony = (TelephonyManager) context
+				.getSystemService(Context.TELEPHONY_SERVICE);
 		CellContextData data = new CellContextData();
 
 		// Check conditions for GSM Phone
@@ -51,6 +52,7 @@ public class CellDataProvider {
 			data.cellId = location.getCid();
 			data.lac = location.getLac();
 			data.networkOperator = telephony.getNetworkOperator();
+			data.networkOperatorName = telephony.getNetworkOperatorName();
 
 			// Get previous conditions
 			SharedPreferences sp = PreferenceManager.getDefaultSharedPreferences(context);
@@ -93,6 +95,7 @@ public class CellDataProvider {
 	 */
 	public static boolean isCellNetworkConnected(Context context) {
 		TelephonyManager telephony = (TelephonyManager) context.getSystemService(Context.TELEPHONY_SERVICE);
-		return ((telephony.getNetworkOperator() != null && telephony.getNetworkOperator().equals("")) ? false : true);
+		return ((telephony.getNetworkOperator() != null && telephony.getNetworkOperator().equals("")) ? false
+				: true);
 	}
 }

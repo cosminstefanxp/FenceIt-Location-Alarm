@@ -32,7 +32,7 @@ import android.widget.ProgressBar;
 
 import com.fenceit.R;
 import com.fenceit.alarm.locations.WifisDetectedLocation;
-import com.fenceit.alarm.locations.WifisDetectedLocation.Wifi;
+import com.fenceit.alarm.locations.WifisDetectedLocation.WifiNet;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.WifiConnectedDataProvider;
 import com.fenceit.provider.WifisDetectedDataProvider;
@@ -41,7 +41,7 @@ import com.fenceit.ui.adapters.WifisDetectedAdapter;
 /**
  * The Class WifisDetectedActivity for setting a {@link WifisDetectedLocation}.
  */
-public class WifisDetectedActivity extends AbstractLocationActivity2<WifisDetectedLocation> implements
+public class WifisDetectedActivity extends AbstractLocationActivity<WifisDetectedLocation> implements
 		OnClickListener {
 
 	/** The Constant DIALOG_ENABLE_WIFI. */
@@ -60,7 +60,7 @@ public class WifisDetectedActivity extends AbstractLocationActivity2<WifisDetect
 	private WifisDetectedAdapter adapter;
 
 	/** The wifis. */
-	private ArrayList<Wifi> wifis;
+	private ArrayList<WifiNet> wifis;
 
 	/** The receiver. */
 	private BroadcastReceiver receiver;
@@ -145,7 +145,7 @@ public class WifisDetectedActivity extends AbstractLocationActivity2<WifisDetect
 		// Update the Wifis
 		this.wifis.clear();
 		for (ScanResult rest : wifiScanResults) {
-			Wifi w = new Wifi();
+			WifiNet w = new WifiNet();
 			w.BSSID = rest.BSSID;
 			w.SSID = rest.SSID;
 			w.selected = true;
@@ -154,8 +154,6 @@ public class WifisDetectedActivity extends AbstractLocationActivity2<WifisDetect
 
 		// Update the view
 		adapter.setWifis(wifis);
-
-		// The location is updated in the storeLocation() method
 	}
 
 	/**
@@ -170,7 +168,6 @@ public class WifisDetectedActivity extends AbstractLocationActivity2<WifisDetect
 			progressBar.setVisibility(View.GONE);
 			refreshButton.setVisibility(View.VISIBLE);
 		}
-
 	}
 
 	@Override
@@ -197,15 +194,16 @@ public class WifisDetectedActivity extends AbstractLocationActivity2<WifisDetect
 	protected void postFetchLocation() {
 		// Prepare the wifis array from the location
 		String[] bssids = location.getBSSIDs();
+		String[] ssids = location.getSSIDs();
 		if (bssids == null || bssids.length == 0) {
-			wifis = new ArrayList<WifisDetectedLocation.Wifi>();
+			wifis = new ArrayList<WifisDetectedLocation.WifiNet>();
 			return;
 		}
-		wifis = new ArrayList<WifisDetectedLocation.Wifi>(bssids.length);
-		for (String b : bssids) {
-			Wifi w = new Wifi();
-			w.BSSID = b;
-			w.SSID = "-";
+		wifis = new ArrayList<WifisDetectedLocation.WifiNet>(bssids.length);
+		for (int i = 0; i < bssids.length; i++) {
+			WifiNet w = new WifiNet();
+			w.BSSID = bssids[i];
+			w.SSID = ssids[i];
 			w.selected = true;
 			wifis.add(w);
 		}
@@ -216,9 +214,13 @@ public class WifisDetectedActivity extends AbstractLocationActivity2<WifisDetect
 	protected void preStoreLocation() {
 		// Store required data
 		String[] bssids = new String[wifis.size()];
-		for (int i = 0; i < bssids.length; i++)
+		String[] ssids = new String[wifis.size()];
+		for (int i = 0; i < bssids.length; i++) {
 			bssids[i] = wifis.get(i).BSSID;
+			ssids[i] = wifis.get(i).SSID;
+		}
 		location.setBSSIDs(bssids);
+		location.setSSIDs(ssids);
 	}
 
 	@SuppressLint("ValidFragment")

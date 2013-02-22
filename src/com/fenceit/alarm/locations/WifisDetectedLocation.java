@@ -20,7 +20,7 @@ import com.fenceit.provider.ContextData;
 import com.fenceit.provider.WifisDetectedContextData;
 
 /**
- * The Class WifisDetectedLocation is an implementation of an AlarmLocation based on the Wifi networks
+ * The Class WifisDetectedLocation is an implementation of an {@link AlarmLocation} based on the Wifi networks
  * detected by the Wireless interface.
  */
 @DatabaseClass
@@ -35,6 +35,9 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	/** The serialized BSSIDs. */
 	@DatabaseField
 	private String serializedBSSIDs;
+
+	@DatabaseField
+	private String serializedSSIDs;
 
 	/** The Constant tableName. */
 	public static final String tableName = "wifisdetec_locations";
@@ -96,44 +99,24 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription()
-	 */
 	@Override
-	public String getDescription() {
-		if (serializedBSSIDs.length() > 15)
-			return serializedBSSIDs.substring(0, 14);
+	public String getDetailedDescription() {
+		if (serializedSSIDs.length() > 25)
+			return "Wi-Fis: " + serializedSSIDs.substring(0, 23) + "...";
 		else
-			return serializedBSSIDs;
+			return "Wi-Fis: " + serializedSSIDs;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription()
-	 */
 	@Override
 	public String getTypeDescription() {
 		return "Detected Wifis";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getType()
-	 */
 	@Override
 	public LocationType getType() {
 		return LocationType.WifisDetectedLocation;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete()
-	 */
 	@Override
 	public boolean isComplete() {
 		return serializedBSSIDs != null && serializedBSSIDs.length() > 0;
@@ -146,7 +129,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	 * @return the bssids, as an array of Strings, or null, if there is no data.
 	 */
 	public String[] getBSSIDs() {
-		if(serializedBSSIDs==null)
+		if (serializedBSSIDs == null)
 			return null;
 		return serializedBSSIDs.split(SPLITTER);
 	}
@@ -167,9 +150,36 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	}
 
 	/**
-	 * The Class Wifi stores information about a Wifi network.
+	 * Gets the SSIDs. The SSIDs are stored serialized and a de-serialization is used for every get, so the
+	 * results of this method should be cached.
+	 * 
+	 * @return the bssids, as an array of Strings, or null, if there is no data.
 	 */
-	public static class Wifi {
+	public String[] getSSIDs() {
+		if (serializedSSIDs == null)
+			return null;
+		return serializedSSIDs.split(SPLITTER);
+	}
+
+	/**
+	 * Sets the SSIDs.The SSIDs are stored serialized and a serialization is used for every set, so it should
+	 * be used with moderation.
+	 * 
+	 * @param ssids the new SSIDs
+	 */
+	public void setSSIDs(String[] ssids) {
+		StringBuilder out = new StringBuilder();
+		for (String ssid : ssids) {
+			out.append(ssid);
+			out.append(SPLITTER);
+		}
+		serializedSSIDs = out.toString();
+	}
+
+	/**
+	 * The Class WifiNet stores information about a Wifi network.
+	 */
+	public static class WifiNet {
 
 		/** The BSSID. */
 		public String BSSID;
@@ -184,7 +194,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	@Override
 	public String toString() {
 		return "WifisDetectedLocation [id=" + id + ", name=" + name + ", serializedBSSIDs="
-				+ serializedBSSIDs + "]";
+				+ serializedBSSIDs + ", serializedSSIDs=" + serializedSSIDs + "]";
 	}
 
 	@Override
@@ -196,10 +206,10 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 	public AbstractAlarmLocation copy() {
 		WifisDetectedLocation newLocation = new WifisDetectedLocation();
 		newLocation.serializedBSSIDs = this.serializedBSSIDs;
+		newLocation.serializedSSIDs = this.serializedSSIDs;
 		newLocation.name = this.name;
 		newLocation.favorite = this.favorite;
 		newLocation.id = this.id;
 		return newLocation;
 	}
-
 }

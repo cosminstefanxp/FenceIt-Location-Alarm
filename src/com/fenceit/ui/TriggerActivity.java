@@ -134,7 +134,7 @@ public class TriggerActivity extends DefaultActivity implements OnClickListener 
 			((TextView) findViewById(R.id.trigger_locationTitleText)).setText(loc.getName());
 			((TextView) findViewById(R.id.trigger_locationTypeText)).setText(loc.getTypeDescription()
 					+ " location type");
-			((TextView) findViewById(R.id.trigger_locationDescText)).setText(loc.getDescription());
+			((TextView) findViewById(R.id.trigger_locationDescText)).setText(loc.getDetailedDescription());
 			((ImageView) findViewById(R.id.trigger_locationTypeImage)).setImageResource(loc.getTypeImageResource());
 		}
 	}

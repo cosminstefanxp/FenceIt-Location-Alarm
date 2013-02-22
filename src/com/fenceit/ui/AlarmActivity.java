@@ -39,6 +39,7 @@ import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.db.AlarmActionBroker;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.service.BackgroundService;
+import com.fenceit.ui.TriggersFragment.TriggersFragmentContainer;
 import com.fenceit.ui.adapters.ActionsAdapter;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 import com.fenceit.ui.helpers.LoseFocusOnEditorActionListener;
@@ -46,7 +47,7 @@ import com.fenceit.ui.helpers.LoseFocusOnEditorActionListener;
 /**
  * The Class AlarmActivity showing the screen for editing an Alarm.
  */
-public class AlarmActivity extends DefaultActivity implements OnClickListener, OnItemClickListener {
+public class AlarmActivity extends DefaultActivity implements OnClickListener, OnItemClickListener, TriggersFragmentContainer {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(AlarmActivity.class);
@@ -500,5 +501,10 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		Intent addActionActivityIntent = AlarmActionBroker.getActivityIntent(this, type);
 		addActionActivityIntent.putExtra("alarm", alarm);
 		startActivityForResult(addActionActivityIntent, REQ_CODE_ADD_ACTION);
+	}
+
+	@Override
+	public Alarm getCorrespondingAlarm() {
+		return alarm;
 	}
 }

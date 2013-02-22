@@ -17,7 +17,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.fenceit.R;
-import com.fenceit.alarm.locations.WifisDetectedLocation.Wifi;
+import com.fenceit.alarm.locations.WifisDetectedLocation.WifiNet;
 
 /**
  * The Class AlarmAdapter that is used to display the alarms in a ListView.
@@ -28,7 +28,7 @@ public class WifisDetectedAdapter extends BaseAdapter {
 	private final Activity context;
 
 	/** The wifis. */
-	private ArrayList<Wifi> wifis;
+	private ArrayList<WifiNet> wifis;
 
 	/**
 	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for
@@ -52,7 +52,7 @@ public class WifisDetectedAdapter extends BaseAdapter {
 	 * @param context the context
 	 * @param wifis the wifis
 	 */
-	public WifisDetectedAdapter(Activity context, ArrayList<Wifi> wifis) {
+	public WifisDetectedAdapter(Activity context, ArrayList<WifiNet> wifis) {
 		this.context = context;
 		this.wifis = wifis;
 	}
@@ -92,7 +92,7 @@ public class WifisDetectedAdapter extends BaseAdapter {
 		}
 
 		// Populate the view
-		Wifi w = wifis.get(position);
+		WifiNet w = wifis.get(position);
 		holder.ssidTextV.setText(w.SSID);
 		holder.bssidTextV.setText(w.BSSID);
 		if (w.selected)
@@ -108,7 +108,7 @@ public class WifisDetectedAdapter extends BaseAdapter {
 	 * 
 	 * @param wifis the new wifis
 	 */
-	public void setWifis(ArrayList<Wifi> wifis) {
+	public void setWifis(ArrayList<WifiNet> wifis) {
 		this.wifis = wifis;
 		super.notifyDataSetChanged();
 	}

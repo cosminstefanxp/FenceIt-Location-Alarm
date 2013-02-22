@@ -164,24 +164,12 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	 */
 	@Override
 	public String getMainDescription() {
-		switch (this.type) {
-		case ON_ENTER:
-			return "When arriving at";
-		case ON_EXIT:
-			return "When leaving";
-		default:
-			return "Unset";
-		}
+		return location == null ? locationType.toString() : location.getMainDescription();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.triggers.AlarmTrigger#getSecondaryDescription()
-	 */
 	@Override
 	public String getSecondaryDescription() {
-		return locationType.toString();
+		return location == null ? "" : location.getDetailedDescription();
 	}
 
 	/**
@@ -213,7 +201,7 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 
 	/**
 	 * Gets the trigger types names, in the same order as {@link BasicTrigger#getTriggerTypes()}
-	 *
+	 * 
 	 * @param context the context
 	 * @return the trigger types names
 	 */

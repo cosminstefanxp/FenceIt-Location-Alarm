@@ -18,6 +18,9 @@ public class CellContextData implements ContextData {
 
 	/** The numeric name (MCC+MNC) of current registered operator. */
 	public String networkOperator;
+	
+	/** The network name. */
+	public String networkOperatorName;
 
 	/** The previous cell id. */
 	public int prevCellId;

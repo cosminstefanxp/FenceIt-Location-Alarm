@@ -36,7 +36,7 @@ import com.fenceit.ui.picker.NumberPickerDialog.OnNumberSetListener;
 /**
  * The Class CoordinatesActivity used for setting up {@link CoordinatesLocation}.
  */
-public class CoordinatesActivity extends AbstractLocationActivity2<CoordinatesLocation> implements
+public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLocation> implements
 		OnClickListener, CoordinatesLocationDataListener {
 
 	/** The Constant DIALOG_ENABLE_NETWORK. */

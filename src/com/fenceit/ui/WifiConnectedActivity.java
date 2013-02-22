@@ -30,7 +30,7 @@ import com.fenceit.provider.WifiConnectedDataProvider;
 /**
  * The Class WifiConnectedActivity for setting up a {@link WifiConnectedLocation}.
  */
-public class WifiConnectedActivity extends AbstractLocationActivity2<WifiConnectedLocation> implements
+public class WifiConnectedActivity extends AbstractLocationActivity<WifiConnectedLocation> implements
 		OnClickListener {
 
 	/** The Constant DIALOG_ENABLE_WIFI. */

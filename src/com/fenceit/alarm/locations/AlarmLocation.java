@@ -52,13 +52,20 @@ public interface AlarmLocation extends DatabaseReferenceClass {
 	 * @return the id
 	 */
 	public long getId();
+	
+	/**
+	 * Gets the main description.
+	 *
+	 * @return the main description
+	 */
+	public String getMainDescription();
 
 	/**
-	 * Gets the description.
-	 * 
-	 * @return the description
+	 * Gets the detailed description.
+	 *
+	 * @return the detailed description
 	 */
-	public String getDescription();
+	public String getDetailedDescription();
 
 	/**
 	 * Gets the type description.

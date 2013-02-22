@@ -32,9 +32,6 @@ public class CoordinatesMapActivity extends MapActivity {
 	/** The my location overlay. */
 	private MyLocationOverlay myLocationOverlay = null;
 
-	/* (non-Javadoc)
-	 * @see com.google.android.maps.MapActivity#onCreate(android.os.Bundle)
-	 */
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -43,7 +40,7 @@ public class CoordinatesMapActivity extends MapActivity {
 
 		mapView.setBuiltInZoomControls(true);
 
-		// Add on longp ress listener
+		// Add on long press listener
 		mapView.setOnLongpressListener(new MyCustomMapView.OnLongpressListener() {
 			public void onLongpress(final MapView view, final GeoPoint longpressLocation) {
 				runOnUiThread(new Runnable() {
@@ -62,7 +59,7 @@ public class CoordinatesMapActivity extends MapActivity {
 	}
 
 	/**
-	 * a new location was selected.
+	 * A new location was selected.
 	 * 
 	 * @param point the geographical coordinates
 	 */
@@ -76,9 +73,6 @@ public class CoordinatesMapActivity extends MapActivity {
 		finish();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.maps.MapActivity#onResume()
-	 */
 	@Override
 	public void onResume() {
 		super.onResume();
@@ -90,27 +84,18 @@ public class CoordinatesMapActivity extends MapActivity {
 		});
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.maps.MapActivity#onPause()
-	 */
 	@Override
 	public void onPause() {
 		super.onPause();
 		myLocationOverlay.disableMyLocation();
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.maps.MapActivity#isLocationDisplayed()
-	 */
 	@Override
 	protected boolean isLocationDisplayed() {
 		return myLocationOverlay.isMyLocationEnabled();
 
 	}
 
-	/* (non-Javadoc)
-	 * @see com.google.android.maps.MapActivity#isRouteDisplayed()
-	 */
 	@Override
 	protected boolean isRouteDisplayed() {
 		return false;

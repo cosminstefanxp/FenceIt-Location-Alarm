@@ -30,7 +30,7 @@ import com.fenceit.ui.helpers.ErrorDialogFragment;
 /**
  * The Class CellNetworkActivity for setting up a {@link CellNetworkLocation}.
  */
-public class CellNetworkActivity extends AbstractLocationActivity2<CellNetworkLocation> implements
+public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLocation> implements
 		OnClickListener {
 
 	/** The Constant DIALOG_ENABLE_NETWORK. */
@@ -99,6 +99,7 @@ public class CellNetworkActivity extends AbstractLocationActivity2<CellNetworkLo
 		location.setLac(cellInfo.lac);
 		location.setMnc(Integer.parseInt(cellInfo.networkOperator.substring(0, 3)));
 		location.setMcc(Integer.parseInt(cellInfo.networkOperator.substring(3)));
+		location.setOperatorName(cellInfo.networkOperatorName);
 
 		// Update the view
 		refreshLocationView();

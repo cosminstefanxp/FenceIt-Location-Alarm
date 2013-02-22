@@ -16,7 +16,7 @@ import org.androwrapee.db.IdField;
  * An abstract implementation of the AlarmLocation.
  */
 @DatabaseClass
-public abstract class AbstractAlarmLocation implements AlarmLocation, Serializable{
+public abstract class AbstractAlarmLocation implements AlarmLocation, Serializable {
 
 	/** The Constant serialVersionUID. */
 	private static final long serialVersionUID = 5014117271712172420L;
@@ -28,15 +28,15 @@ public abstract class AbstractAlarmLocation implements AlarmLocation, Serializab
 	/** The name of the location. */
 	@DatabaseField
 	protected String name;
-	
-	public static final int STAYED_INSIDE=0;
-	public static final int STAYED_OUTSIDE=1;
-	public static final int ENTERED_LOCATION=2;
-	public static final int LEFT_LOCATION=3;
+
+	public static final int STAYED_INSIDE = 0;
+	public static final int STAYED_OUTSIDE = 1;
+	public static final int ENTERED_LOCATION = 2;
+	public static final int LEFT_LOCATION = 3;
 
 	/**
-	 * If the location is a favorite one. Only the favorite locations remain in the database after
-	 * the referencing trigger has been deleted.
+	 * If the location is a favorite one. Only the favorite locations remain in the database after the
+	 * referencing trigger has been deleted.
 	 */
 	@DatabaseField
 	protected boolean favorite;
@@ -46,12 +46,10 @@ public abstract class AbstractAlarmLocation implements AlarmLocation, Serializab
 	 */
 	protected AbstractAlarmLocation() {
 		this.favorite = false;
-		this.name = "Alarm Location";
+		this.name = "";
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getId() */
+	@Override
 	public long getId() {
 		return id;
 	}
@@ -65,11 +63,14 @@ public abstract class AbstractAlarmLocation implements AlarmLocation, Serializab
 		this.id = id;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getName() */
+	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public String getMainDescription() {
+		return name.length() == 0 ? getTypeDescription() + " Location" : getName();
 	}
 
 	/**
@@ -98,10 +99,10 @@ public abstract class AbstractAlarmLocation implements AlarmLocation, Serializab
 	public void setFavorite(boolean favorite) {
 		this.favorite = favorite;
 	}
-	
+
 	/**
 	 * Creates a copy of the Alarm Location. Must be an actual instance of the extending type.
-	 *
+	 * 
 	 * @return the location
 	 */
 	public abstract AbstractAlarmLocation copy();

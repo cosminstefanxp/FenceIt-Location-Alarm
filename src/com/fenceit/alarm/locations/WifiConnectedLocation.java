@@ -110,10 +110,6 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 		this.matchWithBssid = matchWithBssid;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#isInside(com.fenceit.alarm.ContextInfo)
-	 */
 	@Override
 	public Status checkStatus(ContextData info) {
 		WifiConnectedContextData data = (WifiConnectedContextData) info;
@@ -122,10 +118,12 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 		// Check current status
 		boolean isInside = false;
 		if (matchWithBssid) {
-			if (data.connectedWifiInfo.getBSSID() != null && data.connectedWifiInfo.getBSSID().equals(this.bssid))
+			if (data.connectedWifiInfo.getBSSID() != null
+					&& data.connectedWifiInfo.getBSSID().equals(this.bssid))
 				isInside = true;
 		} else {
-			if (data.connectedWifiInfo.getSSID() != null && data.connectedWifiInfo.getSSID().equals(this.ssid))
+			if (data.connectedWifiInfo.getSSID() != null
+					&& data.connectedWifiInfo.getSSID().equals(this.ssid))
 				isInside = true;
 		}
 
@@ -153,40 +151,21 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription()
-	 */
 	@Override
-	public String getDescription() {
-		if (matchWithBssid)
-			return "BSSID: " + this.bssid;
-		else
-			return "SSID: " + this.ssid;
+	public String getDetailedDescription() {
+		return "Wi-Fi Network: " + this.ssid;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription()
-	 */
 	@Override
 	public String getTypeDescription() {
 		return "Connected Wifi";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getType()
-	 */
 	@Override
 	public LocationType getType() {
 		return LocationType.WifiConnectedLocation;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete()
-	 */
 	@Override
 	public boolean isComplete() {
 		if ((matchWithBssid && bssid == null) || (!matchWithBssid && ssid == null))
@@ -194,19 +173,11 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
 		return "WifiConnectedLocation [bssid=" + bssid + ", ssid=" + ssid + "]";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeImageResource()
-	 */
 	@Override
 	public int getTypeImageResource() {
 		return R.drawable.ic_location_wifi_connected;
@@ -215,9 +186,9 @@ public class WifiConnectedLocation extends AbstractAlarmLocation implements Seri
 	@Override
 	public AbstractAlarmLocation copy() {
 		WifiConnectedLocation newLocation = new WifiConnectedLocation();
-		newLocation.bssid=this.bssid;
-		newLocation.matchWithBssid=this.matchWithBssid;
-		newLocation.ssid=this.ssid;
+		newLocation.bssid = this.bssid;
+		newLocation.matchWithBssid = this.matchWithBssid;
+		newLocation.ssid = this.ssid;
 		newLocation.name = this.name;
 		newLocation.favorite = this.favorite;
 		newLocation.id = this.id;

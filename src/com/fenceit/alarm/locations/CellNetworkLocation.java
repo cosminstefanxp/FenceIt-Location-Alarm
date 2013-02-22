@@ -46,11 +46,10 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 	@DatabaseField
 	private int lac = -1;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#checkStatus(com.fenceit.provider.ContextData)
-	 */
+	/** The operator name. */
+	@DatabaseField
+	private String operatorName;
+
 	@Override
 	public Status checkStatus(ContextData info) {
 		CellContextData data = (CellContextData) info;
@@ -91,41 +90,21 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getDescription()
-	 */
 	@Override
-	public String getDescription() {
-		return mcc + "/" + mnc + "/" + lac + "/" + cellId;
+	public String getDetailedDescription() {
+		return operatorName + " " + cellId;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getTypeDescription()
-	 */
 	@Override
 	public String getTypeDescription() {
 		return "Cell Tower";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#getType()
-	 */
 	@Override
 	public LocationType getType() {
 		return LocationType.CellNetworkLocation;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.locations.AlarmLocation#isComplete()
-	 */
 	@Override
 	public boolean isComplete() {
 		return cellId != -1 && lac != -1;
@@ -203,11 +182,24 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 		this.lac = lac;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Gets the operator name.
 	 * 
-	 * @see java.lang.Object#toString()
+	 * @return the operator name
 	 */
+	public String getOperatorName() {
+		return operatorName;
+	}
+
+	/**
+	 * Sets the operator name.
+	 * 
+	 * @param operatorName the new operator name
+	 */
+	public void setOperatorName(String operatorName) {
+		this.operatorName = operatorName;
+	}
+
 	@Override
 	public String toString() {
 		return "CellLocation [cellId=" + cellId + ", mnc=" + mnc + ", mcc=" + mcc + ", lac=" + lac + "]";
@@ -226,6 +218,7 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 		newLocation.mcc = this.mcc;
 		newLocation.mnc = this.mnc;
 		newLocation.name = this.name;
+		newLocation.operatorName = this.operatorName;
 		newLocation.favorite = this.favorite;
 		newLocation.id = this.id;
 		return newLocation;
