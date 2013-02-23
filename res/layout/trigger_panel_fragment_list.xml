@@ -2,46 +2,54 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:descendantFocusability="blocksDescendants" >
-
-    <TextView
-        android:id="@+id/triggerPanel.separator"
-        android:layout_width="1px"
-        android:layout_height="fill_parent"
-        android:layout_alignParentTop="true"
-        android:layout_margin="5dp"
-        android:layout_toRightOf="@+id/triggerPanel.triggerTypeSpinner"
-        android:background="@color/setting_item_border"
-        tools:ignore="PxUsage" />
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="@dimen/margin_size"
+    android:paddingBottom="10dp" >
 
     <Spinner
         android:id="@+id/triggerPanel.triggerTypeSpinner"
-        android:layout_width="120dp"
-        android:layout_height="wrap_content"
+        android:layout_width="80dp"
+        android:layout_height="fill_parent"
+        android:layout_alignBottom="@+id/triggerPanel.secondaryDescription"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:focusable="false"
-        android:focusableInTouchMode="false"
         tools:listitem="@android:layout/simple_spinner_item" />
 
     <TextView
         android:id="@+id/triggerPanel.mainDescription"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/triggerPanel.triggerTypeSpinner"
-        android:layout_marginLeft="22dp"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="18dp"
+        android:layout_toLeftOf="@+id/triggerPanel.locationTypeImage"
         android:layout_toRightOf="@+id/triggerPanel.triggerTypeSpinner"
-        android:text="Location Name"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/default_text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
         android:id="@+id/triggerPanel.secondaryDescription"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/triggerPanel.mainDescription"
         android:layout_below="@+id/triggerPanel.mainDescription"
-        android:text="Medium Text"
+        android:layout_toLeftOf="@+id/triggerPanel.locationTypeImage"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/default_text"
         android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ImageView
+        android:id="@+id/triggerPanel.locationTypeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="18dp"
+        android:src="@drawable/ic_location_wifis_detected" />
 
 </RelativeLayout>

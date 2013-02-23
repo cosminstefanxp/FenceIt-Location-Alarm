@@ -30,32 +30,24 @@
             android:textAppearance="?android:attr/textAppearanceLarge" />
     </RelativeLayout>
 
-    <FrameLayout
+    <TextView
+        android:id="@+id/triggerPanel.noTrigggersText"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:padding="3dp"
+        android:text="No triggers yet."
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:visibility="gone" />
+
+    <ListView
+        android:id="@+id/triggerPanel.triggersListView"
         android:layout_width="fill_parent"
         android:layout_height="0dip"
-        android:layout_weight="1" >
-
-        <TextView
-            android:id="@+id/triggerPanel.noTrigggersText"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:padding="3dp"
-            android:text="No triggers yet."
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:visibility="gone" />
-
-        <ListView
-            android:id="@+id/triggerPanel.triggersListView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:cacheColorHint="#00000000"
-            android:dividerHeight="10dp"
-            android:padding="1dp"
-            android:scrollbarStyle="insideOverlay"
-            android:scrollbars="vertical"
-            tools:listitem="@layout/trigger_panel_fragment_list" >
-
-        </ListView>
-    </FrameLayout>
+        android:layout_weight="1"
+        android:padding="1dp"
+        android:scrollbarStyle="insideOverlay"
+        android:scrollbars="vertical"
+        tools:listitem="@layout/trigger_panel_fragment_list" >
+    </ListView>
 
 </LinearLayout>

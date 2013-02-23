@@ -7,6 +7,7 @@
 package com.fenceit.alarm.locations;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
@@ -53,7 +54,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 
 	@Override
 	public String getDetailedDescription() {
-		return String.format("Lat: %.4f, Long: %.4f", latitude, longitude);
+		return String.format(Locale.ENGLISH, "Lat: %.4f, Long: %.4f", latitude, longitude);
 	}
 
 	@Override
@@ -184,7 +185,7 @@ public class CoordinatesLocation extends AbstractAlarmLocation implements Serial
 
 	@Override
 	public int getTypeImageResource() {
-		return R.drawable.ic_location_coord;
+		return R.drawable.ic_location_geo;
 	}
 
 	@Override

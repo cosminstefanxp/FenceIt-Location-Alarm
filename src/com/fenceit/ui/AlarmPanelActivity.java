@@ -142,12 +142,10 @@ public class AlarmPanelActivity extends DefaultActivity implements OnItemClickLi
 		// if ((requestCode == REQ_CODE_ADD_ALARM ||
 		// requestCode==REQ_CODE_EDIT_ALARM) && resultCode
 		// == RESULT_OK) {
-		if (resultCode == RESULT_OK) {
-			// TODO: separate new alarm from edited alarm
-			log.debug("Refreshing alarms...");
-			fetchAlarms();
-			refreshAlarmsListView();
-		}
+		// TODO: separate new alarm from edited alarm
+		log.debug("Refreshing alarms...");
+		fetchAlarms();
+		refreshAlarmsListView();
 
 	}
 

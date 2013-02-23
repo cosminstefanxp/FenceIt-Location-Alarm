@@ -19,7 +19,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/alarm.triggersListImage"
-        android:text="When: "
+        android:text="@string/default_text"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -28,7 +28,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/alarm.triggersListMainDesc"
         android:layout_below="@+id/alarm.triggersListMainDesc"
-        android:text="Location"
+        android:text="@string/default_text"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

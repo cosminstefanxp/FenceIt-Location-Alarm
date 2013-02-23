@@ -13,6 +13,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -45,6 +46,9 @@ public class TriggersAdapter extends BaseAdapter {
 
 		/** The secondary description. */
 		public TextView secondDescriptionTextV;
+
+		/** The location type image view. */
+		public ImageView locationTypeImageV;
 	}
 
 	/**
@@ -81,6 +85,7 @@ public class TriggersAdapter extends BaseAdapter {
 			holder.mainDescriptionTextV = (TextView) rowView.findViewById(R.id.triggerPanel_mainDescription);
 			holder.secondDescriptionTextV = (TextView) rowView
 					.findViewById(R.id.triggerPanel_secondaryDescription);
+			holder.locationTypeImageV = (ImageView) rowView.findViewById(R.id.triggerPanel_locationTypeImage);
 			// Save the view holder as a tag
 			rowView.setTag(holder);
 		} else {
@@ -93,6 +98,7 @@ public class TriggersAdapter extends BaseAdapter {
 		holder.triggerTypeSpinner.setSelection(triggerTypeAdapter.getIndex(trigger.getType()));
 		holder.mainDescriptionTextV.setText(trigger.getMainDescription());
 		holder.secondDescriptionTextV.setText(trigger.getSecondaryDescription());
+		holder.locationTypeImageV.setImageResource(trigger.getLocation().getTypeImageResource());
 
 		return rowView;
 	}

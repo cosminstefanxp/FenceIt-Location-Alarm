@@ -47,7 +47,8 @@ import com.fenceit.ui.helpers.LoseFocusOnEditorActionListener;
 /**
  * The Class AlarmActivity showing the screen for editing an Alarm.
  */
-public class AlarmActivity extends DefaultActivity implements OnClickListener, OnItemClickListener, TriggersFragmentContainer {
+public class AlarmActivity extends DefaultActivity implements OnClickListener, OnItemClickListener,
+		TriggersFragmentContainer {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(AlarmActivity.class);
@@ -116,7 +117,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 		}
 
 		// Add the triggers fragment
-		Fragment triggersFragment = TriggersFragment.newInstance(alarm.getId());
+		Fragment triggersFragment = TriggersFragment.newInstance();
 		getSupportFragmentManager().beginTransaction()
 				.add(R.id.alarm_triggersFragmentContainer, triggersFragment).commit();
 
@@ -172,6 +173,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 			log.info("Creating new alarm...");
 			alarm = new Alarm();
 			newAlarm = true;
+			storeAlarm();
 		}
 	}
 

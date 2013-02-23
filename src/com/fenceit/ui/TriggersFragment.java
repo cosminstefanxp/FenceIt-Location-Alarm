@@ -6,6 +6,7 @@
  */
 package com.fenceit.ui;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import org.androwrapee.db.DefaultDAO;
@@ -34,12 +35,18 @@ import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.AlarmLocationBroker;
+import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 import com.fenceit.ui.adapters.TriggersAdapter;
 
+/**
+ * The Fragment used for displaying and editing the {@link BasicTrigger Triggers} associated with an
+ * {@link Alarm}.
+ */
 public class TriggersFragment extends Fragment implements OnClickListener, OnItemClickListener {
 
+	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(TriggersFragment.class);
 
 	/** The Constant used for the DIALOG for a NEW LOCATION. */
@@ -62,28 +69,27 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 
 	/** The triggers. */
 	private List<BasicTrigger> triggers;
-	
+
 	/** The container. */
 	private TriggersFragmentContainer container;
 
 	/**
 	 * New instance.
-	 *
-	 * @param alarmID the alarm id
+	 * 
 	 * @return the triggers fragment
 	 */
-	public static TriggersFragment newInstance(long alarmID) {
+	public static TriggersFragment newInstance() {
 		TriggersFragment f = new TriggersFragment();
-		Bundle args = new Bundle();
-		args.putLong("alarmID", alarmID);
-		f.setArguments(args);
+		// Bundle args = new Bundle();
+		// args.putLong("alarmID", alarmID);
+		// f.setArguments(args);
 		return f;
 	}
 
 	@Override
 	public void onAttach(Activity activity) {
 		super.onAttach(activity);
-		container=(TriggersFragmentContainer) activity;
+		container = (TriggersFragmentContainer) activity;
 	}
 
 	@Override
@@ -94,10 +100,8 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 			daoTriggers = DatabaseManager.getDAOInstance(getActivity().getApplicationContext(),
 					BasicTrigger.class, BasicTrigger.tableName);
 
-		// Get arguments
-		Bundle arguments = getArguments();
-		Long alarmID = (Long) (arguments != null ? arguments.get("alarmID") : null);
-		fetchTriggers(alarmID);
+		// Get the triggers
+		fetchTriggers(container.getCorrespondingAlarm().getId());
 	}
 
 	@Override
@@ -112,7 +116,7 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 		triggersAdapter = new TriggersAdapter(getActivity(), triggers);
 		ListView triggersLV = (ListView) view.findViewById(R.id.triggerPanel_triggersListView);
 		triggersLV.setAdapter(triggersAdapter);
-		// triggersLV.setEmptyView(view.findViewById(R.id.triggerPanel_noTrigggersText));
+		triggersLV.setEmptyView(view.findViewById(R.id.triggerPanel_noTrigggersText));
 		triggersLV.setOnItemClickListener(this);
 
 		return view;
@@ -131,17 +135,22 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 	}
 
 	/**
-	 * Fetches the associated triggers of an alarm from the database
+	 * Fetches the associated triggers of an alarm from the database.
+	 * 
+	 * @param alarmID the alarm id
 	 */
 	private void fetchTriggers(long alarmID) {
 		// Get the associated triggers
-		daoTriggers.open();
-		this.triggers = daoTriggers.fetchAll(DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarmID);
-		daoTriggers.close();
+		this.triggers = DatabaseAccessor.buildFullTriggers(getActivity(), DefaultDAO.REFERENCE_PREPENDER
+				+ "alarm=" + alarmID);
+		// If the returned list was empty, it's a Collections.emptyList() immutable list, so we should create
+		// a new one
+		if (this.triggers.isEmpty())
+			this.triggers = new ArrayList<BasicTrigger>();
 	}
 
 	/**
-	 * Stores the trigger in the database.
+	 * Stores a trigger in the database.
 	 * 
 	 * @param trigger the trigger
 	 * @param newEntity whether it is a new entity
@@ -201,6 +210,8 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 
 	/**
 	 * Starts the activity for a new trigger/location.
+	 * 
+	 * @param type the type
 	 */
 	private void startActivityForNewLocation(LocationType type) {
 		if (type.equals(LocationType.FavoriteExistingLocation)) {
@@ -216,12 +227,17 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 		}
 	}
 
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see android.support.v4.app.Fragment#onActivityResult(int, int, android.content.Intent)
+	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
 
-		// If a Location was added or selected 
+		// If a Location was added or selected
 		if (resultCode == Activity.RESULT_OK
 				&& (requestCode == REQ_CODE_SELECT_LOCATION || requestCode == REQ_CODE_NEW_LOCATION)) {
 			log.debug("Refreshing location...");
@@ -239,8 +255,11 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 		}
 		// TODO: Selected activity
 	}
-	
-	public void refreshTriggersView(){
+
+	/**
+	 * Refresh triggers view.
+	 */
+	public void refreshTriggersView() {
 		triggersAdapter.setTriggers(triggers);
 	}
 
@@ -250,6 +269,12 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 	 */
 	@SuppressLint("ValidFragment")
 	public class LocationTypeSelectorDialogFragment extends DialogFragment {
+
+		/*
+		 * (non-Javadoc)
+		 * 
+		 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
+		 */
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			// Screen rotation bug fix
@@ -275,14 +300,15 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 	}
 
 	/**
-	 * The Interface TriggersFragmentContainer that has to be implemented by container activities of the
+	 * The Interface TriggersFragmentContainer that has to be implemented by container activities of the.
+	 * 
 	 * {@link TriggersFragment}.
 	 */
 	public interface TriggersFragmentContainer {
 
 		/**
 		 * Gets the corresponding alarm.
-		 *
+		 * 
 		 * @return the corresponding alarm
 		 */
 		public Alarm getCorrespondingAlarm();

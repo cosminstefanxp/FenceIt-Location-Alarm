@@ -101,10 +101,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 
 	@Override
 	public String getDetailedDescription() {
-		if (serializedSSIDs.length() > 25)
-			return "Wi-Fis: " + serializedSSIDs.substring(0, 23) + "...";
-		else
-			return "Wi-Fis: " + serializedSSIDs;
+		return "Wi-Fis: " + serializedSSIDs;
 	}
 
 	@Override
@@ -199,7 +196,7 @@ public class WifisDetectedLocation extends AbstractAlarmLocation implements Seri
 
 	@Override
 	public int getTypeImageResource() {
-		return R.drawable.ic_location_wifi_detected;
+		return R.drawable.ic_location_wifis_detected;
 	}
 
 	@Override
