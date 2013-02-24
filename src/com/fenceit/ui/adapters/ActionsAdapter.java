@@ -69,13 +69,13 @@ public class ActionsAdapter extends BaseAdapter {
 		if (rowView == null) {
 			// Inflate a new view
 			LayoutInflater inflater = context.getLayoutInflater();
-			rowView = inflater.inflate(R.layout.alarm_action_list, null);
+			rowView = inflater.inflate(R.layout.actions_panel_fragment_list, null);
 
 			// Save the fields in the view holder for quick reference
 			holder = new ViewHolder();
-			holder.mainDescriptionTextV = (TextView) rowView.findViewById(R.id.alarm_actionsListMainDesc);
-			holder.typeDescriptionTextV = (TextView) rowView.findViewById(R.id.alarm_actionsListSecDesc);
-			holder.typeImage = (ImageView) rowView.findViewById(R.id.alarm_actionsListTypeImage);
+			holder.mainDescriptionTextV = (TextView) rowView.findViewById(R.id.actionsPanel_actionsListMainDesc);
+			holder.typeDescriptionTextV = (TextView) rowView.findViewById(R.id.actionsPanel_actionsListSecDesc);
+			holder.typeImage = (ImageView) rowView.findViewById(R.id.actionsPanel_actionsListTypeImage);
 
 			// Save the view holder as a tag
 			rowView.setTag(holder);

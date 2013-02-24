@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:descendantFocusability="blocksDescendants"
+    android:padding="@dimen/margin_size"
+    android:paddingBottom="10dp" >
+
+    <Spinner
+        android:id="@+id/triggerPanel.triggerTypeSpinner"
+        android:layout_width="80dp"
+        android:layout_height="fill_parent"
+        android:layout_alignBottom="@+id/triggerPanel.secondaryDescription"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentTop="true"
+        android:focusable="false" />
+
+    <TextView
+        android:id="@+id/triggerPanel.mainDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="18dp"
+        android:layout_toLeftOf="@+id/triggerPanel.locationTypeImage"
+        android:layout_toRightOf="@+id/triggerPanel.triggerTypeSpinner"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/default_text"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <TextView
+        android:id="@+id/triggerPanel.secondaryDescription"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/triggerPanel.mainDescription"
+        android:layout_below="@+id/triggerPanel.mainDescription"
+        android:layout_toLeftOf="@+id/triggerPanel.locationTypeImage"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/default_text"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
+
+    <ImageView
+        android:id="@+id/triggerPanel.locationTypeImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentTop="true"
+        android:layout_marginLeft="18dp"
+        android:layout_marginTop="5dp"
+        android:src="@drawable/ic_location_wifis_detected" />
+
+</RelativeLayout>

@@ -27,6 +27,8 @@
     <string name="alarm_set_name_description">Set the name of this alarm.</string>
     <string name="triggers">Triggers</string>
     <string name="trigger_add">Add a new Trigger</string>
+    <string name="actions">Actions</string>
+    <string name="action_add">Add a new Action</string>
 
     <string-array name="trigger_types">
         <item>Arriving</item>

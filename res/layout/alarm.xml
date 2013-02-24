@@ -36,53 +36,10 @@
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
-    <RelativeLayout
-        style="@style/SectionHeaderSmall"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="true" >
-
-        <ImageButton
-            android:id="@+id/alarm.addActionButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:contentDescription="Add a new Action"
-            android:src="@android:drawable/ic_menu_add" />
-
-        <TextView
-            android:id="@+id/alarm.actionsText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="Actions"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-    </RelativeLayout>
-
     <FrameLayout
+        android:id="@+id/alarm.actionsFragmentContainer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" >
-
-        <TextView
-            android:id="@+id/alarm.noActionsText"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:padding="3dp"
-            android:text="No actions yet."
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-
-        <ListView
-            android:id="@+id/alarm.actionsListView"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:background="@color/background"
-            android:cacheColorHint="#00000000"
-            android:scrollbarStyle="insideOverlay"
-            android:scrollbars="vertical" >
-        </ListView>
-    </FrameLayout>
+        android:layout_weight="1" />
 
 </LinearLayout>

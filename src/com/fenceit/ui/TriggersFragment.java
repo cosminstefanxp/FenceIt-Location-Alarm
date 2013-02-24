@@ -18,20 +18,17 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.res.Configuration;
-import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
@@ -112,7 +109,6 @@ public class TriggersFragment extends SherlockFragment implements OnClickListene
 		// Get the triggers
 		fetchTriggers(getArguments().getLong("alarmID"));
 	}
-
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -330,8 +326,7 @@ public class TriggersFragment extends SherlockFragment implements OnClickListene
 	}
 
 	/**
-	 * The Interface TriggersFragmentContainer that has to be implemented by container activities of the.
-	 * 
+	 * The Interface TriggersFragmentContainer that has to be implemented by container activities of the
 	 * {@link TriggersFragment}.
 	 */
 	public interface TriggersFragmentContainer {
@@ -346,7 +341,7 @@ public class TriggersFragment extends SherlockFragment implements OnClickListene
 	}
 
 	/*
-	 * For long click on an Alarm item in the list.
+	 * For long click on a Trigger item in the list.
 	 */
 	@Override
 	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
