@@ -18,6 +18,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.database.Cursor;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
@@ -27,11 +28,16 @@ import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
+import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
 
+import com.actionbarsherlock.app.SherlockFragment;
+import com.actionbarsherlock.view.ActionMode;
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.LocationType;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.AlarmLocationBroker;
@@ -39,12 +45,14 @@ import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 import com.fenceit.ui.adapters.TriggersAdapter;
+import com.fenceit.ui.helpers.EditItemActionMode;
 
 /**
  * The Fragment used for displaying and editing the {@link BasicTrigger Triggers} associated with an
  * {@link Alarm}.
  */
-public class TriggersFragment extends Fragment implements OnClickListener, OnItemClickListener {
+public class TriggersFragment extends SherlockFragment implements OnClickListener, OnItemClickListener,
+		OnItemLongClickListener {
 
 	/** The Constant log. */
 	private static final Logger log = Logger.getLogger(TriggersFragment.class);
@@ -76,13 +84,14 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 	/**
 	 * New instance.
 	 * 
+	 * @param alarmID the alarm id
 	 * @return the triggers fragment
 	 */
-	public static TriggersFragment newInstance() {
+	public static TriggersFragment newInstance(long alarmID) {
 		TriggersFragment f = new TriggersFragment();
-		// Bundle args = new Bundle();
-		// args.putLong("alarmID", alarmID);
-		// f.setArguments(args);
+		Bundle args = new Bundle();
+		args.putLong("alarmID", alarmID);
+		f.setArguments(args);
 		return f;
 	}
 
@@ -101,8 +110,9 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 					BasicTrigger.class, BasicTrigger.tableName);
 
 		// Get the triggers
-		fetchTriggers(container.getCorrespondingAlarm().getId());
+		fetchTriggers(getArguments().getLong("alarmID"));
 	}
+
 
 	@Override
 	public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -113,11 +123,12 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 		view.findViewById(R.id.triggerPanel_addTriggerButton).setOnClickListener(this);
 
 		// Set up triggers list view and adapter
-		triggersAdapter = new TriggersAdapter(getActivity(), triggers);
+		triggersAdapter = new TriggersAdapter(getActivity(), triggers, this);
 		ListView triggersLV = (ListView) view.findViewById(R.id.triggerPanel_triggersListView);
 		triggersLV.setAdapter(triggersAdapter);
 		triggersLV.setEmptyView(view.findViewById(R.id.triggerPanel_noTrigggersText));
 		triggersLV.setOnItemClickListener(this);
+		triggersLV.setOnItemLongClickListener(this);
 
 		return view;
 	}
@@ -156,7 +167,7 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 	 * @param newEntity whether it is a new entity
 	 * @return true, if successful
 	 */
-	private boolean storeTrigger(BasicTrigger trigger, boolean newEntity) {
+	public boolean storeTrigger(BasicTrigger trigger, boolean newEntity) {
 		// Checks
 		if (trigger == null) {
 			log.error("No trigger to store in database.");
@@ -195,17 +206,21 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (parent.getId() == R.id.triggerPanel_triggersListView) {
 			log.debug("Editing an existing location for trigger with id: " + id);
-			// Get the location's id
-			Cursor c = daoTriggers.open().fetchCursor(id);
-			long alarmID = daoTriggers.getReferenceId(c, "alarm");
-			daoTriggers.close();
-
-			// Start the activity
-			Intent intent = AlarmLocationBroker.getActivityIntent(this.getActivity().getApplicationContext(),
-					triggers.get(position).getLocationType());
-			intent.putExtra("id", alarmID);
-			startActivityForResult(intent, REQ_CODE_EDIT_LOCATION);
+			startActivityForEditLocation(triggers.get(position).getLocation());
 		}
+	}
+
+	/**
+	 * Starts the activity for editing a location.
+	 * 
+	 * @param location the location
+	 */
+	private void startActivityForEditLocation(AlarmLocation location) {
+		// Start the activity
+		Intent intent = AlarmLocationBroker.getActivityIntent(this.getActivity().getApplicationContext(),
+				location.getType());
+		intent.putExtra("id", location.getId());
+		startActivityForResult(intent, REQ_CODE_EDIT_LOCATION);
 	}
 
 	/**
@@ -225,6 +240,21 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 			Intent intent = AlarmLocationBroker.getActivityIntent(getActivity(), type);
 			startActivityForResult(intent, REQ_CODE_NEW_LOCATION);
 		}
+	}
+
+	/**
+	 * Deletes a trigger.
+	 * 
+	 * @param trigger the trigger
+	 */
+	private void deleteTrigger(BasicTrigger trigger) {
+		log.info("Deleting trigger with id: " + trigger.getId());
+		if (daoTriggers.open().delete(trigger.getId())) {
+			Toast.makeText(getActivity(), "Trigger deleted.", Toast.LENGTH_SHORT).show();
+		}
+		triggers.remove(trigger);
+		daoTriggers.close();
+
 	}
 
 	/*
@@ -313,5 +343,30 @@ public class TriggersFragment extends Fragment implements OnClickListener, OnIte
 		 */
 		public Alarm getCorrespondingAlarm();
 
+	}
+
+	/*
+	 * For long click on an Alarm item in the list.
+	 */
+	@Override
+	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
+		// Start an action mode with options regarding the Alarm
+		getSherlockActivity().startActionMode(new EditItemActionMode() {
+			@Override
+			protected void onEditItem(ActionMode mode) {
+				log.info("Editing trigger with id " + id + " using action mode.");
+				startActivityForEditLocation(triggers.get(position).getLocation());
+				mode.finish();
+			}
+
+			@Override
+			protected void onDeleteItem(ActionMode mode) {
+				log.info("Deleting trigger using action mode on " + position);
+				deleteTrigger(triggers.get(position));
+				refreshTriggersView();
+				mode.finish();
+			}
+		});
+		return true;
 	}
 }

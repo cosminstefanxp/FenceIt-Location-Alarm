@@ -47,4 +47,7 @@
         <item name="android:checkMark">@drawable/btn_radio_holo_light</item>
     </style>
 
+    <style name="TextViewSelectorStyle">
+        <item name="android:background">@drawable/spinner_background_holo_light</item>
+    </style>
 </resources>

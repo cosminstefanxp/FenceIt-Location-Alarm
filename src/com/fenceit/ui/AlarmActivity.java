@@ -95,6 +95,7 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 	 */
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
+		log.info("Activity create");
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.alarm);
 
@@ -109,17 +110,17 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 			Long alarmID = (Long) (extras != null ? extras.get("id") : null);
 
 			fetchAlarm(alarmID);
+
+			// Add the triggers fragment
+			Fragment triggersFragment = TriggersFragment.newInstance(alarm.getId());
+			getSupportFragmentManager().beginTransaction()
+					.add(R.id.alarm_triggersFragmentContainer, triggersFragment).commit();
 		}
 		// If it's a restored instance
 		else {
 			alarm = (Alarm) savedInstanceState.getSerializable("alarm");
 			log.info("Restored saved instance of alarm: " + alarm);
 		}
-
-		// Add the triggers fragment
-		Fragment triggersFragment = TriggersFragment.newInstance();
-		getSupportFragmentManager().beginTransaction()
-				.add(R.id.alarm_triggersFragmentContainer, triggersFragment).commit();
 
 		// Add OnClickListeners
 		findViewById(R.id.alarm_nameSection).setOnClickListener(this);
@@ -203,8 +204,15 @@ public class AlarmActivity extends DefaultActivity implements OnClickListener, O
 
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
+		log.info("Activity save instance");
 		super.onSaveInstanceState(outState);
 		outState.putSerializable("alarm", alarm);
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		log.info("On Activity restore instance");
+		super.onRestoreInstanceState(savedInstanceState);
 	}
 
 	/**

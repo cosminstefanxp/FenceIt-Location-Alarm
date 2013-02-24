@@ -7,24 +7,25 @@
     android:padding="@dimen/margin_size"
     android:paddingBottom="10dp" >
 
-    <Spinner
-        android:id="@+id/triggerPanel.triggerTypeSpinner"
+    <TextView
+        android:id="@+id/triggerPanel.triggerTypeTextSelector"
+        style="@style/TextViewSelectorStyle"
         android:layout_width="80dp"
         android:layout_height="fill_parent"
         android:layout_alignBottom="@+id/triggerPanel.secondaryDescription"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
         android:focusable="false"
-        tools:listitem="@android:layout/simple_spinner_item" />
+        android:text="@string/default_text"/>
 
     <TextView
         android:id="@+id/triggerPanel.mainDescription"
-        android:layout_width="wrap_content"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="18dp"
         android:layout_toLeftOf="@+id/triggerPanel.locationTypeImage"
-        android:layout_toRightOf="@+id/triggerPanel.triggerTypeSpinner"
+        android:layout_toRightOf="@+id/triggerPanel.triggerTypeTextSelector"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="@string/default_text"
@@ -46,10 +47,10 @@
         android:id="@+id/triggerPanel.locationTypeImage"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
         android:layout_alignParentRight="true"
         android:layout_alignParentTop="true"
         android:layout_marginLeft="18dp"
+        android:layout_marginTop="5dp"
         android:src="@drawable/ic_location_wifis_detected" />
 
 </RelativeLayout>

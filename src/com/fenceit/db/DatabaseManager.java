@@ -34,7 +34,7 @@ public class DatabaseManager {
 	public static final String DATABASE_NAME = "fenceit.db";
 
 	/** The DATABASE VERSION. */
-	public static final int DATABASE_VERSION = 1;
+	public static final int DATABASE_VERSION = 4;
 
 	/** The db helper. */
 	private static DefaultDatabaseHelper dbHelper = null;
