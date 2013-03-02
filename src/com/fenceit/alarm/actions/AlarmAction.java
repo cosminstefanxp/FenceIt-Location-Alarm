@@ -9,14 +9,13 @@ package com.fenceit.alarm.actions;
 import android.content.Context;
 
 /**
- * The Interface AlarmAction defines an alarm action, which can be executed when an alarm is
- * triggered.
+ * The Interface AlarmAction defines an alarm action, which can be executed when an alarm is triggered.
  */
 public interface AlarmAction {
 
 	/**
-	 * Executes the alarm in the given Android context. The method must be executed on the main
-	 * thread of the Android application.
+	 * Executes the alarm in the given Android context. The method must be executed on the main thread of the
+	 * Android application.
 	 * 
 	 * @param context the context
 	 */
@@ -32,16 +31,18 @@ public interface AlarmAction {
 	/**
 	 * Gets the description.
 	 * 
+	 * @param context the context, to be used for accessing resources
 	 * @return the description
 	 */
-	public String getDescription();
+	public String getDescription(Context context);
 
 	/**
 	 * Gets the type description.
 	 * 
 	 * @return the type description
+	 * @param context the context, to be used for accessing resources
 	 */
-	public String getTypeDescription();
+	public String getTypeDescription(Context context);
 
 	/**
 	 * Gets the type.
@@ -56,12 +57,12 @@ public interface AlarmAction {
 	 * @return the type image resource
 	 */
 	public int getTypeImageResource();
-	
+
 	/**
 	 * Gets the id.
-	 *
+	 * 
 	 * @return the id
 	 */
 	public long getId();
-	
+
 }

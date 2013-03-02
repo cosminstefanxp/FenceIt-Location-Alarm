@@ -29,7 +29,7 @@
                 android:layout_centerVertical="true"
                 android:background="@drawable/title_button"
                 android:contentDescription="@string/general_refresh"
-                android:src="@android:drawable/ic_popup_sync" />
+                android:src="@drawable/ic_refresh" />
         </RelativeLayout>
 
         <RelativeLayout

@@ -18,8 +18,8 @@ import com.fenceit.alarm.Alarm;
 import com.fenceit.ui.NotificationTriggeredActivity;
 
 /**
- * The Class NotificationAction that implements an Alarm Action that displays a simple notification
- * when triggered.
+ * The Class NotificationAction that implements an Alarm Action that displays a simple notification when
+ * triggered.
  */
 @DatabaseClass
 public class NotificationAction extends AbstractAlarmAction {
@@ -44,6 +44,7 @@ public class NotificationAction extends AbstractAlarmAction {
 	 */
 	public NotificationAction(Alarm alarm) {
 		super(alarm);
+		this.message = "";
 	}
 
 	/**
@@ -54,9 +55,6 @@ public class NotificationAction extends AbstractAlarmAction {
 		super(null);
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see com.fenceit.alarm.AlarmAction#execute() */
 	@Override
 	public void execute(Context context) {
 		log.warn("Notification action triggered: " + this);
@@ -90,16 +88,16 @@ public class NotificationAction extends AbstractAlarmAction {
 	}
 
 	@Override
-	public String getDescription() {
-		if (this.message.length() > 30)
-			return this.message.substring(0, 30) + "...";
+	public String getDescription(Context context) {
+		if (this.message.trim().length() == 0)
+			return context.getResources().getString(R.string.notification_no_message);
 		else
 			return this.message;
 	}
 
 	@Override
-	public String getTypeDescription() {
-		return "Notification Action";
+	public String getTypeDescription(Context context) {
+		return context.getResources().getString(R.string.notification_type_desc);
 	}
 
 	@Override
@@ -108,9 +106,8 @@ public class NotificationAction extends AbstractAlarmAction {
 	}
 
 	@Override
-	public int getTypeImageResource() { 
+	public int getTypeImageResource() {
 		return R.drawable.ic_action_notification;
-		
 	}
 
 	@Override

@@ -86,8 +86,8 @@ public class ActionsAdapter extends BaseAdapter {
 
 		// Populate the view
 		AlarmAction action = actions.get(position);
-		holder.mainDescriptionTextV.setText(action.getTypeDescription());
-		holder.typeDescriptionTextV.setText(action.getDescription());
+		holder.mainDescriptionTextV.setText(action.getTypeDescription(context));
+		holder.typeDescriptionTextV.setText(action.getDescription(context));
 		holder.typeImage.setImageResource(action.getTypeImageResource());
 
 		return rowView;

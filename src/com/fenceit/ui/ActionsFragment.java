@@ -12,14 +12,18 @@ import java.util.List;
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.ViewGroup;
-import android.webkit.WebView.FindListener;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
@@ -32,7 +36,6 @@ import com.fenceit.alarm.Alarm;
 import com.fenceit.alarm.actions.ActionType;
 import com.fenceit.alarm.actions.AlarmAction;
 import com.fenceit.db.AlarmActionBroker;
-import com.fenceit.ui.TriggersFragment.TriggersFragmentContainer;
 import com.fenceit.ui.adapters.ActionsAdapter;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 import com.fenceit.ui.helpers.EditItemActionMode;
@@ -53,7 +56,7 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 	 * The Constant DIALOG_NEW_ACTION used to identify the dialog that allows the user to select the type for
 	 * a new action.
 	 */
-	private static final int DIALOG_NEW_ACTION = 2;
+	private static final String DIALOG_NEW_ACTION = "new_action";
 
 	/** The actions adapter. */
 	private ActionsAdapter actionsAdapter;
@@ -148,20 +151,21 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.actionsPanel_addActionButton:
-			log.info("Add action button clicked.");
-			// showDialog(DIALOG_NEW_ACTION);
-			break;
+		if (v.getId() == R.id.actionsPanel_addActionButton) {
+			DialogFragment dialog = new ActionTypeSelectorDialogFragment();
+			dialog.show(getActivity().getSupportFragmentManager(), DIALOG_NEW_ACTION);
 		}
 	}
 
 	/**
-	 * Start activity for new action.
+	 * Starts the activity to create a new action. In the new intent, the serialized alarm is added.
+	 * 
+	 * @param type the type of action
 	 */
 	private void startActivityForNewAction(ActionType type) {
+		log.debug("Creating new action of type: " + type);
 		Intent addActionActivityIntent = AlarmActionBroker.getActivityIntent(getActivity(), type);
-		// addActionActivityIntent.putExtra("alarmID", alarmI);
+		addActionActivityIntent.putExtra("alarm", this.container.getCorrespondingAlarm());
 		startActivityForResult(addActionActivityIntent, REQ_CODE_ADD_ACTION);
 	}
 
@@ -183,17 +187,16 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 		actionsAdapter.setActions(actions);
 	}
 
-	// @Override
-	// protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-	// super.onActivityResult(requestCode, resultCode, data);
-	// log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
-	// if (resultCode == RESULT_OK
-	// && (requestCode == REQ_CODE_ADD_ACTION || requestCode == REQ_CODE_EDIT_ACTION)) {
-	// log.debug("Refreshing actions...");
-	// fetchActions();
-	// refreshActionsListView();
-	// }
-	// }
+	@Override
+	public void onActivityResult(int requestCode, int resultCode, Intent data) {
+		super.onActivityResult(requestCode, resultCode, data);
+		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
+		if (requestCode == REQ_CODE_ADD_ACTION || requestCode == REQ_CODE_EDIT_ACTION) {
+			log.debug("Refreshing actions...");
+			fetchActions(container.getCorrespondingAlarm().getId());
+			refreshActionsView();
+		}
+	}
 
 	/**
 	 * The Interface ActionsFragmentContainer that has to be implemented by container activities of the
@@ -233,5 +236,33 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 			}
 		});
 		return true;
+	}
+
+	/**
+	 * The Action Type Selector DialogFragment used for selecting a the type of action to be created.
+	 */
+	@SuppressLint("ValidFragment")
+	public class ActionTypeSelectorDialogFragment extends DialogFragment {
+
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Screen rotation bug fix
+			setRetainInstance(true);
+
+			// Use the Builder class for convenient dialog construction
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+			builder.setTitle(R.string.dialog_new_action);
+			builder.setItems(actionTypesAdapter.getNames(), new DialogInterface.OnClickListener() {
+
+				// Process the selection
+				public void onClick(DialogInterface dialog, int item) {
+					startActivityForNewAction(actionTypesAdapter.getValues()[item]);
+					dialog.dismiss();
+				}
+			});
+			builder.setNegativeButton(android.R.string.cancel, null);
+			// Create the AlertDialog object and return it
+			return builder.create();
+		}
 	}
 }

@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/BasicActivity"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
-    <include layout="@layout/template_title_bar" />
 
     <LinearLayout
         android:id="@+id/ringer_mode.newModeSection"
@@ -15,11 +12,11 @@
         android:orientation="vertical" >
 
         <TextView
+            android:id="@+id/ringer_mode.modeText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="NEW MODE"
-            android:textAppearance="?android:attr/textAppearanceMedium" 
-            android:id="@+id/ringer_mode.modeText"/>
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:layout_width="wrap_content"

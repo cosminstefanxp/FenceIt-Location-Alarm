@@ -1,11 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/BasicActivity"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
-
-    <include layout="@layout/template_title_bar" />
 
     <LinearLayout
         android:id="@+id/notification.messageSection"
@@ -17,14 +14,16 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Notification Message"
+            android:text="@string/action_notification_message"
             android:textAppearance="?android:attr/textAppearanceMedium" />
 
         <TextView
             android:id="@+id/notification.messageText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Set the message of this notification."
+            android:ellipsize="end"
+            android:maxLines="3"
+            android:text="@string/notification_action_message_hint"
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 

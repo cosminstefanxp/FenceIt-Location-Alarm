@@ -133,7 +133,7 @@ public class TriggersFragment extends SherlockFragment implements OnClickListene
 	public void onClick(View v) {
 		switch (v.getId()) {
 		case R.id.triggerPanel_addTriggerButton:
-			LocationTypeSelectorDialogFragment dialog = new LocationTypeSelectorDialogFragment();
+			DialogFragment dialog = new LocationTypeSelectorDialogFragment();
 			dialog.show(getActivity().getSupportFragmentManager(), DIALOG_NEW_LOCATION);
 			break;
 		default:
@@ -320,6 +320,7 @@ public class TriggersFragment extends SherlockFragment implements OnClickListene
 					dialog.dismiss();
 				}
 			});
+			builder.setNegativeButton(android.R.string.cancel, null);
 			// Create the AlertDialog object and return it
 			return builder.create();
 		}

@@ -9,17 +9,17 @@ package com.fenceit.ui;
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.EditText;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
@@ -27,27 +27,22 @@ import com.fenceit.alarm.actions.NotificationAction;
 import com.fenceit.db.DatabaseManager;
 
 /**
- * The Class NotificationActivity used for setting up an action that displays a notification screen
- * to the user.
+ * The Class NotificationActivity used for setting up an action that displays a notification screen to the
+ * user.
  */
 public class NotificationActivity extends DefaultActivity implements OnClickListener {
-
-	private static final int MAX_MESSAGE_VIEW_LENGTH = 120;
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(NotificationActivity.class);
 
 	/** The Constant DIALOG_SET_MESSAGE. */
-	private static final int DIALOG_SET_MESSAGE = 0;
+	private static final String DIALOG_SET_MESSAGE = "set_message";
 
 	/** The data access object. */
 	private DefaultDAO<NotificationAction> dao = null;
 
 	/** The action. */
 	private NotificationAction action;
-
-	/** If it's a new entity. */
-	private boolean newEntity;
 
 	/**
 	 * Called when the activity is first created.
@@ -58,7 +53,6 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.notification_action);
-//		((TextView) findViewById(R.id.title_titleText)).setText("Edit Action");
 
 		// Prepare database connection
 		if (dao == null)
@@ -67,11 +61,11 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 
 		// If it's a new activity
 		if (savedInstanceState == null) {
-			// Get the action from the database
+			// Get the action from the database, if it was already created - 'id' will be null otherwise
 			Bundle extras = getIntent().getExtras();
 			Long actionID = (Long) (extras != null ? extras.get("id") : null);
 
-			// Get the location from the intent
+			// Create a new action using the alarm provided in the intent - 'alarm' will be null otherwise
 			Alarm alarm = (Alarm) extras.getSerializable("alarm");
 
 			fetchAction(actionID, alarm);
@@ -84,16 +78,12 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 		}
 
 		// Buttons and others
-		findViewById(R.id.title_saveButton).setOnClickListener(this);
 		findViewById(R.id.notification_messageSection).setOnClickListener(this);
 
 		// Fill data
 		refreshActivity();
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle) */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -105,15 +95,10 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 	 */
 	private void refreshActivity() {
 		if (action.getMessage() != null && action.getMessage().trim().length() > 0)
-			if (action.getMessage().length() > MAX_MESSAGE_VIEW_LENGTH)
-				((TextView) findViewById(R.id.notification_messageText)).setText(action.getMessage().substring(0,
-						MAX_MESSAGE_VIEW_LENGTH)
-						+ "...");
-			else
-				((TextView) findViewById(R.id.notification_messageText)).setText(action.getMessage());
+			((TextView) findViewById(R.id.notification_messageText)).setText(action.getMessage());
 		else
 			((TextView) findViewById(R.id.notification_messageText))
-					.setText("Click to set a message for the notification.");
+					.setText(R.string.notification_action_message_hint);
 	}
 
 	/**
@@ -129,22 +114,24 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 			action = dao.fetch(actionID);
 			dao.close();
 			action.setAlarm(alarm);
-			log.debug("Fetched action: " + action);
+			if (log.isDebugEnabled())
+				log.debug("Fetched action: " + action);
 			if (action != null)
 				return;
 		}
 		// No entity in database... creating a new one
 		log.info("Creating new NotificationAction...");
 		action = new NotificationAction(alarm);
-		newEntity = true;
+		storeAction(true);
 	}
 
 	/**
 	 * Stores the action in the database.
 	 * 
+	 * @param newEntity if it is a new entity -> insert a new entity
 	 * @return true, if successful
 	 */
-	private boolean storeAction() {
+	private boolean storeAction(boolean newEntity) {
 		// Checks
 		if (action == null) {
 			log.error("No action to store in database.");
@@ -158,7 +145,7 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 		}
 
 		// Save the entity to the database
-		log.info("Saving action in database...");
+		log.debug("Saving action in database...");
 		dao.open();
 		if (newEntity) {
 			long id = dao.insert(action, true);
@@ -174,67 +161,49 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 		return true;
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.view.View.OnClickListener#onClick(android.view.View) */
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.title_saveButton:
-			log.info("Save button clicked. Storing entity...");
-			if (!storeAction()) {
-				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
-						Toast.LENGTH_SHORT).show();
-				return;
-			}
-			Intent intent = new Intent();
-			intent.putExtra("id", action.getId());
-			setResult(RESULT_OK, intent);
-			finish();
-			return;
-		case R.id.notification_messageSection:
+		if (v.getId() == R.id.notification_messageSection) {
 			log.debug("Updating message...");
-			showDialog(DIALOG_SET_MESSAGE);
-			break;
+			DialogFragment dialog = new NotificationTextDialogFragment();
+			dialog.show(this.getSupportFragmentManager(), DIALOG_SET_MESSAGE);
 		}
 	}
 
-	/* (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onCreateDialog(int) */
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		Dialog dialog;
-		// Try to handle this type of dialog
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		switch (id) {
-		// Create a dialog asking the user to set a new message
-		case DIALOG_SET_MESSAGE:
+	@SuppressLint("ValidFragment")
+	public class NotificationTextDialogFragment extends DialogFragment {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Screen rotation bug fix
+			setRetainInstance(true);
+
+			// Use the Builder class for convenient dialog construction
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
 			// Create the dialog associated with setting Alarm name
-			builder.setTitle("Notification message");
-			builder.setMessage("Set the notification message:");
+			builder.setTitle(R.string.notification_set_message);
+
 			// Prepare the text edit, including with margins
-			LayoutInflater factory = LayoutInflater.from(this);
+			LayoutInflater factory = LayoutInflater.from(getActivity());
 			View messageDialogView = factory.inflate(R.layout.dialog_textarea_layout, null);
 			final EditText messageText = (EditText) messageDialogView.findViewById(R.id.dialog_editText);
 			messageText.setText(action.getMessage());
+			messageText.setSelection(messageText.getText().length());
 			builder.setView(messageDialogView);
 
 			// Only use an OK button
-			builder.setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+			builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					action.setMessage(messageText.getText().toString());
+					storeAction(false);
 					refreshActivity();
 				}
 			});
+			builder.setNegativeButton(android.R.string.cancel, null);
 
 			// Build the dialog
-			dialog = builder.create();
-			break;
-		default:
-			dialog = null;
+			return builder.create();
 		}
-		return dialog;
 	}
 }

@@ -51,21 +51,14 @@ public class RingerModeAction extends AbstractAlarmAction {
 		super(alarm);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.actions.AlarmAction#execute(android.content.Context)
-	 */
 	@Override
 	public void execute(Context context) {
-		log.warn("Change Ringer Mode action triggered: " + getDescription());
+		if (log.isInfoEnabled())
+			log.info("Change Ringer Mode action triggered: " + getDescription(context));
 		AudioManager audio_mngr = (AudioManager) context.getSystemService(Context.AUDIO_SERVICE);
 		audio_mngr.setRingerMode(targetRingerMode);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.actions.AlarmAction#isComplete()
-	 */
 	@Override
 	public boolean isComplete() {
 		return targetRingerMode == AudioManager.RINGER_MODE_NORMAL
@@ -73,12 +66,8 @@ public class RingerModeAction extends AbstractAlarmAction {
 				|| targetRingerMode == AudioManager.RINGER_MODE_SILENT;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.actions.AlarmAction#getDescription()
-	 */
 	@Override
-	public String getDescription() {
+	public String getDescription(Context context) {
 		String desc;
 		switch (targetRingerMode) {
 		case AudioManager.RINGER_MODE_NORMAL:
@@ -97,40 +86,24 @@ public class RingerModeAction extends AbstractAlarmAction {
 		return "Set Ringer Mode to " + desc;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.actions.AlarmAction#getTypeDescription()
-	 */
 	@Override
-	public String getTypeDescription() {
+	public String getTypeDescription(Context context) {
 		return "Change Ringer Mode Action";
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.actions.AlarmAction#getType()
-	 */
 	@Override
 	public ActionType getType() {
 		return ActionType.RingerModeAction;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.alarm.actions.AlarmAction#getTypeImageResource()
-	 */
 	@Override
 	public int getTypeImageResource() {
 		return R.drawable.ic_action_ringer_mode;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see java.lang.Object#toString()
-	 */
 	@Override
 	public String toString() {
-		return "RingerModeAction [" + getDescription() + "]";
+		return "RingerModeAction [" + targetRingerMode + "]";
 	}
 
 	public int getTargetRingerMode() {

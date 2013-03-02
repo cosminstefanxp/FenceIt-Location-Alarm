@@ -166,69 +166,6 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		return true;
 	}
 
-	// @Override
-	// public void onCreateContextMenu(ContextMenu menu, View v, ContextMenuInfo menuInfo) {
-	// super.onCreateContextMenu(menu, v, menuInfo);
-	//
-	// switch (v.getId()) {
-	// case R.id.alarm_actionsListView:
-	// // Check which list item was selected
-	// AdapterView.AdapterContextMenuInfo info2 = (AdapterView.AdapterContextMenuInfo) menuInfo;
-	// contextMenuPosition = info2.position;
-	// log.debug("Selected Actions list item on position: " + contextMenuPosition);
-	//
-	// // Inflate the menu
-	// MenuInflater inflater2 = getMenuInflater();
-	// inflater2.inflate(R.menu.alarm_list_action_menu, menu);
-	// break;
-	// }
-	// }
-
-	// @Override
-	// public boolean onContextItemSelected(MenuItem item) {
-	// AdapterContextMenuInfo info = (AdapterContextMenuInfo) item.getMenuInfo();
-	// switch (item.getItemId()) {
-	// case R.id.menu_alarm_list_action_delete:
-	// // deleteAction(alarm.getActions().get(info.position));
-	// // refreshActionsListView();
-	// return true;
-	// default:
-	// return super.onContextItemSelected(item);
-	// }
-	// }
-
-
-	// @Override
-	// protected Dialog onCreateDialog(int id) {
-	// Dialog dialog = null;
-	// AlertDialog.Builder builder = new AlertDialog.Builder(this);
-	// switch (id) {
-	// case DIALOG_NEW_ACTION:
-	// // Create the dialog associated with creating a new type of action
-	// builder.setTitle("New action of type");
-	// builder.setItems(actionTypesAdapter.getNames(), new DialogInterface.OnClickListener() {
-	// // Process the selection
-	// public void onClick(DialogInterface dialog, int item) {
-	// log.debug("Creating new action of type: " + actionTypesAdapter.getValues()[item]);
-	// // If it's a new alarm, we have to store it in the database so we can get an id and
-	// // connect the action with it
-	// if (newAlarm)
-	// storeAlarm();
-	// // Launch the Activity to define the action
-	// startActivityForNewAction(actionTypesAdapter.getValues()[item]);
-	// dialog.dismiss();
-	// }
-	// });
-	// // Build the dialog
-	// dialog = builder.create();
-	// break;
-	//
-	// default:
-	// dialog = null;
-	// }
-	// return dialog;
-	// }
-
 	@Override
 	public Alarm getCorrespondingAlarm() {
 		return alarm;

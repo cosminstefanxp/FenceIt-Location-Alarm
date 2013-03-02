@@ -9,16 +9,16 @@ package com.fenceit.ui;
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
+import android.annotation.SuppressLint;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
-import android.content.Intent;
 import android.media.AudioManager;
 import android.os.Bundle;
+import android.support.v4.app.DialogFragment;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
@@ -35,16 +35,13 @@ public class RingerModeActivity extends DefaultActivity implements OnClickListen
 	private static final Logger log = Logger.getLogger(RingerModeActivity.class);
 
 	/** The Constant DIALOG_SET_RINGER_MODE. */
-	private static final int DIALOG_SET_RINGER_MODE = 0;
+	private static final String DIALOG_SET_RINGER_MODE = "set_ringer_mode";
 
 	/** The data access object. */
 	private DefaultDAO<RingerModeAction> dao = null;
 
 	/** The action. */
 	private RingerModeAction action;
-
-	/** If it's a new entity. */
-	private boolean newEntity;
 
 	/** The adapter for the ringer modes. */
 	private SingleChoiceAdapter<Integer> modesAdapter;
@@ -58,7 +55,6 @@ public class RingerModeActivity extends DefaultActivity implements OnClickListen
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.ringer_mode_action);
-//		((TextView) findViewById(R.id.title_titleText)).setText("Edit Action");
 
 		// Prepare database connection
 		if (dao == null)
@@ -84,20 +80,15 @@ public class RingerModeActivity extends DefaultActivity implements OnClickListen
 		}
 
 		// Buttons and others
-		findViewById(R.id.title_saveButton).setOnClickListener(this);
 		findViewById(R.id.ringer_mode_newModeSection).setOnClickListener(this);
 
 		// Fill data
-		modesAdapter = new SingleChoiceAdapter<Integer>(null, new Integer[] { AudioManager.RINGER_MODE_NORMAL,
-				AudioManager.RINGER_MODE_SILENT, AudioManager.RINGER_MODE_VIBRATE }, new CharSequence[] { "Normal",
-				"Silent", "Vibrate" });
+		modesAdapter = new SingleChoiceAdapter<Integer>(null, new Integer[] {
+				AudioManager.RINGER_MODE_NORMAL, AudioManager.RINGER_MODE_SILENT,
+				AudioManager.RINGER_MODE_VIBRATE }, new CharSequence[] { "Normal", "Silent", "Vibrate" });
 		refreshActivity();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see android.app.Activity#onSaveInstanceState(android.os.Bundle)
-	 */
 	@Override
 	protected void onSaveInstanceState(Bundle outState) {
 		super.onSaveInstanceState(outState);
@@ -108,7 +99,7 @@ public class RingerModeActivity extends DefaultActivity implements OnClickListen
 	 * Refresh the activity displayed views using the data from the action.
 	 */
 	private void refreshActivity() {
-		((TextView) findViewById(R.id.ringer_mode_modeText)).setText(action.getDescription());
+		((TextView) findViewById(R.id.ringer_mode_modeText)).setText(action.getDescription(this));
 	}
 
 	/**
@@ -131,15 +122,16 @@ public class RingerModeActivity extends DefaultActivity implements OnClickListen
 		// No entity in database... creating a new one
 		log.info("Creating new RingerModeAction...");
 		action = new RingerModeAction(alarm);
-		newEntity = true;
+		storeAction(true);
 	}
 
 	/**
 	 * Stores the action in the database.
 	 * 
+	 * @param newEntity if it is a new entity -> insert a new entity
 	 * @return true, if successful
 	 */
-	private boolean storeAction() {
+	private boolean storeAction(boolean newEntity) {
 		// Checks
 		if (action == null) {
 			log.error("No action to store in database.");
@@ -169,63 +161,44 @@ public class RingerModeActivity extends DefaultActivity implements OnClickListen
 		return true;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see android.view.View.OnClickListener#onClick(android.view.View)
-	 */
 	@Override
 	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.title_saveButton:
-			log.info("Save button clicked. Storing entity...");
-			if (!storeAction()) {
-				Toast.makeText(this, "Not all fields are completed corectly. Please check all of them.",
-						Toast.LENGTH_SHORT).show();
-				return;
-			}
-			Intent intent = new Intent();
-			intent.putExtra("id", action.getId());
-			setResult(RESULT_OK, intent);
-			finish();
-			return;
-		case R.id.ringer_mode_newModeSection:
+		if (v.getId() == R.id.ringer_mode_newModeSection) {
 			log.debug("Updating target ringer mode...");
-			showDialog(DIALOG_SET_RINGER_MODE);
-			break;
+			DialogFragment dialog = new RingerModeDialogFragment();
+			dialog.show(this.getSupportFragmentManager(), DIALOG_SET_RINGER_MODE);
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see android.app.Activity#onCreateDialog(int)
-	 */
-	@Override
-	protected Dialog onCreateDialog(int id) {
-		Dialog dialog;
-		// Try to handle this type of dialog
-		AlertDialog.Builder builder = new AlertDialog.Builder(this);
-		switch (id) {
-		// Create a dialog asking the user to set a new target ringer mode
-		case DIALOG_SET_RINGER_MODE:
+	@SuppressLint("ValidFragment")
+	public class RingerModeDialogFragment extends DialogFragment {
+		@Override
+		public Dialog onCreateDialog(Bundle savedInstanceState) {
+			// Screen rotation bug fix
+			setRetainInstance(true);
+
+			// Use the Builder class for convenient dialog construction
+			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+
 			// Create the dialog associated with the Ringer Mode
-			builder.setTitle("New Ringer Mode");
-			builder.setSingleChoiceItems(modesAdapter.getNames(), modesAdapter.getIndex(action.getTargetRingerMode()),
+			builder.setTitle(R.string.action_ringer_mode_type);
+			builder.setSingleChoiceItems(modesAdapter.getNames(),
+					modesAdapter.getIndex(action.getTargetRingerMode()),
 					new DialogInterface.OnClickListener() {
 
 						// Process the selection
 						public void onClick(DialogInterface dialog, int item) {
 							log.debug("Selected new ringer mode: " + modesAdapter.getValues()[item]);
 							action.setTargetRingerMode(modesAdapter.getValues()[item]);
+							storeAction(false);
 							refreshActivity();
-							dialog.dismiss();
+							dismiss();
 						}
 					});
+			builder.setNegativeButton(android.R.string.cancel, null);
+
 			// Build the dialog
-			dialog = builder.create();
-			break;
-		default:
-			dialog = null;
+			return builder.create();
 		}
-		return dialog;
 	}
 }
