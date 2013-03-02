@@ -12,6 +12,11 @@ import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
 import org.androwrapee.db.IdField;
 
+import com.fenceit.R;
+
+import android.content.Context;
+import android.text.Html;
+
 /**
  * An abstract implementation of the AlarmLocation.
  */
@@ -66,6 +71,12 @@ public abstract class AbstractAlarmLocation implements AlarmLocation, Serializab
 	@Override
 	public String getName() {
 		return name;
+	}
+
+	@Override
+	public CharSequence getDisplayName(Context context) {
+		return name.trim().length() > 0 ? name : Html.fromHtml(context.getResources().getString(
+				R.string.location_favorite_noname));
 	}
 
 	@Override

@@ -98,5 +98,8 @@
     <string name="action_notification_message">Notification Message</string>
     <string name="notification_action_message_hint">Set the message of this notification.</string>
     <string name="action_ringer_mode_type">Set new Ringer Mode</string>
+    <string name="location_name_hint">Set the name of this location.</string>
+    <string name="location_favorite_hint">Save as favorite</string>
+    <string name="location_favorite_noname">&lt;i&gt;Anonymous Location&lt;/i&gt;</string>
 
 </resources>

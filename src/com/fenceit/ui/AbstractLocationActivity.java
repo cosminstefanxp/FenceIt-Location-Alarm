@@ -16,6 +16,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -135,7 +136,7 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 			log.error("No location to store in database.");
 			return false;
 		}
-		
+
 		preStoreLocation();
 
 		// Check if all data is all right
@@ -202,9 +203,9 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 	protected abstract T instantiateLocation();
 
 	protected abstract void refreshLocationView();
-	
+
 	protected abstract void postFetchLocation();
-	
+
 	protected abstract void preStoreLocation();
 
 	/**
@@ -251,7 +252,7 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 		if (this.location.isFavorite()) {
 			findViewById(R.id.location_nameSection).setVisibility(View.VISIBLE);
 			// Change location name
-			((TextView) findViewById(R.id.location_nameText)).setText(this.location.getName());
+			((TextView) findViewById(R.id.location_nameText)).setText(location.getDisplayName(this));
 		} else
 			findViewById(R.id.location_nameSection).setVisibility(View.GONE);
 	}
@@ -262,7 +263,7 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
 			// Screen rotation bug fix
 			setRetainInstance(true);
-			
+
 			// Use the Builder class for convenient dialog construction
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
@@ -273,6 +274,7 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 			View nameDialogView = factory.inflate(R.layout.dialog_edit_text_layout, null);
 			final EditText nameText = (EditText) nameDialogView.findViewById(R.id.dialog_editText);
 			nameText.setText(location.getName());
+			nameText.setSelection(nameText.getText().length());
 			builder.setView(nameDialogView);
 
 			// Only use an OK button
@@ -280,7 +282,9 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 				@Override
 				public void onClick(DialogInterface dialog, int which) {
 					location.setName(nameText.getText().toString());
-					((TextView) findViewById(R.id.location_nameText)).setText(location.getName());
+					// Change location name
+					((TextView) findViewById(R.id.location_nameText)).setText(location
+							.getDisplayName(AbstractLocationActivity.this));
 				}
 			});
 			// Create the AlertDialog object and return it

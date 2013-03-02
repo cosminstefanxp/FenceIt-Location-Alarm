@@ -9,7 +9,7 @@
 
     <Spinner
         android:id="@+id/triggerPanel.triggerTypeSpinner"
-        android:layout_width="80dp"
+        android:layout_width="93dp"
         android:layout_height="fill_parent"
         android:layout_alignBottom="@+id/triggerPanel.secondaryDescription"
         android:layout_alignParentLeft="true"
@@ -21,13 +21,13 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginLeft="18dp"
+        android:layout_marginLeft="10dp"
         android:layout_toLeftOf="@+id/triggerPanel.locationTypeImage"
         android:layout_toRightOf="@+id/triggerPanel.triggerTypeSpinner"
         android:ellipsize="end"
         android:singleLine="true"
         android:text="@string/default_text"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
         android:id="@+id/triggerPanel.secondaryDescription"

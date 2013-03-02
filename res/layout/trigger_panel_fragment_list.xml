@@ -7,6 +7,7 @@
     android:padding="@dimen/margin_size"
     android:paddingBottom="10dp" >
 
+    <!-- Old version, with click on textview to change -->
     <TextView
         android:id="@+id/triggerPanel.triggerTypeTextSelector"
         style="@style/TextViewSelectorStyle"

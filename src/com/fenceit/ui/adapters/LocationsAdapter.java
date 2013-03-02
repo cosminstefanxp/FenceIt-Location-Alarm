@@ -9,6 +9,7 @@ package com.fenceit.ui.adapters;
 import java.util.List;
 
 import android.app.Activity;
+import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -31,8 +32,7 @@ public class LocationsAdapter extends BaseAdapter {
 	private List<AlarmLocation> locations;
 
 	/**
-	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for
-	 * quick access.
+	 * The Nested Static class ViewHolder, that contains references to the fields of a View, for quick access.
 	 */
 	private static class ViewHolder {
 
@@ -60,9 +60,11 @@ public class LocationsAdapter extends BaseAdapter {
 		this.locations = locations;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup) */
+	 * @see android.widget.ArrayAdapter#getView(int, android.view.View, android.view.ViewGroup)
+	 */
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
 		// Try to us a converted view
@@ -88,7 +90,7 @@ public class LocationsAdapter extends BaseAdapter {
 
 		// Populate the view
 		AlarmLocation location = locations.get(position);
-		holder.nameTextV.setText(location.getName());
+		holder.nameTextV.setText(location.getDisplayName(context));
 		holder.mainDescriptionTextV.setText(location.getDetailedDescription());
 		holder.typeDescriptionTextV.setText(location.getTypeDescription() + " Location");
 		holder.typeImage.setImageResource(location.getTypeImageResource());

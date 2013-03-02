@@ -10,6 +10,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentLeft="true"
         android:layout_alignParentTop="true"
+        android:layout_alignBottom="@+id/locationPanel.descriptionText"
+        android:layout_gravity="center"
         android:layout_margin="6dp"
         android:padding="10dp"
         android:src="@android:drawable/ic_menu_compass" />
@@ -21,7 +23,7 @@
         android:layout_alignParentTop="true"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/locationPanel.typeImage"
-        android:text="Location Name"
+        android:text="@string/default_text"
         android:textAppearance="?android:attr/textAppearanceLarge" />
 
     <TextView
@@ -30,7 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/locationPanel.nameText"
         android:layout_below="@+id/locationPanel.nameText"
-        android:text="LocationType"
+        android:text="@string/default_text"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
@@ -39,7 +41,9 @@
         android:layout_height="wrap_content"
         android:layout_alignLeft="@+id/locationPanel.typeText"
         android:layout_below="@+id/locationPanel.typeText"
-        android:text="Location Description"
+        android:ellipsize="end"
+        android:singleLine="true"
+        android:text="@string/default_text"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>

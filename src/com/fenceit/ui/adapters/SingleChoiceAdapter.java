@@ -6,7 +6,12 @@
  */
 package com.fenceit.ui.adapters;
 
+import org.apache.log4j.Logger;
+
+import com.fenceit.R;
+
 import android.content.Context;
+import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
@@ -103,10 +108,20 @@ public class SingleChoiceAdapter<T> extends BaseAdapter {
 
 	@Override
 	public View getView(int position, View convertView, ViewGroup parent) {
-		if (convertView == null) {
-			convertView = new TextView(context);
-		}
-		((TextView) convertView).setText(names[position]);
-		return convertView;
+		Logger.getRootLogger().info("Normal view");
+		TextView textView = (TextView) View.inflate(context, android.R.layout.simple_spinner_item, null);
+		textView.setText(names[position]);
+		return textView;
+	}
+
+	@Override
+	public View getDropDownView(int position, View convertView, ViewGroup parent) {
+		Logger.getRootLogger().info("Dropdown view");
+		TextView textView = (TextView) View.inflate(context, android.R.layout.simple_spinner_dropdown_item,
+				null);
+		int padTop = context.getResources().getDimensionPixelSize(R.dimen.spinner_padding);
+		textView.setPadding(padTop, padTop, padTop, padTop);
+		textView.setText(names[position]);
+		return textView;
 	}
 }

@@ -22,4 +22,5 @@
     <dimen name="border_size">1px</dimen>
     <dimen name="border_size_neg">-2px</dimen>
     <dimen name="margin_size">5dp</dimen>
+    <dimen name="spinner_padding">10dp</dimen>
 </resources>
