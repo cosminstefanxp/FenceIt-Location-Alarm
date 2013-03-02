@@ -9,7 +9,6 @@ package com.fenceit.ui.adapters;
 import java.util.List;
 
 import android.app.Activity;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
