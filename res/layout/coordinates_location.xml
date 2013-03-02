@@ -39,7 +39,7 @@
                     android:layout_height="wrap_content"
                     android:background="@drawable/title_button"
                     android:contentDescription="@string/general_refresh"
-                    android:src="@android:drawable/ic_popup_sync" />
+                    android:src="@drawable/ic_refresh" />
             </FrameLayout>
         </RelativeLayout>
 
