@@ -27,19 +27,21 @@
             android:layout_height="wrap_content"
             android:text="@string/alarm_set_name_description"
             android:textAppearance="?android:attr/textAppearanceSmall" />
-
     </LinearLayout>
 
     <FrameLayout
         android:id="@+id/alarm.triggersFragmentContainer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:measureAllChildren="true"
+        android:minHeight="120dp" />
 
     <FrameLayout
         android:id="@+id/alarm.actionsFragmentContainer"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_weight="1" />
+        android:layout_weight="1"
+        android:minHeight="120dp" />
 
 </LinearLayout>

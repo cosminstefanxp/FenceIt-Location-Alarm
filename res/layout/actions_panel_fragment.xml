@@ -34,7 +34,7 @@
         android:id="@+id/actionsPanel.noActionsText"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="3dp"
+        android:padding="6dp"
         android:text="No actions yet."
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:visibility="gone" />

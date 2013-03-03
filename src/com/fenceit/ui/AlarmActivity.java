@@ -13,6 +13,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
@@ -20,7 +21,6 @@ import com.fenceit.db.DatabaseManager;
 import com.fenceit.service.BackgroundService;
 import com.fenceit.ui.ActionsFragment.ActionsFragmentContainer;
 import com.fenceit.ui.TriggersFragment.TriggersFragmentContainer;
-import com.fenceit.ui.helpers.LoseFocusOnEditorActionListener;
 
 /**
  * The Class AlarmActivity showing the screen for editing an Alarm.
@@ -33,9 +33,6 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 
 	/** The alarm. */
 	private Alarm alarm;
-
-	/** The new alarm. */
-	private boolean newAlarm = false;
 
 	/** The data access object. */
 	private DefaultDAO<Alarm> dao = null;
@@ -79,10 +76,23 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		}
 
 		// Add OnClickListeners
-		((TextView) findViewById(R.id.alarm_nameText))
-				.setOnEditorActionListener(new LoseFocusOnEditorActionListener());
+		// ((TextView) findViewById(R.id.alarm_nameText))
+		// .setOnEditorActionListener(new LoseFocusOnEditorActionListener());
 
 		refreshActivity();
+	}
+
+	@Override
+	protected void onPause() {
+		super.onPause();
+		// If the name was changed, save it
+		String newName = ((TextView) findViewById(R.id.alarm_nameText)).getText().toString();
+		if (!newName.equals(alarm.getName())) {
+			alarm.setName(newName);
+			if (storeAlarm(false) == false)
+				Toast.makeText(this, "Alarm not updated due to invalid name.", Toast.LENGTH_LONG).show();
+		}
+
 	}
 
 	/**
@@ -114,8 +124,7 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		} else {
 			log.info("Creating new alarm...");
 			alarm = new Alarm();
-			newAlarm = true;
-			storeAlarm();
+			storeAlarm(true);
 		}
 	}
 
@@ -130,7 +139,7 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 	 * 
 	 * @return true, if successful
 	 */
-	private boolean storeAlarm() {
+	private boolean storeAlarm(boolean newAlarm) {
 		if (alarm == null) {
 			log.error("No alarm to store in database.");
 			return false;
@@ -151,7 +160,8 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		}
 
 		// Save the alarm to the database
-		log.info("Saving alarm in database...");
+		if (log.isDebugEnabled())
+			log.debug("Saving alarm in database: " + alarm);
 		dao.open();
 		if (newAlarm) {
 			long id = dao.insert(alarm, true);

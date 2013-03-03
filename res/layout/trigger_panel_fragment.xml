@@ -34,7 +34,7 @@
         android:id="@+id/triggerPanel.noTrigggersText"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:padding="3dp"
+        android:padding="6dp"
         android:text="No triggers yet."
         android:textAppearance="?android:attr/textAppearanceSmall"
         android:visibility="gone" />
@@ -47,6 +47,7 @@
         android:padding="1dp"
         android:scrollbarStyle="insideOverlay"
         android:scrollbars="vertical"
+        android:minHeight="120dp"
         tools:listitem="@layout/trigger_panel_fragment_list" >
     </ListView>
 
