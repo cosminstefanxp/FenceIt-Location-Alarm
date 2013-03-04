@@ -107,6 +107,7 @@ public class TriggersFragment extends SherlockFragment implements OnClickListene
 					BasicTrigger.class, BasicTrigger.tableName);
 
 		// Get the triggers
+		log.info(getArguments());
 		fetchTriggers(getArguments().getLong("alarmID"));
 	}
 
