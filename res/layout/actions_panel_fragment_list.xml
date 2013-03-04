@@ -11,7 +11,10 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="7dp"
+        android:layout_alignBottom="@+id/actionsPanel.actionsListSecDesc"
+        android:layout_alignTop="@+id/actionsPanel.actionsListMainDesc"
         android:padding="7dp"
+        android:gravity="center"
         android:src="@android:drawable/ic_menu_view" />
 
     <TextView
@@ -19,7 +22,6 @@
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
-        android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/actionsPanel.actionsListTypeImage"
         android:ellipsize="end"
         android:singleLine="true"

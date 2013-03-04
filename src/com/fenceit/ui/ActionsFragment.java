@@ -28,6 +28,7 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 
 import com.actionbarsherlock.app.SherlockFragment;
 import com.actionbarsherlock.view.ActionMode;
@@ -40,8 +41,7 @@ import com.fenceit.ui.adapters.ActionsAdapter;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 import com.fenceit.ui.helpers.EditItemActionMode;
 
-public class ActionsFragment extends SherlockFragment implements OnItemClickListener, OnClickListener,
-		OnItemLongClickListener {
+public class ActionsFragment extends SherlockFragment implements OnItemClickListener, OnItemLongClickListener {
 
 	/** The log. */
 	private Logger log = Logger.getLogger(ActionsFragment.class);
@@ -104,15 +104,16 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.actions_panel_fragment, container, false);
 
-		// Add OnClickListeners
-		view.findViewById(R.id.actionsPanel_addActionButton).setOnClickListener(this);
-
-		// Set up actions list view and adapter
+		// Set up actions list view
 		ListView actionsLV = (ListView) view.findViewById(R.id.actionsPanel_actionsListView);
+		View header = getSherlockActivity().getLayoutInflater().inflate(R.layout.helper_list_add_item, null);
+		((TextView) header.findViewById(R.id.textView)).setText(getString(R.string.action_add));
+		actionsLV.addHeaderView(header);
+
+		// Set up actions adapter
 		actionsLV.setAdapter(actionsAdapter);
 		actionsLV.setOnItemClickListener(this);
 		actionsLV.setOnItemLongClickListener(this);
-		actionsLV.setEmptyView(view.findViewById(R.id.actionsPanel_noActionsText));
 
 		// Refresh the activity
 		return view;
@@ -131,8 +132,13 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (parent.getId() == R.id.actionsPanel_actionsListView) {
-			log.debug("Editing an existing action with id: " + id);
-			startActivityForEditAction(actions.get(position));
+			if (view.getId() == R.id.list_add_item) {
+				DialogFragment dialog = new ActionTypeSelectorDialogFragment();
+				dialog.show(getActivity().getSupportFragmentManager(), DIALOG_NEW_ACTION);
+			} else {
+				log.debug("Editing an existing action with id: " + id);
+				startActivityForEditAction(actions.get(position));
+			}
 		}
 	}
 
@@ -147,14 +153,6 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 		editActionActivityIntent.putExtra("id", action.getId());
 		startActivityForResult(editActionActivityIntent, REQ_CODE_EDIT_ACTION);
 
-	}
-
-	@Override
-	public void onClick(View v) {
-		if (v.getId() == R.id.actionsPanel_addActionButton) {
-			DialogFragment dialog = new ActionTypeSelectorDialogFragment();
-			dialog.show(getActivity().getSupportFragmentManager(), DIALOG_NEW_ACTION);
-		}
 	}
 
 	/**

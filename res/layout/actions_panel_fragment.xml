@@ -5,40 +5,6 @@
     android:layout_height="match_parent"
     android:orientation="vertical" >
 
-    <RelativeLayout
-        style="@style/SectionHeaderSmall"
-        android:layout_width="fill_parent"
-        android:layout_height="wrap_content"
-        android:baselineAligned="true" >
-
-        <ImageButton
-            android:id="@+id/actionsPanel.addActionButton"
-            android:layout_width="48dp"
-            android:layout_height="48dp"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentTop="true"
-            android:contentDescription="@string/action_add"
-            android:src="@drawable/ic_new" />
-
-        <TextView
-            style="@style/SectionHeaderTitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="true"
-            android:layout_centerVertical="true"
-            android:text="@string/actions"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
-    </RelativeLayout>
-
-    <TextView
-        android:id="@+id/actionsPanel.noActionsText"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent"
-        android:padding="6dp"
-        android:text="No actions yet."
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:visibility="gone" />
-
     <ListView
         android:id="@+id/actionsPanel.actionsListView"
         android:layout_width="fill_parent"

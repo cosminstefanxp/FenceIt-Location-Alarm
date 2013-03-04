@@ -22,12 +22,12 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragment;
@@ -48,7 +48,7 @@ import com.fenceit.ui.helpers.EditItemActionMode;
  * The Fragment used for displaying and editing the {@link BasicTrigger Triggers} associated with an
  * {@link Alarm}.
  */
-public class TriggersFragment extends SherlockFragment implements OnClickListener, OnItemClickListener,
+public class TriggersFragment extends SherlockFragment implements OnItemClickListener,
 		OnItemLongClickListener {
 
 	/** The Constant log. */
@@ -116,30 +116,19 @@ public class TriggersFragment extends SherlockFragment implements OnClickListene
 		// Inflate the layout for this fragment
 		View view = inflater.inflate(R.layout.trigger_panel_fragment, container, false);
 
-		// Add OnClickListeners
-		view.findViewById(R.id.triggerPanel_addTriggerButton).setOnClickListener(this);
-
-		// Set up triggers list view and adapter
-		triggersAdapter = new TriggersAdapter(getActivity(), triggers, this);
+		// Set up triggers list view
 		ListView triggersLV = (ListView) view.findViewById(R.id.triggerPanel_triggersListView);
+		View header = getSherlockActivity().getLayoutInflater().inflate(R.layout.helper_list_add_item, null);
+		((TextView) header.findViewById(R.id.textView)).setText(getString(R.string.trigger_add));
+		triggersLV.addHeaderView(header);
+
+		// Set up adapter
+		triggersAdapter = new TriggersAdapter(getActivity(), triggers, this);
 		triggersLV.setAdapter(triggersAdapter);
-		triggersLV.setEmptyView(view.findViewById(R.id.triggerPanel_noTrigggersText));
 		triggersLV.setOnItemClickListener(this);
 		triggersLV.setOnItemLongClickListener(this);
 
 		return view;
-	}
-
-	@Override
-	public void onClick(View v) {
-		switch (v.getId()) {
-		case R.id.triggerPanel_addTriggerButton:
-			DialogFragment dialog = new LocationTypeSelectorDialogFragment();
-			dialog.show(getActivity().getSupportFragmentManager(), DIALOG_NEW_LOCATION);
-			break;
-		default:
-			break;
-		}
 	}
 
 	/**
@@ -202,8 +191,14 @@ public class TriggersFragment extends SherlockFragment implements OnClickListene
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 		if (parent.getId() == R.id.triggerPanel_triggersListView) {
-			log.debug("Editing an existing location for trigger with id: " + id);
-			startActivityForEditLocation(triggers.get(position).getLocation());
+			if (view.getId() == R.id.list_add_item) {
+				DialogFragment dialog = new LocationTypeSelectorDialogFragment();
+				dialog.show(getActivity().getSupportFragmentManager(), DIALOG_NEW_LOCATION);
+			} else {
+
+				log.debug("Editing an existing location for trigger with id: " + id);
+				startActivityForEditLocation(triggers.get(position).getLocation());
+			}
 		}
 	}
 
