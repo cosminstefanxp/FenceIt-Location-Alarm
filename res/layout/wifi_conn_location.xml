@@ -2,7 +2,8 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:isScrollContainer="true" >
+    android:isScrollContainer="true"
+    android:padding="@dimen/activity_padding" >
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -15,29 +16,25 @@
             android:layout_height="wrap_content" >
 
             <TextView
-                android:id="@+id/TextView1"
+                style="@style/SectionHeaderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
                 android:layout_alignParentLeft="true"
-                android:layout_centerVertical="true"
-                android:text="@string/location_connected_wifi_title"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:text="@string/location_connected_wifi_title" />
 
             <ImageButton
                 android:id="@+id/wificonn.refreshButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
+                style="@style/LocationRefreshButton"
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true"
-                android:background="@drawable/title_button"
-                android:contentDescription="@string/general_refresh"
-                android:src="@drawable/ic_refresh" />
+                android:contentDescription="@string/general_refresh" />
         </RelativeLayout>
 
         <RelativeLayout
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:paddingLeft="@dimen/margin_size" >
+            android:paddingLeft="@dimen/inner_padding" >
 
             <TextView
                 android:id="@+id/wificonn.ssidLabel"
@@ -58,20 +55,11 @@
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
-                android:id="@+id/wificonn.macLabel"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignParentLeft="true"
-                android:layout_below="@+id/wificonn.bssidLabel"
-                android:text="@string/location_connected_wifi_mac"
-                android:textAppearance="?android:attr/textAppearanceMedium" />
-
-            <TextView
                 android:id="@+id/wificonn.statusLabel"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
-                android:layout_below="@+id/wificonn.macLabel"
+                android:layout_below="@+id/wificonn.bssidLabel"
                 android:text="@string/location_connected_wifi_status"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -93,28 +81,19 @@
                 android:text="@string/default_text" />
 
             <TextView
-                android:id="@+id/wificonn.macText"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_alignBaseline="@+id/wificonn.macLabel"
-                android:layout_alignLeft="@+id/wificonn.bssidText"
-                android:text="@string/default_text" />
-
-            <TextView
                 android:id="@+id/wificonn.statusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignBaseline="@+id/wificonn.statusLabel"
-                android:layout_alignLeft="@+id/wificonn.macText"
+                android:layout_alignLeft="@+id/wificonn.ssidText"
                 android:text="@string/default_text" />
         </RelativeLayout>
 
         <TextView
-            style="@style/SectionHeader"
+            style="@style/SectionHeaderText.SingleView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/location_settings"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="@string/location_settings" />
 
         <LinearLayout
             android:id="@+id/wificonn.matchBssidSection"

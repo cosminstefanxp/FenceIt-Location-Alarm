@@ -45,8 +45,8 @@ import com.fenceit.ui.adapters.TriggersAdapter;
 import com.fenceit.ui.helpers.EditItemActionMode;
 
 /**
- * The Fragment used for displaying and editing the {@link BasicTrigger Triggers} associated with an
- * {@link Alarm}.
+ * The Fragment used for displaying and editing the {@link BasicTrigger
+ * Triggers} associated with an {@link Alarm}.
  */
 public class TriggersFragment extends SherlockFragment implements OnItemClickListener,
 		OnItemLongClickListener {
@@ -118,7 +118,8 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 
 		// Set up triggers list view
 		ListView triggersLV = (ListView) view.findViewById(R.id.triggerPanel_triggersListView);
-		View header = getSherlockActivity().getLayoutInflater().inflate(R.layout.helper_list_add_item, null);
+		View header = getSherlockActivity().getLayoutInflater().inflate(
+				R.layout.helper_list_add_item, null);
 		((TextView) header.findViewById(R.id.textView)).setText(getString(R.string.trigger_add));
 		triggersLV.addHeaderView(header);
 
@@ -138,9 +139,10 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	 */
 	private void fetchTriggers(long alarmID) {
 		// Get the associated triggers
-		this.triggers = DatabaseAccessor.buildFullTriggers(getActivity(), DefaultDAO.REFERENCE_PREPENDER
-				+ "alarm=" + alarmID);
-		// If the returned list was empty, it's a Collections.emptyList() immutable list, so we should create
+		this.triggers = DatabaseAccessor.buildFullTriggers(getActivity(),
+				DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarmID);
+		// If the returned list was empty, it's a Collections.emptyList()
+		// immutable list, so we should create
 		// a new one
 		if (this.triggers.isEmpty())
 			this.triggers = new ArrayList<BasicTrigger>();
@@ -180,7 +182,8 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 			daoTriggers.update(trigger, trigger.getId());
 		daoTriggers.close();
 
-		// Notify the Background service that a trigger was modified, so a rescheduling might be
+		// Notify the Background service that a trigger was modified, so a
+		// rescheduling might be
 		// necessary
 		AlarmLocationBroker.startServiceFromActivity(getActivity(), trigger.getLocationType());
 
@@ -197,7 +200,7 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 			} else {
 
 				log.debug("Editing an existing location for trigger with id: " + id);
-				startActivityForEditLocation(triggers.get(position).getLocation());
+				startActivityForEditLocation(triggers.get(position - 1).getLocation());
 			}
 		}
 	}
@@ -209,8 +212,8 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	 */
 	private void startActivityForEditLocation(AlarmLocation location) {
 		// Start the activity
-		Intent intent = AlarmLocationBroker.getActivityIntent(this.getActivity().getApplicationContext(),
-				location.getType());
+		Intent intent = AlarmLocationBroker.getActivityIntent(this.getActivity()
+				.getApplicationContext(), location.getType());
 		intent.putExtra("id", location.getId());
 		startActivityForResult(intent, REQ_CODE_EDIT_LOCATION);
 	}
@@ -252,12 +255,14 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see android.support.v4.app.Fragment#onActivityResult(int, int, android.content.Intent)
+	 * @see android.support.v4.app.Fragment#onActivityResult(int, int,
+	 * android.content.Intent)
 	 */
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
+		log.debug("Activity Result received for request " + requestCode + " with result code: "
+				+ resultCode);
 
 		// If a Location was added or selected
 		if (resultCode == Activity.RESULT_OK
@@ -286,8 +291,8 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	}
 
 	/**
-	 * The Location Type Selector DialogFragment used for selecting a the type of location used when creating
-	 * a new trigger.
+	 * The Location Type Selector DialogFragment used for selecting a the type
+	 * of location used when creating a new trigger.
 	 */
 	@SuppressLint("ValidFragment")
 	public class LocationTypeSelectorDialogFragment extends DialogFragment {
@@ -295,7 +300,9 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 		/*
 		 * (non-Javadoc)
 		 * 
-		 * @see android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle)
+		 * @see
+		 * android.support.v4.app.DialogFragment#onCreateDialog(android.os.Bundle
+		 * )
 		 */
 		@Override
 		public Dialog onCreateDialog(Bundle savedInstanceState) {
@@ -323,8 +330,8 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	}
 
 	/**
-	 * The Interface TriggersFragmentContainer that has to be implemented by container activities of the
-	 * {@link TriggersFragment}.
+	 * The Interface TriggersFragmentContainer that has to be implemented by
+	 * container activities of the {@link TriggersFragment}.
 	 */
 	public interface TriggersFragmentContainer {
 
@@ -341,7 +348,8 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	 * For long click on a Trigger item in the list.
 	 */
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
+	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position,
+			final long id) {
 		// Start an action mode with options regarding the Alarm
 		getSherlockActivity().startActionMode(new EditItemActionMode() {
 			@Override

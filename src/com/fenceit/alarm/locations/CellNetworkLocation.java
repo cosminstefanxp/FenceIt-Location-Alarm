@@ -7,6 +7,7 @@
 package com.fenceit.alarm.locations;
 
 import java.io.Serializable;
+import java.util.Locale;
 
 import org.androwrapee.db.DatabaseClass;
 import org.androwrapee.db.DatabaseField;
@@ -16,8 +17,8 @@ import com.fenceit.provider.CellContextData;
 import com.fenceit.provider.ContextData;
 
 /**
- * The Class CellLocation is an implementation of an AlarmLocation based on the Cell Tower to which the device
- * is currently connected.
+ * The Class CellLocation is an implementation of an AlarmLocation based on the
+ * Cell Tower to which the device is currently connected.
  */
 @DatabaseClass
 public class CellNetworkLocation extends AbstractAlarmLocation implements Serializable {
@@ -92,7 +93,7 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 
 	@Override
 	public String getDetailedDescription() {
-		return operatorName + " " + cellId;
+		return String.format(Locale.ENGLISH, "%s - %d/%d", operatorName, cellId, lac);
 	}
 
 	@Override
@@ -202,7 +203,8 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 
 	@Override
 	public String toString() {
-		return "CellLocation [cellId=" + cellId + ", mnc=" + mnc + ", mcc=" + mcc + ", lac=" + lac + "]";
+		return "CellLocation [cellId=" + cellId + ", mnc=" + mnc + ", mcc=" + mcc + ", lac=" + lac
+				+ "]";
 	}
 
 	@Override

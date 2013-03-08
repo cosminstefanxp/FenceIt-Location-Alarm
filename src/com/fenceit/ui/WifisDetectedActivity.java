@@ -118,7 +118,8 @@ public class WifisDetectedActivity extends AbstractLocationActivity<WifisDetecte
 				dialog.show(this.getSupportFragmentManager(), DIALOG_ENABLE_WIFI);
 				return;
 			}
-			// Prepare broadcast receiver for broadcasts regarding finished scans
+			// Prepare broadcast receiver for broadcasts regarding finished
+			// scans
 			if (receiver == null) {
 				receiver = new WifiScanReceiver();
 				IntentFilter filter = new IntentFilter();
@@ -135,7 +136,8 @@ public class WifisDetectedActivity extends AbstractLocationActivity<WifisDetecte
 	}
 
 	/**
-	 * Gather context info from the environment and fill in the location and the views.
+	 * Gather context info from the environment and fill in the location and the
+	 * views.
 	 */
 	private void gatherContextInfo() {
 
@@ -157,7 +159,8 @@ public class WifisDetectedActivity extends AbstractLocationActivity<WifisDetecte
 	}
 
 	/**
-	 * The Class WifiScanReceiver that is the BroadcastReceiver for the Wifi Scan Finished.
+	 * The Class WifiScanReceiver that is the BroadcastReceiver for the Wifi
+	 * Scan Finished.
 	 */
 	private class WifiScanReceiver extends BroadcastReceiver {
 

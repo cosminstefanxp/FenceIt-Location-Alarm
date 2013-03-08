@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent" >
+    android:layout_height="fill_parent"
+    android:padding="@dimen/activity_padding" >
 
     <LinearLayout
         android:layout_width="fill_parent"
@@ -14,12 +15,12 @@
             android:layout_height="wrap_content" >
 
             <TextView
+                style="@style/SectionHeaderText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_centerVertical="true"
-                android:text="@string/location_geo_title"
-                android:textAppearance="?android:attr/textAppearanceLarge" />
+                android:text="@string/location_geo_title" />
 
             <FrameLayout
                 android:layout_width="wrap_content"
@@ -27,19 +28,16 @@
                 android:layout_alignParentRight="true"
                 android:layout_centerVertical="true" >
 
-                <ProgressBar
-                    android:id="@+id/coordinates.progressBar"
-                    android:layout_width="34dp"
-                    android:layout_height="34dp"
-                    android:visibility="invisible" />
-
                 <ImageButton
                     android:id="@+id/coordinates.refreshButton"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/title_button"
-                    android:contentDescription="@string/general_refresh"
-                    android:src="@drawable/ic_refresh" />
+                    style="@style/LocationRefreshButton"
+                    android:contentDescription="@string/general_refresh" />
+
+                <ProgressBar
+                    android:id="@+id/coordinates.progressBar"
+                    android:layout_width="52dp"
+                    android:layout_height="48dp"
+                    android:visibility="invisible" />
             </FrameLayout>
         </RelativeLayout>
 
@@ -127,11 +125,10 @@
         </RelativeLayout>
 
         <TextView
-            style="@style/SectionHeader"
+            style="@style/SectionHeaderText.SingleView"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
-            android:text="@string/location_settings"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="@string/location_settings" />
 
         <LinearLayout
             android:id="@+id/coordinates.radiusSection"

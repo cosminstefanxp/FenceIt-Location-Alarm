@@ -54,6 +54,7 @@
         <item>Geographical Position</item>
         <item>Existing favorite location</item>
     </string-array>
+    <string name="location_type_cell">Cellular Network Location</string>
 
     <string name="dialog_enable_wifi_title">Wi-Fi Interface not enabled</string>
     <string name="dialog_enable_cell_title">Mobile Network Interface not enabled</string>
@@ -69,7 +70,7 @@
     <string name="dialog_location_name_title">New Location Name</string>
     <string name="undone_success">Changes undone!</string>
     <string name="location_save_incomplete_fields">Not all fields are completed correctly. Please check all of them.</string>
-    <string name="location_connected_wifi_title">Connected Wifi</string>
+    <string name="location_connected_wifi_title">Connected Wi-Fi network</string>
     <string name="general_refresh">Click to gather new info</string>
     <string name="location_connected_wifi_bssid">BSSID:</string>
     <string name="location_connected_wifi_ssid">Name/SSID:</string>
@@ -78,15 +79,13 @@
     <string name="location_settings">Settings</string>
     <string name="default_text">Default text</string>
     <string name="location_connected_wifi_match_section">Set how the locations are compared.</string>
-    <string name="location_detected_wifis_title">Detected Wifi Networks</string>
+    <string name="location_detected_wifis_title">Detected Wi-Fi Networks</string>
     <string name="location_detected_wifis_bssid">BSSID:</string>
     <string name="location_detected_wifis_ssid">Name/SSID:</string>
     <string name="dialog_enable_cell_message">The device does not seem to be connected to any mobile phone networks. Would you like to adjust the settings now?</string>
-    <string name="location_cell_title">Cell Site Info</string>
-    <string name="location_cell_cellid">CellID:</string>
-    <string name="location_cell_lac">Lac:</string>
-    <string name="location_cell_mcc">Mcc</string>
-    <string name="location_cell_mnc">Mnc:</string>
+    <string name="location_cell_title">Cellular network info</string>
+    <string name="location_cell_operator">Operator:</string>
+    <string name="location_cell_cellId">Cellular ID:</string>
     <string name="error_acquiring_data">Error acquiring data</string>
     <string name="location_cell_error_message">An error has occurred while acquiring data from the mobile network interface. Please check that your device is properly connected to a mobile network and try again.</string>
     <string name="location_geo_title">Geo Coordinates</string>

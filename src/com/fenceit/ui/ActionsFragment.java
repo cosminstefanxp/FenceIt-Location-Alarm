@@ -22,7 +22,6 @@ import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.View.OnClickListener;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
@@ -137,7 +136,7 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 				dialog.show(getActivity().getSupportFragmentManager(), DIALOG_NEW_ACTION);
 			} else {
 				log.debug("Editing an existing action with id: " + id);
-				startActivityForEditAction(actions.get(position));
+				startActivityForEditAction(actions.get(position-1));
 			}
 		}
 	}

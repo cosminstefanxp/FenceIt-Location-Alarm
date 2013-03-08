@@ -6,6 +6,8 @@
  */
 package com.fenceit.ui;
 
+import java.util.Locale;
+
 import org.androwrapee.db.DefaultDAO;
 
 import android.annotation.SuppressLint;
@@ -76,7 +78,8 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 	}
 
 	/**
-	 * Gather context info from the environment and fill in the location and the views.
+	 * Gather context info from the environment and fill in the location and the
+	 * views.
 	 */
 	private void gatherContextInfo() {
 		// Check for availability;
@@ -90,8 +93,8 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 		log.info("Cell Network info: " + cellInfo);
 		if (cellInfo == null) {
 			ErrorDialogFragment.newInstance(getString(R.string.error_acquiring_data),
-					getString(R.string.location_cell_error_message)).show(getSupportFragmentManager(),
-					DIALOG_ERROR);
+					getString(R.string.location_cell_error_message)).show(
+					getSupportFragmentManager(), DIALOG_ERROR);
 			return;
 		}
 		// Update the location
@@ -109,8 +112,8 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 	protected DefaultDAO<CellNetworkLocation> getDAO() {
 		// Prepare database connection
 		if (dao == null)
-			dao = DatabaseManager.getDAOInstance(getApplicationContext(), CellNetworkLocation.class,
-					CellNetworkLocation.tableName);
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(),
+					CellNetworkLocation.class, CellNetworkLocation.tableName);
 		return dao;
 	}
 
@@ -123,15 +126,15 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 	protected void refreshLocationView() {
 		// Location Section
 		if (location.isComplete()) {
-			((TextView) findViewById(R.id.cell_cellIdText)).setText(Integer.toString(location.getCellId()));
-			((TextView) findViewById(R.id.cell_lacText)).setText(Integer.toString(location.getLac()));
-			((TextView) findViewById(R.id.cell_mncText)).setText(Integer.toString(location.getMnc()));
-			((TextView) findViewById(R.id.cell_mccText)).setText(Integer.toString(location.getMcc()));
+			((TextView) findViewById(R.id.cell_operatorText))
+					.setText(String.format(Locale.ENGLISH, "%s (%d/%d)",
+							location.getOperatorName(), location.getMnc(), location.getMcc()));
+			((TextView) findViewById(R.id.cell_cellIdText)).setText(location.getCellId() + "/"
+					+ location.getLac());
 		} else {
-			((TextView) findViewById(R.id.cell_cellIdText)).setText(R.string.location_click_refresh);
-			((TextView) findViewById(R.id.cell_lacText)).setText("-");
-			((TextView) findViewById(R.id.cell_mncText)).setText("-");
-			((TextView) findViewById(R.id.cell_mccText)).setText("-");
+			((TextView) findViewById(R.id.cell_operatorText))
+					.setText(R.string.location_click_refresh);
+			((TextView) findViewById(R.id.cell_cellIdText)).setText("-");
 		}
 
 	}
@@ -162,7 +165,8 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 						public void onClick(DialogInterface dialog, int id) {
 							startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
 						}
-					}).setNegativeButton(R.string.general_no, new DialogInterface.OnClickListener() {
+					})
+					.setNegativeButton(R.string.general_no, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							dialog.cancel();
 						}

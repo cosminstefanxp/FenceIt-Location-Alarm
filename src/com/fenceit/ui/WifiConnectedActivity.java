@@ -28,7 +28,8 @@ import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.WifiConnectedDataProvider;
 
 /**
- * The Class WifiConnectedActivity for setting up a {@link WifiConnectedLocation}.
+ * The Class WifiConnectedActivity for setting up a
+ * {@link WifiConnectedLocation}.
  */
 public class WifiConnectedActivity extends AbstractLocationActivity<WifiConnectedLocation> implements
 		OnClickListener {
@@ -77,7 +78,8 @@ public class WifiConnectedActivity extends AbstractLocationActivity<WifiConnecte
 	}
 
 	/**
-	 * Gather context info from the environment and fill in the location and the views.
+	 * Gather context info from the environment and fill in the location and the
+	 * views.
 	 */
 	private void gatherContextInfo() {
 		// Check for availability;
@@ -92,7 +94,6 @@ public class WifiConnectedActivity extends AbstractLocationActivity<WifiConnecte
 		// Update the view
 		((TextView) findViewById(R.id.wificonn_bssidText)).setText(wifiInfo.getBSSID());
 		((TextView) findViewById(R.id.wificonn_ssidText)).setText(wifiInfo.getSSID());
-		((TextView) findViewById(R.id.wificonn_macText)).setText(wifiInfo.getMacAddress());
 		((TextView) findViewById(R.id.wificonn_statusText)).setText(wifiInfo.getSupplicantState().toString());
 		// Update the location
 		location.setBssid(wifiInfo.getBSSID());
@@ -123,7 +124,6 @@ public class WifiConnectedActivity extends AbstractLocationActivity<WifiConnecte
 			((TextView) findViewById(R.id.wificonn_bssidText)).setText(R.string.location_click_refresh);
 			((TextView) findViewById(R.id.wificonn_ssidText)).setText("-");
 		}
-		((TextView) findViewById(R.id.wificonn_macText)).setText("-");
 		((TextView) findViewById(R.id.wificonn_statusText)).setText("-");
 
 		// Settings section

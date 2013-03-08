@@ -2,7 +2,8 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:orientation="vertical"
+    android:padding="@dimen/activity_padding" >
 
     <RelativeLayout
         style="@style/SectionHeader"
@@ -17,26 +18,23 @@
 
             <ImageButton
                 android:id="@+id/wifidetec.refreshButton"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/title_button"
-                android:contentDescription="@string/location_click_refresh"
-                android:src="@drawable/ic_refresh" />
+                style="@style/LocationRefreshButton"
+                android:contentDescription="@string/general_refresh" />
 
             <ProgressBar
                 android:id="@+id/wifidetec.progressBar"
-                android:layout_width="30dp"
-                android:layout_height="30dp"
+                android:layout_width="52dp"
+                android:layout_height="48dp"
                 android:visibility="invisible" />
         </FrameLayout>
 
         <TextView
+            style="@style/SectionHeaderText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
-            android:text="@string/location_detected_wifis_title"
-            android:textAppearance="?android:attr/textAppearanceLarge" />
+            android:text="@string/location_detected_wifis_title" />
     </RelativeLayout>
 
     <ListView
@@ -52,11 +50,11 @@
     </ListView>
 
     <TextView
-        style="@style/SectionHeader"
+        style="@style/SectionHeaderText.SingleView"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:text="@string/location_settings"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
+        android:layout_marginTop="14dp"
+        android:text="@string/location_settings" />
 
     <include layout="@layout/location_common_settings" />
 

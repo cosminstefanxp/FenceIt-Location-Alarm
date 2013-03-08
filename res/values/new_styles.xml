@@ -50,4 +50,35 @@
         <item name="android:background">@drawable/spinner_background_holo_light</item>
     </style>
 
+    <style name="SectionHeader">
+        <item name="android:layout_width">fill_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginBottom">5dp</item>
+        <item name="android:background">@drawable/bottom_border</item>
+    </style>
+
+    <style name="SectionHeaderText">
+        <item name="android:padding">@dimen/inner_padding</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:textColor">@color/bright_foreground_disabled_holo_dark</item>
+    </style>
+
+    <style name="SectionHeaderText.SingleView" parent="@style/SectionHeader">
+        <item name="android:paddingLeft">@dimen/inner_padding</item>
+        <item name="android:paddingBottom">9dp</item>
+        <item name="android:textStyle">bold</item>
+        <item name="android:layout_marginTop">13dp</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:textColor">@color/bright_foreground_disabled_holo_dark</item>
+    </style>
+
+    <style name="LocationRefreshButton" parent="android:Widget.Holo.Light.ImageButton">
+        <item name="android:background">@drawable/title_button</item>
+        <item name="android:layout_width">52dp</item>
+        <item name="android:layout_height">48dp</item>
+        <item name="android:src">@drawable/ic_refresh</item>
+    </style>
+
 </resources>
