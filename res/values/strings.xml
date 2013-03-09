@@ -29,7 +29,7 @@
     <string name="trigger_add">Add a new Trigger</string>
     <string name="actions">Actions</string>
     <string name="action_add">Add a new Action</string>
-    <string name="notification_set_message">Set notification message</string>
+    <string name="notification_set_message">Touch to set a notification message</string>
     <string name="notification_no_message">&lt;No message for notification&gt;</string>
     <string name="notification_type_desc">Notification Action</string>
 
@@ -96,9 +96,10 @@
     <string name="location_geo_activation_radius">Activation radius:</string>
     <string name="action_notification_message">Notification Message</string>
     <string name="notification_action_message_hint">Set the message of this notification.</string>
-    <string name="action_ringer_mode_type">Set new Ringer Mode</string>
-    <string name="location_name_hint">Set the name of this location.</string>
-    <string name="location_favorite_hint">Save as favorite</string>
+    <string name="action_ringer_mode_type">Touch to set new Ringer Mode</string>
+    <string name="location_name_hint">Touch to set the name of this location.</string>
+    <string name="location_favorite_hint_off">Touch to save as favorite</string>
+    <string name="location_favorite_hint_on">Saved as favorite</string>
     <string name="location_favorite_noname">&lt;i&gt;Anonymous Location&lt;/i&gt;</string>
 
 </resources>

@@ -83,12 +83,12 @@ public class RingerModeAction extends AbstractAlarmAction {
 			desc = "-Not Set-";
 			break;
 		}
-		return "Set Ringer Mode to " + desc;
+		return "Set Volume Mode to " + desc;
 	}
 
 	@Override
 	public String getTypeDescription(Context context) {
-		return "Change Ringer Mode Action";
+		return "Change Volume Mode Action";
 	}
 
 	@Override

@@ -16,7 +16,6 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
-import android.text.Html;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
@@ -31,9 +30,9 @@ import com.fenceit.R;
 import com.fenceit.alarm.locations.AbstractAlarmLocation;
 
 /**
- * The Class AbstractLocationActivity is used as a base for implementing Activities for editing
- * AlarmLocations. It handles the click events on options particular to {@link AbstractAlarmLocation}, such as
- * favorite and name.
+ * The Class AbstractLocationActivity is used as a base for implementing
+ * Activities for editing AlarmLocations. It handles the click events on options
+ * particular to {@link AbstractAlarmLocation}, such as favorite and name.
  */
 public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> extends DefaultActivity {
 
@@ -43,9 +42,10 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 	private static final String DIALOG_LOCATION_NAME = "location_name";
 
 	/**
-	 * Checks if the instance of the Activity forces the location to be favorite. This is the case, for
-	 * example, when the LocationActivity was created from the LocationsPanel, in which case, not forcing it
-	 * to be favorite would be useless.
+	 * Checks if the instance of the Activity forces the location to be
+	 * favorite. This is the case, for example, when the LocationActivity was
+	 * created from the LocationsPanel, in which case, not forcing it to be
+	 * favorite would be useless.
 	 */
 	protected boolean isForcedFavorite = false;
 
@@ -173,7 +173,8 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 	}
 
 	/**
-	 * Fetches the associated location from the database, or builds a new one, if no id was provided.
+	 * Fetches the associated location from the database, or builds a new one,
+	 * if no id was provided.
 	 * 
 	 * @param locationID the location id
 	 */
@@ -237,16 +238,22 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 	}
 
 	/**
-	 * Refreshes the graphical elements corresponding to the abstract location's options (favorite, name).
+	 * Refreshes the graphical elements corresponding to the abstract location's
+	 * options (favorite, name).
 	 */
 	protected void refreshAbstractLocationView() {
 		// Change favorite location image
-		if (this.location.isFavorite())
+		if (this.location.isFavorite()) {
 			((ImageView) findViewById(R.id.location_favoriteImage))
 					.setImageResource(android.R.drawable.btn_star_big_on);
-		else
+			((TextView) findViewById(R.id.location_favoriteText))
+					.setText(getString(R.string.location_favorite_hint_on));
+		} else {
 			((ImageView) findViewById(R.id.location_favoriteImage))
 					.setImageResource(android.R.drawable.btn_star_big_off);
+			((TextView) findViewById(R.id.location_favoriteText))
+					.setText(getString(R.string.location_favorite_hint_off));
+		}
 
 		// If the location is not favorite, don't set the name
 		if (this.location.isFavorite()) {

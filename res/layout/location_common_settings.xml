@@ -20,12 +20,13 @@
             android:src="@android:drawable/btn_star_big_on" />
 
         <TextView
+            android:id="@+id/location.favoriteText"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_centerVertical="true"
             android:layout_marginLeft="14dp"
             android:layout_toRightOf="@+id/location.favoriteImage"
-            android:text="@string/location_favorite_hint"
+            android:text="@string/location_favorite_hint_on"
             android:textAppearance="?android:attr/textAppearanceMedium" />
     </RelativeLayout>
 

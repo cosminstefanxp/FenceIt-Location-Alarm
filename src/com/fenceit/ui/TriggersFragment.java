@@ -118,8 +118,7 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 
 		// Set up triggers list view
 		ListView triggersLV = (ListView) view.findViewById(R.id.triggerPanel_triggersListView);
-		View header = getSherlockActivity().getLayoutInflater().inflate(
-				R.layout.helper_list_add_item, null);
+		View header = getSherlockActivity().getLayoutInflater().inflate(R.layout.helper_list_add_item, null);
 		((TextView) header.findViewById(R.id.textView)).setText(getString(R.string.trigger_add));
 		triggersLV.addHeaderView(header);
 
@@ -139,8 +138,8 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	 */
 	private void fetchTriggers(long alarmID) {
 		// Get the associated triggers
-		this.triggers = DatabaseAccessor.buildFullTriggers(getActivity(),
-				DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarmID);
+		this.triggers = DatabaseAccessor.buildFullTriggers(getActivity(), DefaultDAO.REFERENCE_PREPENDER
+				+ "alarm=" + alarmID);
 		// If the returned list was empty, it's a Collections.emptyList()
 		// immutable list, so we should create
 		// a new one
@@ -198,7 +197,9 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 				DialogFragment dialog = new LocationTypeSelectorDialogFragment();
 				dialog.show(getActivity().getSupportFragmentManager(), DIALOG_NEW_LOCATION);
 			} else {
-
+				// Take into consideration the fact that the 'Add new trigger'
+				// has been added as header, so it shifts the position of items
+				// in the list
 				log.debug("Editing an existing location for trigger with id: " + id);
 				startActivityForEditLocation(triggers.get(position - 1).getLocation());
 			}
@@ -212,8 +213,8 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	 */
 	private void startActivityForEditLocation(AlarmLocation location) {
 		// Start the activity
-		Intent intent = AlarmLocationBroker.getActivityIntent(this.getActivity()
-				.getApplicationContext(), location.getType());
+		Intent intent = AlarmLocationBroker.getActivityIntent(this.getActivity().getApplicationContext(),
+				location.getType());
 		intent.putExtra("id", location.getId());
 		startActivityForResult(intent, REQ_CODE_EDIT_LOCATION);
 	}
@@ -261,8 +262,7 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	@Override
 	public void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
-		log.debug("Activity Result received for request " + requestCode + " with result code: "
-				+ resultCode);
+		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
 
 		// If a Location was added or selected
 		if (resultCode == Activity.RESULT_OK
@@ -348,21 +348,23 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	 * For long click on a Trigger item in the list.
 	 */
 	@Override
-	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position,
-			final long id) {
+	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
 		// Start an action mode with options regarding the Alarm
 		getSherlockActivity().startActionMode(new EditItemActionMode() {
+			// Take into consideration the fact that the 'Add new trigger'
+			// has been added as header, so it shifts the position of items
+			// in the list
 			@Override
 			protected void onEditItem(ActionMode mode) {
 				log.info("Editing trigger with id " + id + " using action mode.");
-				startActivityForEditLocation(triggers.get(position).getLocation());
+				startActivityForEditLocation(triggers.get(position - 1).getLocation());
 				mode.finish();
 			}
 
 			@Override
 			protected void onDeleteItem(ActionMode mode) {
 				log.info("Deleting trigger using action mode on " + position);
-				deleteTrigger(triggers.get(position));
+				deleteTrigger(triggers.get(position - 1));
 				refreshTriggersView();
 				mode.finish();
 			}

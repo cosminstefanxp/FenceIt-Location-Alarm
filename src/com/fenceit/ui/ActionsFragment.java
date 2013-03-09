@@ -45,15 +45,21 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 	/** The log. */
 	private Logger log = Logger.getLogger(ActionsFragment.class);
 
-	/** The Constant REQ_CODE_ADD_ACTION used as a request code when creating a new action. */
+	/**
+	 * The Constant REQ_CODE_ADD_ACTION used as a request code when creating a
+	 * new action.
+	 */
 	private static final int REQ_CODE_ADD_ACTION = 3;
 
-	/** The Constant REQ_CODE_EDIT_ACTION used as a request code when editing an action. */
+	/**
+	 * The Constant REQ_CODE_EDIT_ACTION used as a request code when editing an
+	 * action.
+	 */
 	private static final int REQ_CODE_EDIT_ACTION = 4;
 
 	/**
-	 * The Constant DIALOG_NEW_ACTION used to identify the dialog that allows the user to select the type for
-	 * a new action.
+	 * The Constant DIALOG_NEW_ACTION used to identify the dialog that allows
+	 * the user to select the type for a new action.
 	 */
 	private static final String DIALOG_NEW_ACTION = "new_action";
 
@@ -136,7 +142,7 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 				dialog.show(getActivity().getSupportFragmentManager(), DIALOG_NEW_ACTION);
 			} else {
 				log.debug("Editing an existing action with id: " + id);
-				startActivityForEditAction(actions.get(position-1));
+				startActivityForEditAction(actions.get(position - 1));
 			}
 		}
 	}
@@ -155,7 +161,8 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 	}
 
 	/**
-	 * Starts the activity to create a new action. In the new intent, the serialized alarm is added.
+	 * Starts the activity to create a new action. In the new intent, the
+	 * serialized alarm is added.
 	 * 
 	 * @param type the type of action
 	 */
@@ -196,8 +203,8 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 	}
 
 	/**
-	 * The Interface ActionsFragmentContainer that has to be implemented by container activities of the
-	 * {@link ActionsFragment}.
+	 * The Interface ActionsFragmentContainer that has to be implemented by
+	 * container activities of the {@link ActionsFragment}.
 	 */
 	public interface ActionsFragmentContainer {
 
@@ -217,17 +224,20 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 	public boolean onItemLongClick(AdapterView<?> parent, View view, final int position, final long id) {
 		// Start an action mode with options regarding the Alarm
 		getSherlockActivity().startActionMode(new EditItemActionMode() {
+			// Take into consideration the fact that the 'Add new trigger'
+			// has been added as header, so it shifts the position of items
+			// in the list
 			@Override
 			protected void onEditItem(ActionMode mode) {
 				log.info("Editing action with id " + id + " using action mode.");
-				startActivityForEditAction(actions.get(position));
+				startActivityForEditAction(actions.get(position - 1));
 				mode.finish();
 			}
 
 			@Override
 			protected void onDeleteItem(ActionMode mode) {
 				log.info("Deleting action using action mode on " + position);
-				deleteAction(actions.get(position));
+				deleteAction(actions.get(position - 1));
 				refreshActionsView();
 				mode.finish();
 			}
@@ -236,7 +246,8 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 	}
 
 	/**
-	 * The Action Type Selector DialogFragment used for selecting a the type of action to be created.
+	 * The Action Type Selector DialogFragment used for selecting a the type of
+	 * action to be created.
 	 */
 	@SuppressLint("ValidFragment")
 	public class ActionTypeSelectorDialogFragment extends DialogFragment {
