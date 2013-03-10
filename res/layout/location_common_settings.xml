@@ -2,7 +2,7 @@
  This template is added on all the layouts for Locations, as it shows the controls necessary
  for options corresponding to any AbstractAlarmLocation
 -->
-<merge xmlns:android="http://schemas.android.com/apk/res/android">
+<merge xmlns:android="http://schemas.android.com/apk/res/android" >
 
     <RelativeLayout
         android:id="@+id/location.favoriteSection"
@@ -16,7 +16,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="true"
-            android:layout_alignParentTop="true"
+            android:layout_centerVertical="true"
             android:src="@android:drawable/btn_star_big_on" />
 
         <TextView
@@ -32,11 +32,11 @@
 
     <LinearLayout
         android:id="@+id/location.nameSection"
-        style="@style/SettingItem"
+        style="@style/SettingItem.Indented"
         android:clickable="true"
         android:focusable="true"
-        android:orientation="vertical"
-        android:onClick="onClickNameSection" >
+        android:onClick="onClickNameSection"
+        android:orientation="vertical" >
 
         <TextView
             android:id="@+id/location.nameText"

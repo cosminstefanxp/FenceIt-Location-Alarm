@@ -53,7 +53,7 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 	protected T location;
 
 	/** If it's a new entity. */
-	private boolean newEntity;
+	protected boolean newEntity;
 
 	/** The original location. Used for undoing. */
 	private T originalLocation;

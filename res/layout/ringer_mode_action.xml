@@ -1,28 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:id="@+id/ringer_mode.newModeSection"
+    style="@style/SettingItem"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/ringer_mode.newModeSection"
-        style="@style/SettingItem"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical" >
+    <TextView
+        android:id="@+id/ringer_mode.modeText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/default_text"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:id="@+id/ringer_mode.modeText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="NEW MODE"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Set the target ringer mode."
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_ringer_mode_hint"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

@@ -257,8 +257,10 @@ public class BackgroundService extends Service {
 	 * @return the notification
 	 */
 	private Notification prepareOngoingNotification() {
-		Notification notification = new Notification(R.drawable.ic_logo, "FenceIt service started...",
-				System.currentTimeMillis());
+		Notification notification = new Notification();
+		// R.drawable.ic_logo, "FenceIt service started...",
+		//		System.currentTimeMillis());
+		notification.icon=R.drawable.ic_logo;
 
 		// On click, create a new FenceIt Activity. If the activity is started already, clear
 		// everything above it and bring it back

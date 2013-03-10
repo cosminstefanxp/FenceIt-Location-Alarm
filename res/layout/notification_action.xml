@@ -1,30 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:id="@+id/notification.messageSection"
+    style="@style/SettingItem"
+    android:clickable="true"
+    android:focusable="true"
     android:orientation="vertical" >
 
-    <LinearLayout
-        android:id="@+id/notification.messageSection"
-        style="@style/SettingItem"
-        android:clickable="true"
-        android:focusable="true"
-        android:orientation="vertical" >
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/action_notification_message"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/action_notification_message"
-            android:textAppearance="?android:attr/textAppearanceMedium" />
-
-        <TextView
-            android:id="@+id/notification.messageText"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:ellipsize="end"
-            android:maxLines="3"
-            android:text="@string/notification_action_message_hint"
-            android:textAppearance="?android:attr/textAppearanceSmall" />
-    </LinearLayout>
+    <TextView
+        android:id="@+id/notification.messageText"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:ellipsize="end"
+        android:maxLines="3"
+        android:text="@string/notification_action_message_hint"
+        android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </LinearLayout>

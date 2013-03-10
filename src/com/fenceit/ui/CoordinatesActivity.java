@@ -34,7 +34,8 @@ import com.fenceit.ui.picker.NumberPickerDialog;
 import com.fenceit.ui.picker.NumberPickerDialog.OnNumberSetListener;
 
 /**
- * The Class CoordinatesActivity used for setting up {@link CoordinatesLocation}.
+ * The Class CoordinatesActivity used for setting up {@link CoordinatesLocation}
+ * .
  */
 public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLocation> implements
 		OnClickListener, CoordinatesLocationDataListener {
@@ -82,6 +83,8 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 		findViewById(R.id.coordinates_radiusSection).setOnClickListener(this);
 
 		// Fill data
+		if (this.newEntity)
+			startGatheringContextInfo();
 		refreshLocationView();
 		refreshAbstractLocationView();
 	}
@@ -104,12 +107,7 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 			break;
 		case R.id.coordinates_refreshButton:
 			log.info("Refreshing details regarding the current loction of the device.");
-			if (locationProvider == null)
-				locationProvider = new CoordinatesDataProvider();
-			locationProvider.addCoordinatesLocationDataListener(this, this.getApplicationContext());
-			this.progressBar.setProgress(10);
-			this.progressBar.setVisibility(View.VISIBLE);
-			this.refreshButton.setVisibility(View.INVISIBLE);
+			startGatheringContextInfo();
 			break;
 		case R.id.coordinates_mapSection:
 			log.info("Showing map for coordinates selection.");
@@ -122,6 +120,18 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 	// TODO: Cool:
 	// http://stackoverflow.com/questions/7709030/get-gps-location-in-a-broadcast-receiver-or-service-to-broadcast-receiver-data-t/7709140#7709140
 
+	/**
+	 * Start gathering context info.
+	 */
+	private void startGatheringContextInfo() {
+		if (locationProvider == null)
+			locationProvider = new CoordinatesDataProvider();
+		locationProvider.addCoordinatesLocationDataListener(this, this.getApplicationContext());
+		this.progressBar.setProgress(10);
+		this.progressBar.setVisibility(View.VISIBLE);
+		this.refreshButton.setVisibility(View.INVISIBLE);
+	}
+
 	@Override
 	protected Dialog onCreateDialog(int id) {
 		Dialog dialog;
@@ -129,7 +139,8 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 		// Try to handle this type of dialog
 		AlertDialog.Builder builder = new AlertDialog.Builder(this);
 		switch (id) {
-		// Create a dialog asking the user if he wants to go to the Location Settings
+		// Create a dialog asking the user if he wants to go to the Location
+		// Settings
 		case DIALOG_ENABLE_LOCALIZATION:
 			builder.setMessage(
 					"The device does not seem to have any localization interfaces enabled. Would you like to adjust the settings now?")
@@ -145,7 +156,8 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 			dialog = builder.create();
 			break;
 		case DIALOG_ACTIVATION_DISTANCE:
-			// Create the dialog associated with the activation distance for the location
+			// Create the dialog associated with the activation distance for the
+			// location
 			NumberPickerDialog dialogT = new NumberPickerDialog(this, -1, 0);
 			dialogT.setRange(300, 2000);
 			dialogT.setCurrent(location.getActivationDistance());
@@ -155,7 +167,8 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 				@Override
 				public void onNumberSet(int selectedNumber) {
 					location.setActivationDistance(selectedNumber);
-					((TextView) findViewById(R.id.coordinates_radiusText)).setText(selectedNumber + " m");
+					((TextView) findViewById(R.id.coordinates_radiusText)).setText(getString(
+							R.string.location_geo_activation_radius, location.getActivationDistance()));
 				}
 			});
 			dialog = dialogT;
@@ -202,11 +215,6 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onStop()
-	 */
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -247,8 +255,8 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 			((TextView) findViewById(R.id.coordinates_extraText)).setText("-");
 		}
 		// Settings section
-		((TextView) findViewById(R.id.coordinates_radiusText)).setText(location.getActivationDistance()
-				+ " m");
+		((TextView) findViewById(R.id.coordinates_radiusText)).setText(getString(
+				R.string.location_geo_activation_radius, location.getActivationDistance()));
 
 	}
 

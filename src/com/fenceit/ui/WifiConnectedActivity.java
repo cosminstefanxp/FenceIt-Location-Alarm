@@ -55,6 +55,8 @@ public class WifiConnectedActivity extends AbstractLocationActivity<WifiConnecte
 		findViewById(R.id.wificonn_matchBssidSection).setOnClickListener(this);
 
 		// Fill data
+		if (this.newEntity)
+			gatherContextInfo();
 		this.refreshLocationView();
 		this.refreshAbstractLocationView();
 	}

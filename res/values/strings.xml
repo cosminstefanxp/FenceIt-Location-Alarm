@@ -11,7 +11,6 @@
     <string name="dialog_set_number">Set</string>
     <string name="dialog_cancel">Cancel</string>
     <string name="dialog_picker_title">Choose a number</string>
-    <string name="trigger.whenSectionTitle">Triggered when &#8230;</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_main">MainActivity</string>
     <string name="menu_settings">Settings</string>
@@ -42,20 +41,20 @@
     <string name="dialog_new_action">Action of type</string>
 
     <string-array name="location_types">
-        <item>Connected WiFi</item>
-        <item>Detected WiFis</item>
+        <item>Connected Wi-Fi</item>
+        <item>Detected Wi-Fis</item>
         <item>Cellular Network</item>
         <item>Geographical Position</item>
     </string-array>
     <string-array name="location_types_favorite">
-        <item>Connected WiFi</item>
-        <item>Detected WiFis</item>
+        <item>Connected Wi-Fi</item>
+        <item>Detected Wi-Fis</item>
         <item>Cellular Network</item>
         <item>Geographical Position</item>
         <item>Existing favorite location</item>
     </string-array>
-    <string name="location_type_cell">Cellular Network Location</string>
 
+    <string name="location_type_cell">Cellular Network Location</string>
     <string name="dialog_enable_wifi_title">Wi-Fi Interface not enabled</string>
     <string name="dialog_enable_cell_title">Mobile Network Interface not enabled</string>
     <string name="dialog_enable_wifi_message">The Wi-Fi interface doesn\'t seem to be enabled. Would you like to enable it now?</string>
@@ -69,19 +68,19 @@
     <string name="dialog_location_name_message">Set the location name:</string>
     <string name="dialog_location_name_title">New Location Name</string>
     <string name="undone_success">Changes undone!</string>
-    <string name="location_save_incomplete_fields">Not all fields are completed correctly. Please check all of them.</string>
+    <string name="location_save_incomplete_fields">Cannot save location due to missing contextual information. Please refresh the data!</string>
     <string name="location_connected_wifi_title">Connected Wi-Fi network</string>
-    <string name="general_refresh">Click to gather new info</string>
+    <string name="general_refresh">Touch to gather new info</string>
     <string name="location_connected_wifi_bssid">BSSID:</string>
-    <string name="location_connected_wifi_ssid">Name/SSID:</string>
+    <string name="location_connected_wifi_ssid">Name:</string>
     <string name="location_connected_wifi_mac">MAC Address:</string>
     <string name="location_connected_wifi_status">Status:</string>
     <string name="location_settings">Settings</string>
     <string name="default_text">Default text</string>
-    <string name="location_connected_wifi_match_section">Set how the locations are compared.</string>
+    <string name="location_connected_wifi_match_section">Touch to change how locations are compared.</string>
     <string name="location_detected_wifis_title">Detected Wi-Fi Networks</string>
     <string name="location_detected_wifis_bssid">BSSID:</string>
-    <string name="location_detected_wifis_ssid">Name/SSID:</string>
+    <string name="location_detected_wifis_ssid">Name:</string>
     <string name="dialog_enable_cell_message">The device does not seem to be connected to any mobile phone networks. Would you like to adjust the settings now?</string>
     <string name="location_cell_title">Cellular network info</string>
     <string name="location_cell_operator">Operator:</string>
@@ -93,7 +92,8 @@
     <string name="location_geo_longitude">Longitude:</string>
     <string name="location_geo_extra">Extra:</string>
     <string name="location_geo_view_map">View Map</string>
-    <string name="location_geo_activation_radius">Activation radius:</string>
+    <string name="location_geo_activation_radius">Activation radius: %d m</string>
+    <string name="location_geo_activation_radius_hint">Touch to set the location radius from the selected position.</string>
     <string name="action_notification_message">Notification Message</string>
     <string name="notification_action_message_hint">Set the message of this notification.</string>
     <string name="action_ringer_mode_type">Touch to set new Ringer Mode</string>
@@ -101,5 +101,6 @@
     <string name="location_favorite_hint_off">Touch to save as favorite</string>
     <string name="location_favorite_hint_on">Saved as favorite</string>
     <string name="location_favorite_noname">&lt;i&gt;Anonymous Location&lt;/i&gt;</string>
+    <string name="action_ringer_mode_hint">Touch to set the target volume mode.</string>
 
 </resources>

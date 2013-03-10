@@ -85,15 +85,12 @@ public class WifisDetectedActivity extends AbstractLocationActivity<WifisDetecte
 		((ListView) findViewById(R.id.wifidetec_wifisList)).setAdapter(adapter);
 
 		// Fill data
+		if (this.newEntity)
+			startGatheringContextInfo();
 		this.refreshLocationView();
 		this.refreshAbstractLocationView();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.app.Activity#onDestroy()
-	 */
 	@Override
 	protected void onStop() {
 		super.onStop();
@@ -103,36 +100,38 @@ public class WifisDetectedActivity extends AbstractLocationActivity<WifisDetecte
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.view.View.OnClickListener#onClick(android.view.View)
-	 */
 	@Override
 	public void onClick(View v) {
 		if (v == refreshButton) {
 			log.info("Refreshing the list of Wifis in range. Starting scan...");
-			// Check for availability;
-			if (!WifiConnectedDataProvider.isWifiAvailable(this)) {
-				EnableWifiDialogFragment dialog = new EnableWifiDialogFragment();
-				dialog.show(this.getSupportFragmentManager(), DIALOG_ENABLE_WIFI);
-				return;
-			}
-			// Prepare broadcast receiver for broadcasts regarding finished
-			// scans
-			if (receiver == null) {
-				receiver = new WifiScanReceiver();
-				IntentFilter filter = new IntentFilter();
-				filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
-				registerReceiver(receiver, filter);
-			}
-
-			// Start the scan
-			WifisDetectedDataProvider.startScan(getApplicationContext());
-			progressBar.setVisibility(View.VISIBLE);
-			progressBar.setProgress(0);
-			refreshButton.setVisibility(View.INVISIBLE);
+			startGatheringContextInfo();
 		}
+	}
+
+	/**
+	 * Start gathering context info.
+	 */
+	private void startGatheringContextInfo() {
+		// Check for availability;
+		if (!WifiConnectedDataProvider.isWifiAvailable(this)) {
+			EnableWifiDialogFragment dialog = new EnableWifiDialogFragment();
+			dialog.show(this.getSupportFragmentManager(), DIALOG_ENABLE_WIFI);
+			return;
+		}
+		// Prepare broadcast receiver for broadcasts regarding finished
+		// scans
+		if (receiver == null) {
+			receiver = new WifiScanReceiver();
+			IntentFilter filter = new IntentFilter();
+			filter.addAction(WifiManager.SCAN_RESULTS_AVAILABLE_ACTION);
+			registerReceiver(receiver, filter);
+		}
+
+		// Start the scan
+		WifisDetectedDataProvider.startScan(getApplicationContext());
+		progressBar.setVisibility(View.VISIBLE);
+		progressBar.setProgress(0);
+		refreshButton.setVisibility(View.INVISIBLE);
 	}
 
 	/**

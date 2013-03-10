@@ -104,9 +104,6 @@
 
  
 
-    <style name="SettingItem.Indented">
-        <item name="android:layout_marginLeft">35dp</item>
-    </style>
 
     <style name="TextBody">
         <item name="android:textSize">15sp</item>

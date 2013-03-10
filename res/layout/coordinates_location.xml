@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:isScrollContainer="true"
     android:padding="@dimen/activity_padding" >
 
     <LinearLayout
@@ -52,6 +53,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/inner_padding"
                 android:text="@string/location_geo_latitude"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
@@ -139,16 +141,16 @@
             android:orientation="vertical" >
 
             <TextView
+                android:id="@+id/coordinates.radiusText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/location_geo_activation_radius"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
 
             <TextView
-                android:id="@+id/coordinates.radiusText"
+                android:text="@string/location_geo_activation_radius_hint"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/default_text"
                 android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 

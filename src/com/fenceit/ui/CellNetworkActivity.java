@@ -58,15 +58,12 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 		findViewById(R.id.cell_refreshButton).setOnClickListener(this);
 
 		// Fill data
+		if (this.newEntity)
+			gatherContextInfo();
 		refreshLocationView();
 		refreshAbstractLocationView();
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see android.view.View.OnClickListener#onClick(android.view.View)
-	 */
 	@Override
 	public void onClick(View v) {
 		switch (v.getId()) {
@@ -93,8 +90,8 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 		log.info("Cell Network info: " + cellInfo);
 		if (cellInfo == null) {
 			ErrorDialogFragment.newInstance(getString(R.string.error_acquiring_data),
-					getString(R.string.location_cell_error_message)).show(
-					getSupportFragmentManager(), DIALOG_ERROR);
+					getString(R.string.location_cell_error_message)).show(getSupportFragmentManager(),
+					DIALOG_ERROR);
 			return;
 		}
 		// Update the location
@@ -112,8 +109,8 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 	protected DefaultDAO<CellNetworkLocation> getDAO() {
 		// Prepare database connection
 		if (dao == null)
-			dao = DatabaseManager.getDAOInstance(getApplicationContext(),
-					CellNetworkLocation.class, CellNetworkLocation.tableName);
+			dao = DatabaseManager.getDAOInstance(getApplicationContext(), CellNetworkLocation.class,
+					CellNetworkLocation.tableName);
 		return dao;
 	}
 
@@ -126,14 +123,12 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 	protected void refreshLocationView() {
 		// Location Section
 		if (location.isComplete()) {
-			((TextView) findViewById(R.id.cell_operatorText))
-					.setText(String.format(Locale.ENGLISH, "%s (%d/%d)",
-							location.getOperatorName(), location.getMnc(), location.getMcc()));
+			((TextView) findViewById(R.id.cell_operatorText)).setText(String.format(Locale.ENGLISH,
+					"%s (%d/%d)", location.getOperatorName(), location.getMnc(), location.getMcc()));
 			((TextView) findViewById(R.id.cell_cellIdText)).setText(location.getCellId() + "/"
 					+ location.getLac());
 		} else {
-			((TextView) findViewById(R.id.cell_operatorText))
-					.setText(R.string.location_click_refresh);
+			((TextView) findViewById(R.id.cell_operatorText)).setText(R.string.location_click_refresh);
 			((TextView) findViewById(R.id.cell_cellIdText)).setText("-");
 		}
 
@@ -165,8 +160,7 @@ public class CellNetworkActivity extends AbstractLocationActivity<CellNetworkLoc
 						public void onClick(DialogInterface dialog, int id) {
 							startActivity(new Intent(Settings.ACTION_WIRELESS_SETTINGS));
 						}
-					})
-					.setNegativeButton(R.string.general_no, new DialogInterface.OnClickListener() {
+					}).setNegativeButton(R.string.general_no, new DialogInterface.OnClickListener() {
 						public void onClick(DialogInterface dialog, int id) {
 							dialog.cancel();
 						}
