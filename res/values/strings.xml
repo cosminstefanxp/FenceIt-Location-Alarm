@@ -26,6 +26,8 @@
     <string name="alarm_set_name_description">Set the name of this alarm.</string>
     <string name="triggers">Triggers</string>
     <string name="trigger_add">Add a new Trigger</string>
+    <string name="trigger_triggered_enter">Arrived</string>
+    <string name="trigger_triggered_exit">Left</string>
     <string name="actions">Actions</string>
     <string name="action_add">Add a new Action</string>
     <string name="notification_set_message">Touch to set a notification message</string>
@@ -102,5 +104,7 @@
     <string name="location_favorite_hint_on">Saved as favorite</string>
     <string name="location_favorite_noname">&lt;i&gt;Anonymous Location&lt;/i&gt;</string>
     <string name="action_ringer_mode_hint">Touch to set the target volume mode.</string>
+    <string name="sys_notification_trigger_reason">%s</string>
+    <string name="sys_notification_triggered_title">Alarm triggered - %s</string>
 
 </resources>

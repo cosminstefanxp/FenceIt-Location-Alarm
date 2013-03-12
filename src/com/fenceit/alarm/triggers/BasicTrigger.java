@@ -40,8 +40,8 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	private transient Logger log = Logger.getLogger(BasicTrigger.class);
 
 	/**
-	 * The type of location to which this trigger corresponds. Only stored the location type id, to save
-	 * storage.
+	 * The type of location to which this trigger corresponds. Only stored the
+	 * location type id, to save storage.
 	 */
 	@DatabaseField
 	private LocationType locationType;
@@ -81,7 +81,9 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see com.fenceit.alarm.triggers.AbstractAlarmTrigger#shouldTrigger(com.fenceit .alarm.EnvironmentData )
+	 * @see
+	 * com.fenceit.alarm.triggers.AbstractAlarmTrigger#shouldTrigger(com.fenceit
+	 * .alarm.EnvironmentData )
 	 */
 	@Override
 	public boolean shouldTrigger(ContextData data) {
@@ -200,12 +202,21 @@ public class BasicTrigger extends AbstractAlarmTrigger {
 	}
 
 	/**
-	 * Gets the trigger types names, in the same order as {@link BasicTrigger#getTriggerTypes()}
+	 * Gets the trigger types names, in the same order as
+	 * {@link BasicTrigger#getTriggerTypes()}
 	 * 
 	 * @param context the context
 	 * @return the trigger types names
 	 */
 	public static String[] getTriggerTypesNames(Context context) {
 		return context.getResources().getStringArray(R.array.trigger_types);
+	}
+
+	@Override
+	public String getTriggeredDescription(Context context) {
+		if (type == TriggerType.ON_ENTER)
+			return context.getString(R.string.trigger_triggered_enter) + " " + getSecondaryDescription();
+		else
+			return context.getString(R.string.trigger_triggered_exit) + " " + getSecondaryDescription();
 	}
 }

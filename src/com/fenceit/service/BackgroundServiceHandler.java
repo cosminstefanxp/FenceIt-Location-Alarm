@@ -14,12 +14,13 @@ import org.apache.log4j.Logger;
 import android.os.Handler;
 import android.os.Message;
 
+import com.fenceit.R;
 import com.fenceit.alarm.actions.AlarmAction;
 import com.fenceit.db.AlarmActionBroker;
 
 /**
- * The BackgroundServiceHandler is a Handler for the Background Service, allowing it to receive
- * messages, mainly from TriggerCheckerThreads.
+ * The BackgroundServiceHandler is a Handler for the Background Service,
+ * allowing it to receive messages, mainly from TriggerCheckerThreads.
  */
 public class BackgroundServiceHandler extends Handler {
 
@@ -42,9 +43,11 @@ public class BackgroundServiceHandler extends Handler {
 		this.service = service;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see android.os.Handler#handleMessage(android.os.Message) */
+	 * @see android.os.Handler#handleMessage(android.os.Message)
+	 */
 	@Override
 	public void handleMessage(Message msg) {
 		super.handleMessage(msg);
@@ -52,7 +55,8 @@ public class BackgroundServiceHandler extends Handler {
 		case HANDLER_ALARM_TRIGGERED:
 			int alarmId = msg.arg1;
 			String triggerReason = (String) msg.obj;
-			triggerAlarm(alarmId, triggerReason);
+			String alarmName = msg.getData().getString("alarm_name");
+			triggerAlarm(alarmId, alarmName, triggerReason);
 		}
 
 	}
@@ -61,8 +65,10 @@ public class BackgroundServiceHandler extends Handler {
 	 * Trigger an alarm. Runs on main thread.
 	 * 
 	 * @param alarmId the alarm id
+	 * @param alarmName the alarm name
+	 * @param triggerReason the trigger reason
 	 */
-	public void triggerAlarm(int alarmId, String triggerReason) {
+	public void triggerAlarm(int alarmId, String alarmName, String triggerReason) {
 
 		log.warn("An alarm (" + alarmId + ") was triggered because of: " + triggerReason);
 
@@ -71,12 +77,14 @@ public class BackgroundServiceHandler extends Handler {
 				DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarmId);
 
 		// Publish a notification
-		service.publishNotification("FenceIt - Alarm Triggered", alarmId, triggerReason, triggerReason);
+		service.publishNotification(service.getString(R.string.sys_notification_triggered_title, alarmName),
+				alarmId, triggerReason, triggerReason);
 
 		// Execute the actions
 		log.info("Executing actions");
 		for (AlarmAction a : actions) {
-			log.debug("Executing " + a);
+			if (log.isDebugEnabled())
+				log.debug("Executing " + a);
 			a.execute(service);
 		}
 

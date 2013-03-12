@@ -15,6 +15,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.Handler;
 import android.os.IBinder;
+import android.support.v4.app.NotificationCompat;
 import android.widget.Toast;
 
 import com.fenceit.Log4jConfiguration;
@@ -30,8 +31,9 @@ import com.fenceit.service.checkers.TriggerCheckerBroker;
 import com.fenceit.ui.AlarmPanelActivity;
 
 /**
- * The Class BackgroundService is the background service that is indefinitely runnning in the background,
- * scanning for any events that could trigger any of the enabled alarms.
+ * The Class BackgroundService is the background service that is indefinitely
+ * runnning in the background, scanning for any events that could trigger any of
+ * the enabled alarms.
  */
 public class BackgroundService extends Service {
 
@@ -41,7 +43,10 @@ public class BackgroundService extends Service {
 	/** The Constant ONGOING_NOTIFICATION used for identifying notifications. */
 	private static final int ONGOING_NOTIFICATION = 101;
 
-	/** The Constant ALARM_TRIGGERED_NOTIFICATION used for identifying notifications. */
+	/**
+	 * The Constant ALARM_TRIGGERED_NOTIFICATION used for identifying
+	 * notifications.
+	 */
 	private static final int ALARM_TRIGGERED_NOTIFICATION = 102;
 
 	/** The Constant used to define a non-existing event. */
@@ -51,34 +56,38 @@ public class BackgroundService extends Service {
 	public static final int SERVICE_EVENT_SHUTDOWN = 1;
 
 	/**
-	 * The Constant to define an event which appears when a check should be done for all location types.
+	 * The Constant to define an event which appears when a check should be done
+	 * for all location types.
 	 */
 	public static final int SERVICE_EVENT_FORCE_RECHECK = 2;
 
 	/**
-	 * This Constant is used to define an event which initiates a check for triggers related to a
-	 * {@link WifiConnectedLocation}.
+	 * This Constant is used to define an event which initiates a check for
+	 * triggers related to a {@link WifiConnectedLocation}.
 	 */
 	public static final int SERVICE_EVENT_WIFI_CONNECTED = 4;
 	/**
-	 * This Constant is used to define an event which initiates a check for triggers related to a
-	 * {@link WifisDetectedLocation}.
+	 * This Constant is used to define an event which initiates a check for
+	 * triggers related to a {@link WifisDetectedLocation}.
 	 */
 	public static final int SERVICE_EVENT_WIFIS_DETECTED = 5;
 
 	/**
-	 * This Constant is used to define an event which initiates a check for triggers related to a
-	 * {@link CellNetworkLocation}.
+	 * This Constant is used to define an event which initiates a check for
+	 * triggers related to a {@link CellNetworkLocation}.
 	 */
 	public static final int SERVICE_EVENT_CELL_NETWORK = 6;
 
 	/**
-	 * This Constant is used to define an event which initiates a check for triggers related to a
-	 * {@link CoordinatesLocation}..
+	 * This Constant is used to define an event which initiates a check for
+	 * triggers related to a {@link CoordinatesLocation}..
 	 */
 	public static final int SERVICE_EVENT_GEO_COORDINATES = 7;
 
-	/** This Constant is used to name the field used to store the event in the intents. */
+	/**
+	 * This Constant is used to name the field used to store the event in the
+	 * intents.
+	 */
 	public static final String SERVICE_EVENT_FIELD_NAME = "event";
 
 	/** The handler. */
@@ -93,15 +102,12 @@ public class BackgroundService extends Service {
 	/** The service state manager. */
 	private ServiceStateManager serviceStateManager;
 
-	/*
-	 * (non-Javadoc)
-	 * @see android.app.Service#onCreate()
-	 */
 	@Override
 	public void onCreate() {
 		super.onCreate();
 
-		// Making sure the Log4J is configured, even if the main application process is not started
+		// Making sure the Log4J is configured, even if the main application
+		// process is not started
 		new Log4jConfiguration();
 		log.warn("Creating a new instance of the Background Service...");
 
@@ -125,9 +131,11 @@ public class BackgroundService extends Service {
 		alarmDispatcher = new SystemAlarmDispatcher(this.getApplicationContext());
 		CoordinatesDataProvider.mHandler = new Handler();
 
-		// Manage wakeLocks - Set up the green room - The setup is capable of getting called multiple times.
+		// Manage wakeLocks - Set up the green room - The setup is capable of
+		// getting called multiple times.
 		LightedGreenRoomWakeLockManager.setup(this.getApplicationContext());
-		// Register the service as a client to allow safe release of wake locks when destroying the service
+		// Register the service as a client to allow safe release of wake locks
+		// when destroying the service
 		LightedGreenRoomWakeLockManager.registerClient();
 		serviceStateManager.setRegisteredToWakeLock(true);
 
@@ -136,12 +144,13 @@ public class BackgroundService extends Service {
 	}
 
 	/**
-	 * Force a full scan for all types of locations. The ServiceStateManager should be updated before calling
-	 * this method.
+	 * Force a full scan for all types of locations. The ServiceStateManager
+	 * should be updated before calling this method.
 	 */
 	private void forceFullCheck() {
 
-		// Force a scan of triggers for the locations that are associated to an enabled alarm
+		// Force a scan of triggers for the locations that are associated to an
+		// enabled alarm
 		short delay = 1;
 		for (LocationType type : AlarmLocationBroker.getLocationTypes()) {
 			if (serviceStateManager.isLocationTypeEnabled(type)) {
@@ -191,7 +200,8 @@ public class BackgroundService extends Service {
 			return;
 		}
 
-		// If a scan with all the locations types should be scheduled or the service should be shutdown
+		// If a scan with all the locations types should be scheduled or the
+		// service should be shutdown
 		if (event == SERVICE_EVENT_FORCE_RECHECK) {
 			// Update the state of the ServiceStateManager
 			serviceStateManager.updateState(this);
@@ -203,14 +213,17 @@ public class BackgroundService extends Service {
 			return;
 		}
 
-		// Run the trigger checker thread, if enabled for the given location type
+		// Run the trigger checker thread, if enabled for the given location
+		// type
 		LocationType type = TriggerCheckerBroker.getLocationType(event);
 		if (serviceStateManager.isLocationTypeEnabled(type)) {
-			Thread thread = TriggerCheckerBroker.getTriggerCheckerThread(getApplicationContext(), handler, event);
+			Thread thread = TriggerCheckerBroker.getTriggerCheckerThread(getApplicationContext(), handler,
+					event);
 			if (thread != null)
 				thread.start();
 		} else {
-			// This point can be reached as, when a location type becomes disabled, for optimization reasons,
+			// This point can be reached as, when a location type becomes
+			// disabled, for optimization reasons,
 			// pending system alarms are not disabled
 			log.warn("Request to start trigger checker thread, but location type is disabled: " + type);
 		}
@@ -232,10 +245,6 @@ public class BackgroundService extends Service {
 
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see android.app.Service#onDestroy()
-	 */
 	@Override
 	public void onDestroy() {
 		super.onDestroy();
@@ -251,26 +260,24 @@ public class BackgroundService extends Service {
 	}
 
 	/**
-	 * Prepares the ongoing notification that is showing in the notification area while the service is
-	 * running.
+	 * Prepares the ongoing notification that is showing in the notification
+	 * area while the service is running.
 	 * 
 	 * @return the notification
 	 */
 	private Notification prepareOngoingNotification() {
-		Notification notification = new Notification();
-		// R.drawable.ic_logo, "FenceIt service started...",
-		//		System.currentTimeMillis());
-		notification.icon=R.drawable.ic_logo;
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
+				.setSmallIcon(R.drawable.ic_launcher).setContentTitle("FenceIt")
+				.setContentText("Alarms active").setOngoing(true);
 
-		// On click, create a new FenceIt Activity. If the activity is started already, clear
-		// everything above it and bring it back
+		// On click, create a new FenceIt Activity. If the activity is started
+		// already, clear everything above it and bring it back
 		Intent notificationIntent = new Intent(getApplicationContext(), AlarmPanelActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0, notificationIntent, 0);
-		notification.setLatestEventInfo(getApplicationContext(), "FenceIt - Location-based Alarms",
-				"Constantly searching for triggering conditions...", pendingIntent);
-		notification.flags |= Notification.FLAG_NO_CLEAR;
-		return notification;
+		PendingIntent pendingIntent = PendingIntent.getActivity(getApplicationContext(), 0,
+				notificationIntent, 0);
+		builder.setContentIntent(pendingIntent);
+		return builder.build();
 	}
 
 	/**
@@ -282,24 +289,21 @@ public class BackgroundService extends Service {
 	 * @param message the message
 	 */
 	protected void publishNotification(String title, int requestCode, String tickerText, String message) {
-		// On click, create a new FenceIt Activity. If the activity is started already, clear
-		// everything above it and bring it back
+		// On click, create a new FenceIt Activity. If the activity is started
+		// already, clear everything above it and bring it back
 		Intent notificationIntent = new Intent(this, AlarmPanelActivity.class);
 		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, notificationIntent, 0);
 
 		// Create the notification
-		Notification notification = new Notification(R.drawable.ic_logo, tickerText, System.currentTimeMillis());
-		notification.setLatestEventInfo(this, title, message, pendingIntent);
-		notification.defaults = Notification.DEFAULT_ALL;
+		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
+		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(title).setContentText(message)
+				.setContentIntent(pendingIntent).setTicker(tickerText).setAutoCancel(true);
+		Notification notification = builder.build();
 		notification.flags |= Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(ALARM_TRIGGERED_NOTIFICATION, notification);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see android.app.Service#onBind(android.content.Intent)
-	 */
 	@Override
 	public IBinder onBind(Intent intent) {
 		// Not allowing binding
@@ -307,7 +311,8 @@ public class BackgroundService extends Service {
 	}
 
 	/**
-	 * Creates an alarm. This method will be used by the handler, called from checker threads.
+	 * Creates an alarm. This method will be used by the handler, called from
+	 * checker threads.
 	 * 
 	 * @param when the when, as milliseconds since 1st of January 1970
 	 * @param eventType the event type

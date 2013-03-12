@@ -47,17 +47,6 @@ public class WifiConnectedTriggerCheckerThread extends TriggerCheckerThread {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger )
-	 */
-	@Override
-	protected String getTriggerMessage(AlarmTrigger trigger) {
-		log.warn("An alarm was triggered because of: " + trigger);
-		return "The alarm '" + trigger.getAlarm().getName() + "' was triggered because of a "
-				+ trigger.getSecondaryDescription();
-	}
-
-	/*
-	 * (non-Javadoc)
 	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData()
 	 */
 	@Override

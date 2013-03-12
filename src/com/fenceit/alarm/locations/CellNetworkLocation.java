@@ -54,7 +54,7 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 	@Override
 	public Status checkStatus(ContextData info) {
 		CellContextData data = (CellContextData) info;
-		if (data == null || data.cellId == -1)
+		if (data == null || data.cellId == -1 || data.prevNetworkOperator == null)
 			return Status.UNKNOWN;
 
 		// Prepare MNC and MCC
@@ -203,8 +203,7 @@ public class CellNetworkLocation extends AbstractAlarmLocation implements Serial
 
 	@Override
 	public String toString() {
-		return "CellLocation [cellId=" + cellId + ", mnc=" + mnc + ", mcc=" + mcc + ", lac=" + lac
-				+ "]";
+		return "CellLocation [cellId=" + cellId + ", mnc=" + mnc + ", mcc=" + mcc + ", lac=" + lac + "]";
 	}
 
 	@Override

@@ -22,20 +22,23 @@ import com.fenceit.provider.WifisDetectedDataProvider;
 import com.fenceit.service.BackgroundServiceHandler;
 
 /**
- * The WifisDetectedTriggerCheckerThread handles the check for conditions regarding the Wifi networks in range
- * (detected) - the alarm locations of types {@link WifisDetectedLocation}. If any of the alarms should be
+ * The WifisDetectedTriggerCheckerThread handles the check for conditions
+ * regarding the Wifi networks in range (detected) - the alarm locations of
+ * types {@link WifisDetectedLocation}. If any of the alarms should be
  * triggered, it also handles the triggering.
  */
 public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 
 	/**
-	 * The time when this thread was last run, in milliseconds since 1970 (as returned by
-	 * Calendar.getTimeInMillis(). It is used to control the frequency of running this checker.
+	 * The time when this thread was last run, in milliseconds since 1970 (as
+	 * returned by Calendar.getTimeInMillis(). It is used to control the
+	 * frequency of running this checker.
 	 */
 	private static long lastRun = 0;
 
 	/**
-	 * The Constant minDelay that defines the minimum time between two runs of this Checker (in milliseconds).
+	 * The Constant minDelay that defines the minimum time between two runs of
+	 * this Checker (in milliseconds).
 	 */
 	private static final int MIN_DELAY_BETWEEN_CHECKS = 10000;
 
@@ -51,26 +54,18 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.fenceit.service.TriggerCheckerThread#fetchData()
 	 */
 	@Override
 	protected List<? extends AlarmTrigger> fetchData() {
-		return DatabaseAccessor.buildFullTriggersForEnabledLocationType(mContext, LocationType.WifisDetectedLocation);
+		return DatabaseAccessor.buildFullTriggersForEnabledLocationType(mContext,
+				LocationType.WifisDetectedLocation);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger )
-	 */
-	@Override
-	protected String getTriggerMessage(AlarmTrigger trigger) {
-		log.warn("An alarm was triggered because of: " + trigger);
-		return "The alarm '" + trigger.getAlarm().getName() + "' was triggered because of a "
-				+ trigger.getSecondaryDescription();
-	}
-
-	/*
-	 * (non-Javadoc)
+	 * 
 	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData()
 	 */
 	@Override
@@ -81,6 +76,7 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.fenceit.service.TriggerCheckerThread#isPreconditionValid()
 	 */
 	@Override
@@ -105,7 +101,9 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime()
+	 * 
+	 * @see
+	 * com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime()
 	 */
 	@Override
 	protected Float computeDelayFactor(List<? extends AlarmTrigger> triggers, ContextData data) {
@@ -115,7 +113,8 @@ public class WifisDetectedTriggerCheckerThread extends TriggerCheckerThread {
 
 		WifisDetectedContextData cData = (WifisDetectedContextData) data;
 		Float factor = 1.0f;
-		// If in the same position for a lot of time, increase the factor, but up to 300%
+		// If in the same position for a lot of time, increase the factor, but
+		// up to 300%
 		if (cData.countStaticLocation > 40)
 			factor += 2.0f;
 		else

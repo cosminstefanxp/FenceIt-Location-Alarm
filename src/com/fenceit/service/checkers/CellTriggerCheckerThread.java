@@ -20,9 +20,10 @@ import com.fenceit.provider.ContextData;
 import com.fenceit.service.BackgroundServiceHandler;
 
 /**
- * The CellTriggerCheckerThread handles the check for conditions regarding the currently connected cell
- * network (the alarm locations of type {@link CellNetworkLocation}. If any of the alarms should be triggered,
- * it handles that.
+ * The CellTriggerCheckerThread handles the check for conditions regarding the
+ * currently connected cell network (the alarm locations of type
+ * {@link CellNetworkLocation}. If any of the alarms should be triggered, it
+ * handles that.
  */
 public class CellTriggerCheckerThread extends TriggerCheckerThread {
 
@@ -38,25 +39,18 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.fenceit.service.TriggerCheckerThread#fetchData()
 	 */
 	@Override
 	protected List<? extends AlarmTrigger> fetchData() {
-		return DatabaseAccessor.buildFullTriggersForEnabledLocationType(mContext, LocationType.CellNetworkLocation);
+		return DatabaseAccessor.buildFullTriggersForEnabledLocationType(mContext,
+				LocationType.CellNetworkLocation);
 	}
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger )
-	 */
-	@Override
-	protected String getTriggerMessage(AlarmTrigger trigger) {
-		log.warn("An alarm was triggered because of: " + trigger);
-		return "'" + trigger.getAlarm().getName() + "' triggered by " + trigger.getSecondaryDescription();
-	}
-
-	/*
-	 * (non-Javadoc)
+	 * 
 	 * @see com.fenceit.service.TriggerCheckerThread#acquireContextData()
 	 */
 	@Override
@@ -67,6 +61,7 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 
 	/*
 	 * (non-Javadoc)
+	 * 
 	 * @see com.fenceit.service.TriggerCheckerThread#isPreconditionValid()
 	 */
 	@Override
@@ -82,7 +77,9 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 
 	/*
 	 * (non-Javadoc)
-	 * @see com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime()
+	 * 
+	 * @see
+	 * com.fenceit.service.checkers.TriggerCheckerThread#computeNextCheckTime()
 	 */
 	@Override
 	protected Float computeDelayFactor(List<? extends AlarmTrigger> triggers, ContextData data) {
@@ -92,7 +89,8 @@ public class CellTriggerCheckerThread extends TriggerCheckerThread {
 
 		CellContextData cData = (CellContextData) data;
 		Float factor = 1.0f;
-		// If in the same position for a lot of time, increase the factor, but up to 300%
+		// If in the same position for a lot of time, increase the factor, but
+		// up to 300%
 		if (cData.countStaticLocation > 40)
 			factor += 2.0f;
 		else

@@ -53,16 +53,6 @@ public class GeoCoordinatesTriggerCheckerThread extends TriggerCheckerThread imp
 		return DatabaseAccessor.buildFullTriggersForEnabledLocationType(mContext, LocationType.GeoCoordinatesLocation);
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * @see com.fenceit.service.TriggerCheckerThread#triggerAlarm(com.fenceit.alarm.triggers.AlarmTrigger )
-	 */
-	@Override
-	protected String getTriggerMessage(AlarmTrigger trigger) {
-		log.warn("An alarm was triggered because of: " + trigger);
-		return "The alarm '" + trigger.getAlarm().getName() + "' was triggered because of a "
-				+ trigger.getSecondaryDescription();
-	}
 
 	/*
 	 * (non-Javadoc)

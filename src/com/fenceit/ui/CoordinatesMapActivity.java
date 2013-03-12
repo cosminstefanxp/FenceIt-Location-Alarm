@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.fenceit.R;
+import com.fenceit.ui.helpers.LocationItemizedOverlay;
 import com.google.android.maps.GeoPoint;
 import com.google.android.maps.MapActivity;
 import com.google.android.maps.MapView;
@@ -28,19 +29,33 @@ public class CoordinatesMapActivity extends MapActivity {
 
 	/** The map view. */
 	private MyCustomMapView mapView;
-	
+
 	/** The my location overlay. */
 	private MyLocationOverlay myLocationOverlay = null;
+
+	/** The overlay for showing the location. */
+	private LocationItemizedOverlay locationItemizedOverlay = null;
+
+	/** The selected latitude. */
+	private Double selectedLatitude;
+
+	/** The selected longitude. */
+	private Double selectedLongitude;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.coordinates_location_map);
 		mapView = (MyCustomMapView) findViewById(R.id.coordinatesMap_mapView);
-
 		mapView.setBuiltInZoomControls(true);
 
-		// Add on long press listener
+		// Get location coordinates
+		if (savedInstanceState != null) {
+			selectedLatitude = savedInstanceState.getDouble("lat");
+			selectedLongitude = savedInstanceState.getDouble("long");
+		}
+
+		// Add an on long press listener
 		mapView.setOnLongpressListener(new MyCustomMapView.OnLongpressListener() {
 			public void onLongpress(final MapView view, final GeoPoint longpressLocation) {
 				runOnUiThread(new Runnable() {
@@ -54,6 +69,14 @@ public class CoordinatesMapActivity extends MapActivity {
 		// Add overlay for current position
 		myLocationOverlay = new MyLocationOverlay(this, mapView);
 		mapView.getOverlays().add(myLocationOverlay);
+
+		// Add overlay for location, if anything was selected before
+		if (selectedLatitude != null) {
+			locationItemizedOverlay = new LocationItemizedOverlay(getResources().getDrawable(
+					R.drawable.ic_logo_old), selectedLatitude, selectedLongitude);
+			mapView.getOverlays().add(locationItemizedOverlay);
+		}
+
 		mapView.postInvalidate();
 
 	}
@@ -93,7 +116,6 @@ public class CoordinatesMapActivity extends MapActivity {
 	@Override
 	protected boolean isLocationDisplayed() {
 		return myLocationOverlay.isMyLocationEnabled();
-
 	}
 
 	@Override
