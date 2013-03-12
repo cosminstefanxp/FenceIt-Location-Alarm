@@ -267,8 +267,9 @@ public class BackgroundService extends Service {
 	 */
 	private Notification prepareOngoingNotification() {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
-				.setSmallIcon(R.drawable.ic_launcher).setContentTitle("FenceIt")
-				.setContentText("Alarms active").setOngoing(true);
+				.setSmallIcon(R.drawable.ic_launcher)
+				.setContentTitle(getString(R.string.sys_notification_ongoing_title))
+				.setOngoing(true);
 
 		// On click, create a new FenceIt Activity. If the activity is started
 		// already, clear everything above it and bring it back
