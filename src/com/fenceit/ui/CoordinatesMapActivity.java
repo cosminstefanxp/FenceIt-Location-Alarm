@@ -50,9 +50,12 @@ public class CoordinatesMapActivity extends MapActivity {
 		mapView.setBuiltInZoomControls(true);
 
 		// Get location coordinates
-		if (savedInstanceState != null) {
-			selectedLatitude = savedInstanceState.getDouble("lat");
-			selectedLongitude = savedInstanceState.getDouble("long");
+		Bundle extras = getIntent().getExtras();
+		if (extras != null) {
+			selectedLatitude = extras.getDouble("lat");
+			selectedLongitude = extras.getDouble("long");
+			log.info("Showing coordinates map with current position at " + selectedLatitude + "/"
+					+ selectedLongitude);
 		}
 
 		// Add an on long press listener
@@ -72,8 +75,10 @@ public class CoordinatesMapActivity extends MapActivity {
 
 		// Add overlay for location, if anything was selected before
 		if (selectedLatitude != null) {
+
 			locationItemizedOverlay = new LocationItemizedOverlay(getResources().getDrawable(
 					R.drawable.ic_logo_old), selectedLatitude, selectedLongitude);
+			Logger.getRootLogger().info("Initialized: " + locationItemizedOverlay);
 			mapView.getOverlays().add(locationItemizedOverlay);
 		}
 

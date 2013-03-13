@@ -19,6 +19,8 @@ public class HomeActivity extends DefaultActivity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		init();
+		
+		getSupportActionBar().setHomeButtonEnabled(false);
 
 		setContentView(R.layout.home);
 

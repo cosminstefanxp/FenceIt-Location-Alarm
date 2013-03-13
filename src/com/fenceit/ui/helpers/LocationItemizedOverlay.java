@@ -38,6 +38,12 @@ public class LocationItemizedOverlay extends ItemizedOverlay<OverlayItem> {
 	}
 
 	@Override
+	public String toString() {
+		return "LocationItemizedOverlay [selectedLatitude=" + selectedLatitude + ", selectedLongitude="
+				+ selectedLongitude + "]";
+	}
+
+	@Override
 	protected OverlayItem createItem(int index) {
 		GeoPoint point = new GeoPoint((int) (selectedLatitude * 1000000), (int) (selectedLongitude * 1000000));
 		return new OverlayItem(point, "Selected point", String.format("Latitude: %f\nLongitude: %f",
