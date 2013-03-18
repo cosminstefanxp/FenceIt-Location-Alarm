@@ -19,13 +19,13 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TabHost;
 import android.widget.TabHost.OnTabChangeListener;
 import android.widget.TabHost.TabContentFactory;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.actionbarsherlock.view.MenuItem;
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
 import com.fenceit.db.DatabaseManager;
@@ -61,6 +61,7 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.alarm);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Prepare database connections
 		if (dao == null)
@@ -75,14 +76,18 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 			fetchAlarm(alarmID);
 
 			// // Add the triggers fragment
-			// Fragment triggersFragment = TriggersFragment.newInstance(alarm.getId());
+			// Fragment triggersFragment =
+			// TriggersFragment.newInstance(alarm.getId());
 			// getSupportFragmentManager().beginTransaction()
-			// .add(R.id.alarm_triggersFragmentContainer, triggersFragment).commit();
+			// .add(R.id.alarm_triggersFragmentContainer,
+			// triggersFragment).commit();
 			//
 			// // Add the actions fragment
-			// Fragment actionsFragment = ActionsFragment.newInstance(alarm.getId());
+			// Fragment actionsFragment =
+			// ActionsFragment.newInstance(alarm.getId());
 			// getSupportFragmentManager().beginTransaction()
-			// .add(R.id.alarm_actionsFragmentContainer, actionsFragment).commit();
+			// .add(R.id.alarm_actionsFragmentContainer,
+			// actionsFragment).commit();
 		}
 		// If it's a restored instance
 		else {
@@ -97,6 +102,19 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		// .setOnEditorActionListener(new LoseFocusOnEditorActionListener());
 
 		refreshActivity();
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			// home icon in action bar clicked; go home
+			Intent intent = new Intent(this, AlarmPanelActivity.class);
+			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+			startActivity(intent);
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -168,7 +186,8 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 			return false;
 		}
 
-		// Notify the background service that a change has been done on an enabled alarm
+		// Notify the background service that a change has been done on an
+		// enabled alarm
 		if (alarm.isEnabled()) {
 			Intent intent = new Intent(this, BackgroundService.class);
 			intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
@@ -198,7 +217,11 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		return alarm;
 	}
 
-	/* Based on http://thepseudocoder.wordpress.com/2011/10/04/android-tabs-the-fragment-way/ */
+	/*
+	 * Based on
+	 * http://thepseudocoder.wordpress.com/2011/10/04/android-tabs-the-fragment
+	 * -way/
+	 */
 
 	/** The tab host. */
 	private TabHost mTabHost;
@@ -229,8 +252,8 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 	}
 
 	/**
-	 * A factory for creating content for Tab objects with creates an empty View as a placeholder for our
-	 * fragments
+	 * A factory for creating content for Tab objects with creates an empty View
+	 * as a placeholder for our fragments
 	 */
 	class TabFactory implements TabContentFactory {
 
@@ -301,8 +324,10 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		tabSpec.setContent(activity.new TabFactory(activity));
 		String tag = tabSpec.getTag();
 
-		// Check to see if we already have a fragment for this tab, probably from a previously saved state. If
-		// so, deactivate it, because our initial state is that the tab isn't shown.
+		// Check to see if we already have a fragment for this tab, probably
+		// from a previously saved state. If
+		// so, deactivate it, because our initial state is that the tab isn't
+		// shown.
 		tabInfo.fragment = activity.getSupportFragmentManager().findFragmentByTag(tag);
 		if (tabInfo.fragment != null && !tabInfo.fragment.isDetached()) {
 			log.debug("Detaching old fragment for tag: " + tag);
@@ -374,7 +399,8 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 			v = tabHost.getTabWidget().getChildTabViewAt(i);
 			v.setBackgroundResource(R.drawable.tab_indicator_compat_holo);
 
-			// ViewGroup.MarginLayoutParams params = (ViewGroup.MarginLayoutParams) v.getLayoutParams();
+			// ViewGroup.MarginLayoutParams params =
+			// (ViewGroup.MarginLayoutParams) v.getLayoutParams();
 			// // Fix margins in 2.x, by default there is -2
 			// params.setMargins(0, 0, 0, 0);
 		}

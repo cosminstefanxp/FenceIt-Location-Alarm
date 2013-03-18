@@ -14,6 +14,7 @@ import org.androwrapee.db.DefaultDAO;
 import android.content.Context;
 import android.content.Intent;
 
+import com.fenceit.R;
 import com.fenceit.alarm.actions.ActionType;
 import com.fenceit.alarm.actions.AlarmAction;
 import com.fenceit.alarm.actions.NotificationAction;
@@ -23,9 +24,10 @@ import com.fenceit.ui.RingerModeActivity;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
 /**
- * The AlarmActionBroker is a class that is aware of the implemented activities corresponding to action types.
- * It is used to mediate communication between activities that use AlarmAction and the effective
- * implementations of Activities corresponding to each Alarm Action type.
+ * The AlarmActionBroker is a class that is aware of the implemented activities
+ * corresponding to action types. It is used to mediate communication between
+ * activities that use AlarmAction and the effective implementations of
+ * Activities corresponding to each Alarm Action type.
  * <p>
  * It is also used to handle interaction with the database.
  * </p>
@@ -37,9 +39,9 @@ public class AlarmActionBroker {
 	 * 
 	 * @return the action types adapter
 	 */
-	public static SingleChoiceAdapter<ActionType> getActionTypesAdapter() {
-		return new SingleChoiceAdapter<ActionType>(null, new ActionType[] { ActionType.NotificationAction, ActionType.RingerModeAction },
-				new CharSequence[] { "Set up a notification message.", "Switch to a new ringer mode." });
+	public static SingleChoiceAdapter<ActionType> getActionTypesAdapter(Context ctx) {
+		return new SingleChoiceAdapter<ActionType>(null, new ActionType[] { ActionType.NotificationAction,
+				ActionType.RingerModeAction }, ctx.getResources().getStringArray(R.array.action_types));
 	}
 
 	/**
@@ -62,7 +64,8 @@ public class AlarmActionBroker {
 	}
 
 	/**
-	 * Fetches all the actions that match a particular where clause from the database.
+	 * Fetches all the actions that match a particular where clause from the
+	 * database.
 	 * 
 	 * @param context the context
 	 * @param where the where clause
@@ -72,8 +75,8 @@ public class AlarmActionBroker {
 		List<AlarmAction> actions = new ArrayList<AlarmAction>();
 
 		// Fetch Notification Actions
-		DefaultDAO<NotificationAction> daoNA = DatabaseManager.getDAOInstance(context, NotificationAction.class,
-				NotificationAction.tableName);
+		DefaultDAO<NotificationAction> daoNA = DatabaseManager.getDAOInstance(context,
+				NotificationAction.class, NotificationAction.tableName);
 		daoNA.open();
 		List<NotificationAction> actionsNA = daoNA.fetchAll(where);
 		daoNA.close();
@@ -99,14 +102,14 @@ public class AlarmActionBroker {
 	public static void deleteAction(Context context, AlarmAction action) {
 		switch (action.getType()) {
 		case NotificationAction:
-			DefaultDAO<NotificationAction> daoNA = DatabaseManager.getDAOInstance(context, NotificationAction.class,
-					NotificationAction.tableName);
+			DefaultDAO<NotificationAction> daoNA = DatabaseManager.getDAOInstance(context,
+					NotificationAction.class, NotificationAction.tableName);
 			daoNA.open();
 			daoNA.delete(action.getId());
 			daoNA.close();
 		case RingerModeAction:
-			DefaultDAO<RingerModeAction> daoRMA = DatabaseManager.getDAOInstance(context, RingerModeAction.class,
-					RingerModeAction.tableName);
+			DefaultDAO<RingerModeAction> daoRMA = DatabaseManager.getDAOInstance(context,
+					RingerModeAction.class, RingerModeAction.tableName);
 			daoRMA.open();
 			daoRMA.delete(action.getId());
 			daoRMA.close();

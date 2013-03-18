@@ -95,7 +95,7 @@ public class ActionsFragment extends SherlockFragment implements OnItemClickList
 
 		fetchActions(getArguments().getLong("alarmID"));
 		actionsAdapter = new ActionsAdapter(getActivity(), actions);
-		actionTypesAdapter = AlarmActionBroker.getActionTypesAdapter();
+		actionTypesAdapter = AlarmActionBroker.getActionTypesAdapter(getActivity());
 	}
 
 	@Override

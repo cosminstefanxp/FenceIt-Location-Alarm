@@ -62,6 +62,7 @@ public abstract class AbstractLocationActivity<T extends AbstractAlarmLocation> 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		getSupportActionBar().setHomeButtonEnabled(false);
 
 		// If it's a new activity
 		if (savedInstanceState == null) {

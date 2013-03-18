@@ -7,7 +7,6 @@
 package com.fenceit.db;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 import org.androwrapee.db.DefaultDAO;
@@ -100,6 +99,8 @@ public class AlarmLocationBroker {
 			break;
 		case GeoCoordinatesLocation:
 			intent = new Intent(context, CoordinatesActivity.class);
+		default:
+			break;
 		}
 		return intent;
 	}
@@ -143,6 +144,8 @@ public class AlarmLocationBroker {
 			daoCo.open();
 			location = daoCo.fetch(id);
 			daoCo.close();
+			break;
+		default:
 			break;
 		}
 		return location;
@@ -227,6 +230,8 @@ public class AlarmLocationBroker {
 			case CellNetworkLocation:
 				intent.putExtra(BackgroundService.SERVICE_EVENT_FIELD_NAME,
 						BackgroundService.SERVICE_EVENT_CELL_NETWORK);
+				break;
+			default:
 				break;
 			}
 		context.startService(intent);

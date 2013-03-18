@@ -16,7 +16,6 @@ public class DefaultActivity extends SherlockFragmentActivity {
 	protected void onCreate(Bundle arg0) {
 		super.onCreate(arg0);
 		getSupportActionBar().setHomeButtonEnabled(true);
-		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 	}
 
 	@Override
@@ -33,7 +32,7 @@ public class DefaultActivity extends SherlockFragmentActivity {
 			startActivity(new Intent(this, SettingsActivity.class));
 			return true;
 		case android.R.id.home:
-			// app icon in action bar clicked; go up
+			// home icon in action bar clicked; go home
 			Intent intent = new Intent(this, HomeActivity.class);
 			intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
 			startActivity(intent);

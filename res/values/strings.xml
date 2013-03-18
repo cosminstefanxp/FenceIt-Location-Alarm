@@ -40,7 +40,7 @@
     </string-array>
 
     <string name="dialog_new_trigger">Locate using</string>
-    <string name="dialog_new_action">Action of type</string>
+    <string name="dialog_new_action">Action type</string>
 
     <string-array name="location_types">
         <item>Connected Wi-Fi</item>
@@ -107,5 +107,9 @@
     <string name="sys_notification_trigger_reason">%s</string>
     <string name="sys_notification_triggered_title">Alarm triggered - %s</string>
     <string name="sys_notification_ongoing_title">FenceIt - Active Alarms</string>
+    <string-array name="action_types">
+        <item >Play notification alarm</item>
+        <item >Change the volume mode</item>
+    </string-array>
 
 </resources>
