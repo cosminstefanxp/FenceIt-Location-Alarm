@@ -107,9 +107,14 @@
     <string name="sys_notification_trigger_reason">%s</string>
     <string name="sys_notification_triggered_title">Alarm triggered - %s</string>
     <string name="sys_notification_ongoing_title">FenceIt - Active Alarms</string>
+	<string name="location_geo_map_marker_snippet">Latitude: %1$.4f \n Longitude: %2$.4f</string>
+	
     <string-array name="action_types">
-        <item >Play notification alarm</item>
-        <item >Change the volume mode</item>
+        <item>Play notification alarm</item>
+        <item>Change the volume mode</item>
     </string-array>
+        <string name="location_geo_map_marker_title">Location\'s Position</string>
+ 
+    
 
 </resources>

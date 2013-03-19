@@ -13,6 +13,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.MenuItem;
 import com.fenceit.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -38,10 +39,14 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 	/** The marker. */
 	private Marker mMarker;
 
+	/** Whether any changes were made. */
+	private boolean mChangesMade = false;
+
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.coordinates_location_map);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Get location coordinates
 		Bundle extras = getIntent().getExtras();
@@ -81,21 +86,71 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 				mMap.setMyLocationEnabled(true);
 				if (selectedLocation != null) {
 					// Set default zoom and location
-					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 15f));
-					mMarker = mMap.addMarker(new MarkerOptions().position(selectedLocation));
+					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 13f));
+					mMarker = mMap.addMarker(new MarkerOptions()
+							.position(selectedLocation)
+							.draggable(true)
+							.title(getString(R.string.location_geo_map_marker_title))
+							.snippet(
+									getString(R.string.location_geo_map_marker_snippet,
+											selectedLocation.latitude, selectedLocation.longitude)));
 				}
 
+				// On long click on the map select a new location and create a
+				// new marker
 				mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
 
 					@Override
 					public void onMapLongClick(LatLng point) {
 						selectedLocation = point;
-						mMarker.setPosition(selectedLocation);
+						mChangesMade = true;
+						if (mMarker != null) {
+							mMarker.setSnippet(CoordinatesMapActivity.this.getString(
+									R.string.location_geo_map_marker_snippet, selectedLocation.latitude,
+									selectedLocation.longitude));
+							mMarker.setPosition(selectedLocation);
+							mMarker.hideInfoWindow();
+						} else
+							mMarker = mMap.addMarker(new MarkerOptions()
+									.position(selectedLocation)
+									.title(getString(R.string.location_geo_map_marker_title))
+									.draggable(true)
+									.snippet(
+											CoordinatesMapActivity.this.getString(
+													R.string.location_geo_map_marker_snippet,
+													selectedLocation.latitude, selectedLocation.longitude)));
 					}
 				});
 
+				// When the marker is dragged, update the selected location
+				mMap.setOnMarkerDragListener(new GoogleMap.OnMarkerDragListener() {
+
+					@Override
+					public void onMarkerDragStart(Marker marker) {
+					}
+
+					@Override
+					public void onMarkerDragEnd(Marker marker) {
+						selectedLocation = marker.getPosition();
+						mChangesMade = true;
+					}
+
+					@Override
+					public void onMarkerDrag(Marker marker) {
+					}
+				});
 			}
 		}
+	}
+
+	@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch (item.getItemId()) {
+		case android.R.id.home:
+			returnSelectedLocation();
+			return true;
+		}
+		return super.onOptionsItemSelected(item);
 	}
 
 	@Override
@@ -109,11 +164,14 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 	 * 
 	 */
 	public void returnSelectedLocation() {
-		Toast.makeText(this, "Selected position: " + selectedLocation, Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent();
-		intent.putExtra("lat", selectedLocation.latitude);
-		intent.putExtra("long", selectedLocation.longitude);
-		setResult(RESULT_OK, intent);
+		if (mChangesMade) {
+			Toast.makeText(this, "Selected position: " + selectedLocation, Toast.LENGTH_SHORT).show();
+			intent.putExtra("lat", selectedLocation.latitude);
+			intent.putExtra("long", selectedLocation.longitude);
+			setResult(RESULT_OK, intent);
+		} else
+			setResult(RESULT_CANCELED);
 		finish();
 	}
 
