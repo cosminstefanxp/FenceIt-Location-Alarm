@@ -12,91 +12,107 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.actionbarsherlock.app.SherlockFragmentActivity;
 import com.fenceit.R;
-import com.fenceit.ui.helpers.LocationItemizedOverlay;
-import com.google.android.maps.GeoPoint;
-import com.google.android.maps.MapActivity;
-import com.google.android.maps.MapView;
-import com.google.android.maps.MyLocationOverlay;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 
 /**
  * The Class CoordinatesMapActivity.
  */
-public class CoordinatesMapActivity extends MapActivity {
+public class CoordinatesMapActivity extends SherlockFragmentActivity {
 
 	/** The logger. */
 	private static final Logger log = Logger.getLogger(CoordinatesMapActivity.class);
 
-	/** The map view. */
-	private MyCustomMapView mapView;
+	/** The map. */
+	private GoogleMap mMap;
 
-	/** The my location overlay. */
-	private MyLocationOverlay myLocationOverlay = null;
+	/** The selected location. */
+	private LatLng selectedLocation;
 
-	/** The overlay for showing the location. */
-	private LocationItemizedOverlay locationItemizedOverlay = null;
-
-	/** The selected latitude. */
-	private Double selectedLatitude;
-
-	/** The selected longitude. */
-	private Double selectedLongitude;
+	/** The marker. */
+	private Marker mMarker;
 
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.coordinates_location_map);
-		mapView = (MyCustomMapView) findViewById(R.id.coordinatesMap_mapView);
-		mapView.setBuiltInZoomControls(true);
 
 		// Get location coordinates
 		Bundle extras = getIntent().getExtras();
 		if (extras != null) {
-			selectedLatitude = extras.getDouble("lat");
-			selectedLongitude = extras.getDouble("long");
-			log.info("Showing coordinates map with current position at " + selectedLatitude + "/"
-					+ selectedLongitude);
+			if (extras.containsKey("lat"))
+				selectedLocation = new LatLng(extras.getDouble("lat"), extras.getDouble("long"));
+			log.info("Showing coordinates map with current position at " + selectedLocation);
 		}
 
-		// Add an on long press listener
-		mapView.setOnLongpressListener(new MyCustomMapView.OnLongpressListener() {
-			public void onLongpress(final MapView view, final GeoPoint longpressLocation) {
-				runOnUiThread(new Runnable() {
-					public void run() {
-						locationSelected(longpressLocation);
-					}
-				});
-			}
-		});
+		// Set up the map
+		setUpMapIfNeeded();
 
-		// Add overlay for current position
-		myLocationOverlay = new MyLocationOverlay(this, mapView);
-		mapView.getOverlays().add(myLocationOverlay);
-
-		// Add overlay for location, if anything was selected before
-		if (selectedLatitude != null) {
-
-			locationItemizedOverlay = new LocationItemizedOverlay(getResources().getDrawable(
-					R.drawable.ic_logo_old), selectedLatitude, selectedLongitude);
-			Logger.getRootLogger().info("Initialized: " + locationItemizedOverlay);
-			mapView.getOverlays().add(locationItemizedOverlay);
-		}
-
-		mapView.postInvalidate();
-
+		Toast.makeText(this, "Long press on the map to select the location's position.", Toast.LENGTH_LONG)
+				.show();
 	}
 
 	/**
-	 * A new location was selected.
-	 * 
-	 * @param point the geographical coordinates
+	 * Sets up the map if it is possible to do so (i.e., the Google Play
+	 * services APK is correctly installed) and the map has not already been
+	 * instantiated. This will ensure that we only ever manipulate the map once
+	 * when it {@link #mMap} is not null.
+	 * <p>
+	 * If it isn't installed {@link SupportMapFragment} (and
+	 * {@link com.google.android.gms.maps.MapView MapView}) will show a prompt
+	 * for the user to install/update the Google Play services APK on their
+	 * device.
 	 */
-	public void locationSelected(GeoPoint point) {
-		log.info("Long press at: " + point);
-		Toast.makeText(this, "Selected point: " + point, Toast.LENGTH_SHORT).show();
+	private void setUpMapIfNeeded() {
+		// Do a null check to confirm that we have not already instantiated the
+		// map.
+		if (mMap == null) {
+			mMap = ((SupportMapFragment) getSupportFragmentManager().findFragmentById(
+					R.id.coordinates_map_fragment)).getMap();
+			// Check if we were successful in obtaining the map.
+			if (mMap != null) {
+				// The Map is verified. It is now safe to manipulate the map:
+				mMap.setMyLocationEnabled(true);
+				if (selectedLocation != null) {
+					// Set default zoom and location
+					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 15f));
+					mMarker = mMap.addMarker(new MarkerOptions().position(selectedLocation));
+				}
+
+				mMap.setOnMapLongClickListener(new GoogleMap.OnMapLongClickListener() {
+
+					@Override
+					public void onMapLongClick(LatLng point) {
+						selectedLocation = point;
+						mMarker.setPosition(selectedLocation);
+					}
+				});
+
+			}
+		}
+	}
+
+	@Override
+	public void onBackPressed() {
+		returnSelectedLocation();
+	}
+
+	/**
+	 * A new location was selected so the results are returned to the previous
+	 * activity.
+	 * 
+	 */
+	public void returnSelectedLocation() {
+		Toast.makeText(this, "Selected position: " + selectedLocation, Toast.LENGTH_SHORT).show();
 		Intent intent = new Intent();
-		intent.putExtra("lat", point.getLatitudeE6());
-		intent.putExtra("long", point.getLongitudeE6());
+		intent.putExtra("lat", selectedLocation.latitude);
+		intent.putExtra("long", selectedLocation.longitude);
 		setResult(RESULT_OK, intent);
 		finish();
 	}
@@ -104,28 +120,15 @@ public class CoordinatesMapActivity extends MapActivity {
 	@Override
 	public void onResume() {
 		super.onResume();
-		myLocationOverlay.enableMyLocation();
-		myLocationOverlay.runOnFirstFix(new Runnable() {
-			public void run() {
-				mapView.getController().setCenter(myLocationOverlay.getMyLocation());
-			}
-		});
+		if (mMap != null)
+			mMap.setMyLocationEnabled(true);
 	}
 
 	@Override
 	public void onPause() {
 		super.onPause();
-		myLocationOverlay.disableMyLocation();
-	}
-
-	@Override
-	protected boolean isLocationDisplayed() {
-		return myLocationOverlay.isMyLocationEnabled();
-	}
-
-	@Override
-	protected boolean isRouteDisplayed() {
-		return false;
+		if (mMap != null)
+			mMap.setMyLocationEnabled(false);
 	}
 
 }

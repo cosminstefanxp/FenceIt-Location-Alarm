@@ -1,33 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    style="@style/BasicActivity"
-    android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
-
-    <FrameLayout
-        android:id="@+id/FrameLayout1"
-        android:layout_width="fill_parent"
-        android:layout_height="fill_parent" >
-
-        <com.fenceit.ui.MyCustomMapView
-            android:id="@+id/coordinatesMap.mapView"
-            android:layout_width="fill_parent"
-            android:layout_height="fill_parent"
-            android:apiKey="08Kv-m9y7oiTOna3_jOLsm5OL-4i0FORxBe4mDw"
-            android:clickable="true" >
-        </com.fenceit.ui.MyCustomMapView>
-
-        <TextView
-            android:id="@+id/textView1"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:paddingTop="10dp"
-            android:text="Long press to select a new point."
-            android:textAppearance="?android:attr/textAppearanceMedium"
-            android:textColor="@color/title_background" />
-
-    </FrameLayout>
-
-</LinearLayout>
+<fragment xmlns:android="http://schemas.android.com/apk/res/android"
+          android:id="@+id/coordinates_map_fragment"
+          android:layout_width="match_parent"
+          android:layout_height="match_parent"
+          android:name="com.google.android.gms.maps.SupportMapFragment"/>

@@ -210,8 +210,8 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 		if (resultCode == RESULT_OK && requestCode == REQ_MAP_SELECT) {
 			log.info("User selected location: " + data);
 			// Update the location
-			this.location.setLatitude((double) (data.getExtras().getInt("lat")) / 1000000);
-			this.location.setLongitude((double) (data.getExtras().getInt("long")) / 1000000);
+			this.location.setLatitude(data.getExtras().getDouble("lat"));
+			this.location.setLongitude(data.getExtras().getDouble("long"));
 			this.location.setExtra("User selected location");
 
 			// Update the UI
