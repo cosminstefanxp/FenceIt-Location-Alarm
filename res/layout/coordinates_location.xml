@@ -115,6 +115,7 @@
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
+                android:layout_alignParentBottom="true"
                 android:layout_marginLeft="3dp"
                 android:src="@drawable/ic_location_geo_map" />
 
