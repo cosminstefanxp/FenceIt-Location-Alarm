@@ -181,7 +181,7 @@ public class NotificationActivity extends DefaultActivity implements OnClickList
 			AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
 
 			// Create the dialog associated with setting Alarm name
-			builder.setTitle(R.string.notification_set_message);
+			builder.setTitle(R.string.notification_set_message_title);
 
 			// Prepare the text edit, including with margins
 			LayoutInflater factory = LayoutInflater.from(getActivity());

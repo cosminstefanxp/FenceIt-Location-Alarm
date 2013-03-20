@@ -30,9 +30,9 @@
     <string name="trigger_triggered_exit">Left</string>
     <string name="actions">Actions</string>
     <string name="action_add">Add a new Action</string>
-    <string name="notification_set_message">Touch to set a notification message</string>
     <string name="notification_no_message">&lt;No message for notification&gt;</string>
     <string name="notification_type_desc">Notification Action</string>
+    <string name="notification_set_message_title">Set a message</string>
 
     <string-array name="trigger_types">
         <item>Arriving</item>
@@ -97,8 +97,8 @@
     <string name="location_geo_activation_radius">Activation radius: %d m</string>
     <string name="location_geo_activation_radius_hint">Touch to set the location radius from the selected position.</string>
     <string name="action_notification_message">Notification Message</string>
-    <string name="notification_action_message_hint">Set the message of this notification.</string>
-    <string name="action_ringer_mode_type">Touch to set new Ringer Mode</string>
+    <string name="notification_action_message_hint">Touch to set a message for this notification.</string>
+    <string name="action_ringer_mode_type">Touch to set new Volume Mode</string>
     <string name="location_name_hint">Touch to set the name of this location.</string>
     <string name="location_favorite_hint_off">Touch to save as favorite</string>
     <string name="location_favorite_hint_on">Saved as favorite</string>
@@ -107,14 +107,15 @@
     <string name="sys_notification_trigger_reason">%s</string>
     <string name="sys_notification_triggered_title">Alarm triggered - %s</string>
     <string name="sys_notification_ongoing_title">FenceIt - Active Alarms</string>
-	<string name="location_geo_map_marker_snippet">Latitude: %1$.4f \n Longitude: %2$.4f</string>
-	
+    <string name="location_geo_map_marker_snippet">Latitude: %1$.4f \n Longitude: %2$.4f</string>
+
     <string-array name="action_types">
         <item>Play notification alarm</item>
         <item>Change the volume mode</item>
     </string-array>
-        <string name="location_geo_map_marker_title">Location\'s Position</string>
- 
-    
+
+    <string name="location_geo_map_marker_title">Location\'s Position</string>
+
+    <string name="location_geo_view_map_hint">Touch to view or set position on map.</string>
 
 </resources>

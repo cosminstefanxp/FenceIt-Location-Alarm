@@ -103,13 +103,15 @@
 
         <RelativeLayout
             android:id="@+id/coordinates.mapSection"
-            style="@style/SettingItem"
+            android:layout_marginTop="5dp"
+            style="@style/SettingItem.BothBorders"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content" >
 
             <ImageView
                 android:id="@+id/coordinates.mapImage"
                 android:layout_width="25dp"
+                android:layout_centerVertical="true"
                 android:layout_height="wrap_content"
                 android:layout_alignParentLeft="true"
                 android:layout_alignParentTop="true"
@@ -117,13 +119,20 @@
                 android:src="@drawable/ic_location_geo_map" />
 
             <TextView
+                android:id="@+id/coordinates.mapTitle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_centerVertical="true"
                 android:layout_marginLeft="19dp"
                 android:layout_toRightOf="@+id/coordinates.mapImage"
                 android:text="@string/location_geo_view_map"
                 android:textAppearance="?android:attr/textAppearanceMedium" />
+            <TextView
+                android:layout_alignLeft="@+id/coordinates.mapTitle"
+                android:layout_below="@+id/coordinates.mapTitle"
+                android:text="@string/location_geo_view_map_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceSmall" />
         </RelativeLayout>
 
         <TextView
