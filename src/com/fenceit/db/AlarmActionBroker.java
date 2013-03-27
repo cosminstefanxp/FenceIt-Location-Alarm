@@ -37,6 +37,7 @@ public class AlarmActionBroker {
 	/**
 	 * Gets the action types adapter.
 	 * 
+	 * @param ctx the ctx
 	 * @return the action types adapter
 	 */
 	public static SingleChoiceAdapter<ActionType> getActionTypesAdapter(Context ctx) {
@@ -114,5 +115,61 @@ public class AlarmActionBroker {
 			daoRMA.delete(action.getId());
 			daoRMA.close();
 		}
+	}
+
+	/**
+	 * Deletes a list of {@link AlarmAction}s from the database.
+	 * 
+	 * @param context the context
+	 * @param actions the actions
+	 */
+	public static void deleteActions(Context context, List<AlarmAction> actions) {
+		// Open the DAOs
+		DefaultDAO<NotificationAction> daoNA = DatabaseManager.getDAOInstance(context,
+				NotificationAction.class, NotificationAction.tableName);
+		daoNA.open();
+		DefaultDAO<RingerModeAction> daoRMA = DatabaseManager.getDAOInstance(context, RingerModeAction.class,
+				RingerModeAction.tableName);
+		daoRMA.open();
+
+		// Delete each action
+		for (AlarmAction action : actions) {
+			switch (action.getType()) {
+			case NotificationAction:
+				daoNA.delete(action.getId());
+				break;
+			case RingerModeAction:
+				daoRMA.delete(action.getId());
+			default:
+				break;
+			}
+		}
+
+		daoNA.close();
+		daoRMA.close();
+	}
+
+	/**
+	 * Deletes the {@link AlarmAction}s from the database that match a given
+	 * where clause.
+	 * 
+	 * @param context the context
+	 * @param whereClause the where clause
+	 */
+	public static void deleteActions(Context context, String whereClause) {
+		// Open the DAOs
+		DefaultDAO<NotificationAction> daoNA = DatabaseManager.getDAOInstance(context,
+				NotificationAction.class, NotificationAction.tableName);
+		daoNA.open();
+		DefaultDAO<RingerModeAction> daoRMA = DatabaseManager.getDAOInstance(context, RingerModeAction.class,
+				RingerModeAction.tableName);
+		daoRMA.open();
+
+		// Delete actions
+		daoNA.delete(whereClause);
+		daoRMA.delete(whereClause);
+
+		daoNA.close();
+		daoRMA.close();
 	}
 }

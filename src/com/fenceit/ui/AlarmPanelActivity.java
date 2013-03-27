@@ -7,6 +7,7 @@
 package com.fenceit.ui;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
@@ -18,11 +19,17 @@ import android.widget.AdapterView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.AdapterView.OnItemLongClickListener;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.actionbarsherlock.view.ActionMode;
 import com.actionbarsherlock.view.Menu;
 import com.fenceit.R;
 import com.fenceit.alarm.Alarm;
+import com.fenceit.alarm.locations.AlarmLocation;
+import com.fenceit.alarm.triggers.BasicTrigger;
+import com.fenceit.db.AlarmActionBroker;
+import com.fenceit.db.AlarmLocationBroker;
+import com.fenceit.db.DatabaseAccessor;
 import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.AlarmAdapter;
 import com.fenceit.ui.helpers.EditItemActionMode;
@@ -109,8 +116,28 @@ public class AlarmPanelActivity extends DefaultActivity implements OnItemClickLi
 	private void deleteAlarm(Alarm alarm) {
 		log.info("Deleting alarm: " + alarm);
 		dao.open();
-		dao.delete(alarm.getId());
-		alarms.remove(alarm);
+		if (dao.delete(alarm.getId())) {
+			Toast.makeText(this, "Alarm deleted.", Toast.LENGTH_SHORT).show();
+			alarms.remove(alarm);
+
+			// Delete the associated triggers and associated locations
+			List<BasicTrigger> triggers = DatabaseAccessor.buildFullTriggers(this,
+					DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarm.getId());
+			List<AlarmLocation> locationsToDelete = new ArrayList<AlarmLocation>();
+			for (BasicTrigger trigger : triggers)
+				if (trigger.getLocation() != null && !trigger.getLocation().isFavorite())
+					locationsToDelete.add(trigger.getLocation());
+			DefaultDAO<BasicTrigger> daoTrigger = DatabaseManager.getDAOInstance(
+					this.getApplicationContext(), BasicTrigger.class, BasicTrigger.tableName);
+			daoTrigger.open();
+			daoTrigger.delete(DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarm.getId());
+			daoTrigger.close();
+			AlarmLocationBroker.deleteLocations(this, locationsToDelete);
+
+			// Delete the associated actions
+			AlarmActionBroker.deleteActions(this, DefaultDAO.REFERENCE_PREPENDER + "alarm=" + alarm.getId());
+		}
+
 		dao.close();
 	}
 

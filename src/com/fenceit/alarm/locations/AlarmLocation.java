@@ -9,9 +9,7 @@ package com.fenceit.alarm.locations;
 import org.androwrapee.db.DatabaseReferenceClass;
 
 import android.content.Context;
-import android.text.Html;
 
-import com.fenceit.R;
 import com.fenceit.provider.ContextData;
 
 /**
@@ -115,4 +113,12 @@ public interface AlarmLocation extends DatabaseReferenceClass {
 	 */
 	public boolean isComplete();
 
+	/**
+	 * Checks if is favorite.
+	 * 
+	 * @return true, if is favorite
+	 */
+	public boolean isFavorite();
+	
+	
 }

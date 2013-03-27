@@ -93,11 +93,7 @@ public abstract class AbstractAlarmLocation implements AlarmLocation, Serializab
 		this.name = name;
 	}
 
-	/**
-	 * Checks if is favorite.
-	 * 
-	 * @return true, if is favorite
-	 */
+	@Override
 	public boolean isFavorite() {
 		return favorite;
 	}

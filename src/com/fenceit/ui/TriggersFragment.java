@@ -245,11 +245,19 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 	 */
 	private void deleteTrigger(BasicTrigger trigger) {
 		log.info("Deleting trigger with id: " + trigger.getId());
+		// Delete the trigger
 		if (daoTriggers.open().delete(trigger.getId())) {
 			Toast.makeText(getActivity(), "Trigger deleted.", Toast.LENGTH_SHORT).show();
 		}
 		triggers.remove(trigger);
 		daoTriggers.close();
+
+		// Delete the associated location
+		if (trigger.getLocation() != null && !trigger.getLocation().isFavorite()) {
+			if (log.isInfoEnabled())
+				log.info("Deleting alarm with id: " + trigger.getLocation().getId());
+			AlarmLocationBroker.deleteLocation(getActivity(), trigger.getLocation());
+		}
 
 	}
 

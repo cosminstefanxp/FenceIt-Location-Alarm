@@ -29,8 +29,9 @@ import com.fenceit.ui.WifisDetectedActivity;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
 /**
- * The AlarmLocationBroker is a class that is aware of the implemented activities corresponding to location
- * types. It is used to mediate communication between activities that use AlarmLocation and the effective
+ * The AlarmLocationBroker is a class that is aware of the implemented
+ * activities corresponding to location types. It is used to mediate
+ * communication between activities that use AlarmLocation and the effective
  * implementations of Activities corresponding to each Alarm Location type.
  * <p>
  * It is also used to handle interaction with the database.
@@ -44,7 +45,8 @@ public class AlarmLocationBroker {
 			LocationType.CellNetworkLocation, LocationType.GeoCoordinatesLocation };
 
 	/**
-	 * Gets the location types. The LocationType array returned is final and should not be modified.
+	 * Gets the location types. The LocationType array returned is final and
+	 * should not be modified.
 	 * 
 	 * @return the location types
 	 */
@@ -54,7 +56,7 @@ public class AlarmLocationBroker {
 
 	/**
 	 * Gets the location types adapter.
-	 *
+	 * 
 	 * @param ctx the context
 	 * @return the location types adapter
 	 */
@@ -64,7 +66,8 @@ public class AlarmLocationBroker {
 	}
 
 	/**
-	 * Gets the location types adapter, including the fake {@link LocationType#FavoriteExistingLocation}.
+	 * Gets the location types adapter, including the fake
+	 * {@link LocationType#FavoriteExistingLocation}.
 	 * 
 	 * @param ctx the context
 	 * @return the location types adapter
@@ -152,7 +155,8 @@ public class AlarmLocationBroker {
 	}
 
 	/**
-	 * Fetches all the locations that match a particular where clause from the database.
+	 * Fetches all the locations that match a particular where clause from the
+	 * database.
 	 * 
 	 * @param context the context
 	 * @param where the where clause
@@ -197,16 +201,17 @@ public class AlarmLocationBroker {
 	}
 
 	/**
-	 * Start the background service from an activity and issues a trigger check for a particular location
-	 * type.
+	 * Start the background service from an activity and issues a trigger check
+	 * for a particular location type.
 	 * <p>
-	 * The purpose is to notify the background service, if running (otherwise start it), that some triggers
-	 * with this particular location type has been modified and that at a trigger check should be scheduled
-	 * soon.
+	 * The purpose is to notify the background service, if running (otherwise
+	 * start it), that some triggers with this particular location type has been
+	 * modified and that at a trigger check should be scheduled soon.
 	 * </p>
 	 * 
 	 * @param context the context
-	 * @param type the type of location, or null if the service should schedule a check for all location types
+	 * @param type the type of location, or null if the service should schedule
+	 *            a check for all location types
 	 */
 	public static void startServiceFromActivity(Context context, LocationType type) {
 		Intent intent = new Intent(context, BackgroundService.class);
@@ -235,5 +240,101 @@ public class AlarmLocationBroker {
 				break;
 			}
 		context.startService(intent);
+	}
+
+	/**
+	 * Deletes an {@link AlarmLocation} from the database.
+	 * 
+	 * @param context the context
+	 * @param location the location
+	 */
+	public static void deleteLocation(Context context, AlarmLocation location) {
+
+		switch (location.getType()) {
+		case WifiConnectedLocation:
+			// Delete WifiConnectedLocation
+			DefaultDAO<WifiConnectedLocation> daoWC = DatabaseManager.getDAOInstance(context,
+					WifiConnectedLocation.class, WifiConnectedLocation.tableName);
+			daoWC.open();
+			daoWC.delete(location.getId());
+			daoWC.close();
+			break;
+		case WifisDetectedLocation:
+			// Delete WifisDetectedLocation
+			DefaultDAO<WifisDetectedLocation> daoWD = DatabaseManager.getDAOInstance(context,
+					WifisDetectedLocation.class, WifisDetectedLocation.tableName);
+			daoWD.open();
+			daoWD.delete(location.getId());
+			daoWD.close();
+			break;
+		case CellNetworkLocation:
+			// Delete CellLocation
+			DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context,
+					CellNetworkLocation.class, CellNetworkLocation.tableName);
+			daoC.open();
+			daoC.delete(location.getId());
+			daoC.close();
+			break;
+		case GeoCoordinatesLocation:
+			// Delete CoordinatesLocation
+			DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context,
+					CoordinatesLocation.class, CoordinatesLocation.tableName);
+			daoCo.open();
+			daoCo.delete(location.getId());
+			daoCo.close();
+		default:
+			break;
+		}
+	}
+
+	/**
+	 * Deletes a series of {@link AlarmLocation}s from the database.
+	 * 
+	 * @param context the context
+	 * @param locations the locations
+	 */
+	public static void deleteLocations(Context context, List<AlarmLocation> locations) {
+		// Open the DAOs
+		DefaultDAO<WifiConnectedLocation> daoWC = DatabaseManager.getDAOInstance(context,
+				WifiConnectedLocation.class, WifiConnectedLocation.tableName);
+		daoWC.open();
+
+		DefaultDAO<WifisDetectedLocation> daoWD = DatabaseManager.getDAOInstance(context,
+				WifisDetectedLocation.class, WifisDetectedLocation.tableName);
+		daoWD.open();
+
+		DefaultDAO<CellNetworkLocation> daoC = DatabaseManager.getDAOInstance(context,
+				CellNetworkLocation.class, CellNetworkLocation.tableName);
+		daoC.open();
+
+		DefaultDAO<CoordinatesLocation> daoCo = DatabaseManager.getDAOInstance(context,
+				CoordinatesLocation.class, CoordinatesLocation.tableName);
+		daoCo.open();
+
+		// Delete each location
+		for (AlarmLocation location : locations) {
+			switch (location.getType()) {
+			case CellNetworkLocation:
+				daoC.delete(location.getId());
+				break;
+			case WifiConnectedLocation:
+				daoWC.delete(location.getId());
+				break;
+			case WifisDetectedLocation:
+				daoWD.delete(location.getId());
+				break;
+			case GeoCoordinatesLocation:
+				daoCo.delete(location.getId());
+				break;
+			default:
+				break;
+			}
+		}
+
+		// Close the DAOs
+		daoWC.close();
+		daoWD.close();
+		daoC.close();
+		daoCo.close();
 	}
 }
