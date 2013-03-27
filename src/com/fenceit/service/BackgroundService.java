@@ -267,9 +267,8 @@ public class BackgroundService extends Service {
 	 */
 	private Notification prepareOngoingNotification() {
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext())
-				.setSmallIcon(R.drawable.ic_launcher)
-				.setContentTitle(getString(R.string.sys_notification_ongoing_title))
-				.setOngoing(true);
+				.setSmallIcon(R.drawable.ic_stat_notify_logo)
+				.setContentTitle(getString(R.string.sys_notification_ongoing_title)).setOngoing(true);
 
 		// On click, create a new FenceIt Activity. If the activity is started
 		// already, clear everything above it and bring it back
@@ -293,15 +292,16 @@ public class BackgroundService extends Service {
 		// On click, create a new FenceIt Activity. If the activity is started
 		// already, clear everything above it and bring it back
 		Intent notificationIntent = new Intent(this, AlarmPanelActivity.class);
-		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+		notificationIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_NEW_TASK);
 		PendingIntent pendingIntent = PendingIntent.getActivity(this, requestCode, notificationIntent, 0);
 
 		// Create the notification
 		NotificationCompat.Builder builder = new NotificationCompat.Builder(getApplicationContext());
-		builder.setSmallIcon(R.drawable.ic_launcher).setContentTitle(title).setContentText(message)
-				.setContentIntent(pendingIntent).setTicker(tickerText).setAutoCancel(true);
+		builder.setSmallIcon(R.drawable.ic_stat_notify_logo).setContentTitle(title).setContentText(message)
+				.setContentIntent(pendingIntent).setTicker(tickerText).setAutoCancel(true)
+				.setOnlyAlertOnce(true).setDefaults(Notification.DEFAULT_ALL);
 		Notification notification = builder.build();
-		notification.flags |= Notification.FLAG_SHOW_LIGHTS | Notification.FLAG_AUTO_CANCEL;
+		notification.flags |= Notification.FLAG_AUTO_CANCEL;
 		notificationManager.notify(ALARM_TRIGGERED_NOTIFICATION, notification);
 	}
 
