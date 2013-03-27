@@ -176,7 +176,6 @@ public class BackgroundService extends Service {
 
 		if (log.isInfoEnabled())
 			log.info("Starting Background Service with intent: " + intent);
-		Toast.makeText(this, "Background Service Started...", Toast.LENGTH_SHORT).show();
 
 		// Process the extras
 		int event = intent.getIntExtra(SERVICE_EVENT_FIELD_NAME, SERVICE_EVENT_NONE);

@@ -19,6 +19,7 @@ import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.ListView;
 
@@ -187,6 +188,8 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 				daoTrigger.close();
 				// If there's no trigger with this location
 				if (c.getCount() == 0) {
+					Toast.makeText(this, "Location deleted as it's not connected to any trigger anymore.",
+							Toast.LENGTH_LONG).show();
 					log.info("Deleting ex-favorite location as it's not connected to any trigger: "
 							+ l.getId());
 					AlarmLocationBroker.deleteLocation(this, l);
