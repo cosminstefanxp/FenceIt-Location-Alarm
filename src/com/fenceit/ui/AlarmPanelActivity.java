@@ -70,6 +70,7 @@ public class AlarmPanelActivity extends DefaultActivity implements OnItemClickLi
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		getSupportActionBar().setHomeButtonEnabled(true);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		setContentView(R.layout.alarm_panel);
 
@@ -99,7 +100,8 @@ public class AlarmPanelActivity extends DefaultActivity implements OnItemClickLi
 
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-		if (item.getItemId() == R.id.menu_btn_add_item) {
+		switch (item.getItemId()) {
+		case R.id.menu_btn_add_item:
 			log.debug("Add alarm button clicked.");
 			Intent addAlarmActivityIntent = new Intent(this, AlarmActivity.class);
 			startActivityForResult(addAlarmActivityIntent, REQ_CODE_ADD_ALARM);

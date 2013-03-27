@@ -255,7 +255,7 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 		// Delete the associated location
 		if (trigger.getLocation() != null && !trigger.getLocation().isFavorite()) {
 			if (log.isInfoEnabled())
-				log.info("Deleting alarm with id: " + trigger.getLocation().getId());
+				log.info("Deleting location with id: " + trigger.getLocation().getId());
 			AlarmLocationBroker.deleteLocation(getActivity(), trigger.getLocation());
 		}
 
@@ -287,8 +287,13 @@ public class TriggersFragment extends SherlockFragment implements OnItemClickLis
 			storeTrigger(trigger, true);
 			triggers.add(trigger);
 			refreshTriggersView();
+			return;
 		}
-		// TODO: Selected activity
+		if(resultCode==Activity.RESULT_OK && requestCode==REQ_CODE_EDIT_LOCATION)
+		{
+			fetchTriggers(container.getCorrespondingAlarm().getId());
+			refreshTriggersView();
+		}
 	}
 
 	/**

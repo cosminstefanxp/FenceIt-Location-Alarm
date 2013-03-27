@@ -15,6 +15,7 @@ import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,26 +27,33 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.fenceit.R;
 import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.locations.LocationType;
+import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.AlarmLocationBroker;
+import com.fenceit.db.DatabaseManager;
 import com.fenceit.ui.adapters.LocationsAdapter;
 import com.fenceit.ui.adapters.SingleChoiceAdapter;
 
 /**
- * The Class LocationPanelActivity showing all the Locations that have been marked as favorite.
+ * The Class LocationPanelActivity showing all the Locations that have been
+ * marked as favorite.
  */
 public class LocationPanelActivity extends DefaultActivity implements OnItemClickListener {
 
-	/** The Constant REQ_CODE_ADD_LOCATION used as a request code when adding a new location. */
+	/**
+	 * The Constant REQ_CODE_ADD_LOCATION used as a request code when adding a
+	 * new location.
+	 */
 	private static final int REQ_CODE_ADD_LOCATION = 1;
 
 	/**
-	 * The Constant DIALOG_NEW_LOCATION used for the dialog requesting location type, when adding a new
-	 * location.
+	 * The Constant DIALOG_NEW_LOCATION used for the dialog requesting location
+	 * type, when adding a new location.
 	 */
 	private static final int DIALOG_NEW_LOCATION = 1;
 
 	/**
-	 * The Constant REQ_CODE_EDIT_LOCATION used as a request code when editing an existing location.
+	 * The Constant REQ_CODE_EDIT_LOCATION used as a request code when editing
+	 * an existing location.
 	 */
 	private static final int REQ_CODE_EDIT_LOCATION = 2;
 
@@ -73,6 +81,7 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.location_panel);
+		getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
 		// Check the purpose of starting this Locations Panel
 		Bundle extras = getIntent().getExtras();
@@ -103,7 +112,8 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 
 	@Override
 	public boolean onOptionsItemSelected(com.actionbarsherlock.view.MenuItem item) {
-		if (item.getItemId() == R.id.menu_btn_add_item) {
+		switch (item.getItemId()) {
+		case R.id.menu_btn_add_item:
 			log.debug("Add location button clicked.");
 			showDialog(DIALOG_NEW_LOCATION);
 			return true;
@@ -114,8 +124,9 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget.AdapterView,
-	 * android.view.View, int, long)
+	 * @see
+	 * android.widget.AdapterView.OnItemClickListener#onItemClick(android.widget
+	 * .AdapterView, android.view.View, int, long)
 	 */
 	@Override
 	public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -152,17 +163,45 @@ public class LocationPanelActivity extends DefaultActivity implements OnItemClic
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see android.app.Activity#onActivityResult(int, int, android.content.Intent)
+	 * @see android.app.Activity#onActivityResult(int, int,
+	 * android.content.Intent)
 	 */
 	@Override
 	protected void onActivityResult(int requestCode, int resultCode, Intent data) {
 		super.onActivityResult(requestCode, resultCode, data);
 		log.debug("Activity Result received for request " + requestCode + " with result code: " + resultCode);
 
-		// If a new location was added, fetch the locations and refresh the adapter
+		// If a location was edited and it's not favorite anymore and it's not
+		// present in connection to other triggers, delete it from the database
+		if (requestCode == REQ_CODE_EDIT_LOCATION && resultCode == RESULT_OK) {
+			long locationID = data.getLongExtra("id", -1);
+			String typeS = data.getStringExtra("type");
+			LocationType type = LocationType.valueOf(LocationType.class, typeS);
+			AlarmLocation l = AlarmLocationBroker.fetchLocation(this, locationID, type);
+			if (!l.isFavorite()) {
+				// Find if there's any trigger connected to the location
+				DefaultDAO<BasicTrigger> daoTrigger = DatabaseManager.getDAOInstance(
+						this.getApplicationContext(), BasicTrigger.class, BasicTrigger.tableName);
+				daoTrigger.open();
+				Cursor c = daoTrigger.fetchCursor(DefaultDAO.REFERENCE_PREPENDER + "location=" + l.getId());
+				daoTrigger.close();
+				// If there's no trigger with this location
+				if (c.getCount() == 0) {
+					log.info("Deleting ex-favorite location as it's not connected to any trigger: "
+							+ l.getId());
+					AlarmLocationBroker.deleteLocation(this, l);
+				}
+			}
+			log.debug("Refreshing locations...");
+			fetchLocations();
+			listAdapter.setLocations(locations);
+			return;
+		}
+
+		// If a new location was added, fetch the locations and refresh the
+		// adapter
 		// TODO: can be optimized to only fetch new things
-		if ((requestCode == REQ_CODE_ADD_LOCATION || requestCode == REQ_CODE_EDIT_LOCATION)
-				&& resultCode == RESULT_OK) {
+		if (requestCode == REQ_CODE_ADD_LOCATION && resultCode == RESULT_OK) {
 			log.debug("Refreshing locations...");
 			fetchLocations();
 			listAdapter.setLocations(locations);
