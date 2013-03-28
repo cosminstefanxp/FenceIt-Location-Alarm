@@ -61,7 +61,7 @@ public class SimpleEula {
 	/**
 	 * Show.
 	 */
-	public void show() {
+	public void show(boolean forced) {
 		PackageInfo versionInfo = getPackageInfo();
 
 		// the eulaKey changes every time you increment the version number in
@@ -69,7 +69,7 @@ public class SimpleEula {
 		final String eulaKey = EULA_PREFIX + versionInfo.versionCode;
 		final SharedPreferences prefs = PreferenceManager.getDefaultSharedPreferences(mActivity);
 		boolean hasBeenShown = prefs.getBoolean(eulaKey, false);
-		if (hasBeenShown == false) {
+		if (hasBeenShown == false || forced == true) {
 
 			// Show the Eula
 			String title = mActivity.getString(R.string.app_name) + " v" + versionInfo.versionName;
@@ -94,7 +94,7 @@ public class SimpleEula {
 			String message = content;
 
 			AlertDialog.Builder builder = new AlertDialog.Builder(mActivity).setTitle(title)
-					.setMessage(message).setPositiveButton(android.R.string.ok, new Dialog.OnClickListener() {
+					.setMessage(message).setPositiveButton("I agree", new Dialog.OnClickListener() {
 
 						@Override
 						public void onClick(DialogInterface dialogInterface, int i) {
@@ -104,11 +104,15 @@ public class SimpleEula {
 							editor.commit();
 							dialogInterface.dismiss();
 						}
-					}).setNegativeButton(android.R.string.cancel, new Dialog.OnClickListener() {
+					}).setNegativeButton("I disagree", new Dialog.OnClickListener() {
 
 						@Override
 						public void onClick(DialogInterface dialog, int which) {
-							// Close the activity as they have declined the EULA
+							// Close the activity, as they have declined the
+							// EULA
+							SharedPreferences.Editor editor = prefs.edit();
+							editor.putBoolean(eulaKey, false);
+							editor.commit();
 							mActivity.finish();
 						}
 
@@ -116,5 +120,4 @@ public class SimpleEula {
 			builder.create().show();
 		}
 	}
-
 }

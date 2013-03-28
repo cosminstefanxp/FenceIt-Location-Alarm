@@ -7,8 +7,10 @@
 package com.fenceit.ui;
 
 import android.os.Bundle;
+import android.view.View;
 
 import com.fenceit.R;
+import com.fenceit.ui.helpers.SimpleEula;
 
 /**
  * The Class AboutActivity.
@@ -23,5 +25,13 @@ public class AboutActivity extends DefaultActivity {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		setContentView(R.layout.about);
+
+		findViewById(R.id.about_eulaText).setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			public void onClick(View v) {
+				new SimpleEula(AboutActivity.this).show(true);
+			}
+		});
 	}
 }

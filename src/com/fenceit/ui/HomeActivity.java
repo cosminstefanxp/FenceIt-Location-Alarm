@@ -20,7 +20,7 @@ public class HomeActivity extends DefaultActivity implements OnClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		init();
-		new SimpleEula(this).show();
+		new SimpleEula(this).show(false);
 
 		getSupportActionBar().setHomeButtonEnabled(false);
 
