@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/RelativeLayout1"
-    style="@style/BasicActivity"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:orientation="vertical" >
@@ -12,7 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true"
-        android:src="@drawable/ic_logo" />
+        android:src="@drawable/ic_launcher" />
 
     <TextView
         android:id="@+id/about.versionText"
@@ -21,7 +20,7 @@
         android:layout_above="@+id/about.logoImage"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="20dp"
-        android:text="Version 0.9.12"
+        android:text="Version 1.0.12"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView

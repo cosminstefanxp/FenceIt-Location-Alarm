@@ -19,104 +19,10 @@
 -->
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
-    <!-- Base application theme is the default theme. -->
-    <style name="Theme" parent="android:Theme"></style>
-
-    <!-- Variation on the Light theme that turns off the title -->
-    <style name="Theme.D1t" parent="android:style/Theme.Light"></style>
-
-    <style name="Theme.D1" parent="android:style/Theme.Translucent"></style>
-
-    <style name="Theme.D1dialog" parent="android:style/Theme.Dialog"></style>
-
-    <style name="Theme.D1tranlucent" parent="android:style/Theme.Translucent"></style>
-
-     <!-- Title Bar -->
-    <style name="TitleBar">
-    </style>
-
-    <style name="TitleBarAction">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <!-- - <item name="android:background">@null</item> -->
-        <item name="android:background">@color/abs__background_holo_dark</item>
-    </style>
-
-    <style name="TitleBarAction.Text">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_weight">0</item>
-        <item name="android:gravity">center_vertical|right</item>
-        <item name="android:textSize">@dimen/text_size_small</item>
-        <item name="android:paddingLeft">12dip</item>
-        <item name="android:paddingRight">12dip</item>
-        <item name="android:textStyle">italic</item>
-        <item name="android:textColor">@color/title_text</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <style name="TitleBarProgressIndicator" parent="@android:style/Widget.ProgressBar.Small">
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:layout_marginLeft">14dip</item>
-        <item name="android:layout_marginRight">15dip</item>
-        <item name="android:layout_marginTop">14dip</item>
-        <item name="android:indeterminate">true</item>
-    </style>
-
-    <style name="TitleBarSeparator">
-        <item name="android:layout_width">1px</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:background">@color/title_separator</item>
-        <item name="android:contentDescription">@string/description_separator</item>
-    </style>
-
-    <style name="TitleBarLogo">
-        <item name="android:id">@id/title_logo</item>
-        <item name="android:layout_width">wrap_content</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:clickable">true</item>
-    </style>
-
-    <style name="TitleBarSpring">
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:layout_weight">1</item>
-    </style>
-
-    <style name="TitleBarText">
-        <item name="android:id">@id/title_text</item>
-        <item name="android:layout_width">0dp</item>
-        <item name="android:layout_height">fill_parent</item>
-        <item name="android:layout_weight">1</item>
-        <item name="android:gravity">center_vertical</item>
-        <item name="android:textSize">@dimen/text_size_medium</item>
-        <item name="android:paddingLeft">12dip</item>
-        <item name="android:paddingRight">12dip</item>
-        <item name="android:textStyle">bold</item>
-        <item name="android:textColor">@color/title_text</item>
-        <item name="android:singleLine">true</item>
-        <item name="android:ellipsize">end</item>
-    </style>
-
-    <!-- Body and general layouts -->
-
- 
-
-
     <style name="TextBody">
         <item name="android:textSize">15sp</item>
         <item name="android:lineSpacingMultiplier">1.1</item>
         <item name="android:textColor">@android:color/primary_text_dark</item>
-    </style>
-
-    <style name="BasicActivity"></style>
-
-    <style name="Button">
-
-        <!-- - <item name="android:background">@null</item> -->
-        <item name="android:background">@drawable/title_button</item>
     </style>
 
     <style name="DashboardButton">
@@ -129,16 +35,6 @@
         <item name="android:textStyle">bold</item>
         <item name="android:textColor">#ff0000</item>
         <item name="android:background">@null</item>
-    </style>
-
-
-    <style name="SectionHeaderSmall">
-        <item name="android:layout_width">fill_parent</item>
-        <item name="android:layout_height">wrap_content</item>
-        <item name="android:paddingLeft">15dp</item>
-        <item name="android:paddingBottom">5dp</item>
-        <item name="android:paddingTop">5dp</item>
-        <item name="android:background">@drawable/bottom_border</item>
     </style>
 
     <style name="NumberPickerInputText" parent="@android:style/TextAppearance.Large.Inverse">
