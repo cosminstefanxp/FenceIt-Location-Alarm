@@ -42,7 +42,7 @@
         android:layout_below="@+id/about.logoImage"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="20dp"
-        android:text="Cosmin Stefan-Dobrin"
+        android:text="Cosmin Stefan"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <TextView
@@ -52,7 +52,7 @@
         android:layout_below="@+id/about.authorText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="2dp"
-        android:text="cosmin.stefan-dobrin@cti.pub.ro"
+        android:text="cosminstefanxp@gmail.com"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
     <TextView
@@ -62,7 +62,7 @@
         android:layout_below="@+id/about.emailText"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="2dp"
-        android:text="Copyright 2012"
+        android:text="Copyright 2012-2013"
         android:textAppearance="?android:attr/textAppearanceSmall" />
 
 </RelativeLayout>
