@@ -2,6 +2,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
+    android:windowActionBar="false"
+    android:background="@color/dim_foreground_inverse_holo_light"
     android:onClick="onClickScreen" >
 
     <TextView
@@ -20,6 +22,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
+        android:layout_marginBottom="10dp"
         android:gravity="center"
         android:padding="6dp"
         android:text="Click anywhere on the screen to stop the alarm." />
@@ -31,7 +34,8 @@
         android:layout_below="@+id/notification.titleText"
         android:layout_centerHorizontal="true"
         android:scaleType="fitStart"
-        android:src="@drawable/alarm_clock" />
+        android:layout_marginTop="10dp"
+        android:src="@drawable/alarm_bell" />
 
     <TextView
         android:id="@+id/notification.descriptionText"
@@ -50,7 +54,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="50dp"
         android:text="FenceIt"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="24sp"

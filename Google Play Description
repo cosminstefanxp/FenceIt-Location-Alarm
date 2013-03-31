@@ -1,0 +1,30 @@
+Location-aware applications have become some of the most important and used applications on mobile devices and people are in constant search of tools that make their life easier and more efficient. Yet, the main technology used for locating a mobile device is still the Global Positioning System, which has high power consumption and requires special hardware. However, there are situations, such as the case of applications for Location-Based Alarms, when an exact localization is not required. In this paper, we study four methods for localizing a device and what algorithms could be used to improve the process. We present the development of FenceIt, an Android application that allows users to define location-based alarms and which uses alternative methods to GPS positioning and different data processing algorithms in order to preserve both the battery level and the data connection, while being easy to use and attractively designed.
+
+In many scenarios it is useful or it suffices to just determine if a device is or is not in a particular area
+and not exactly where that area is. For example, for the purpose of a location based alarm
+application, it would suffice to conclude that the device has reached “Home”, not being necessary to
+know exactly what address “Home” has or what are its geographical coordinates.
+
+While most of the existing applications in this field use a straightforward approach regarding when to
+check for updates, acquiring information from the environment at regular time intervals and
+checking if any conditions have been met, this is not the optimal behavior. In some cases, more
+information from the context can be used to make the querying algorithm more efficient.
+An important type of optimization is only applicable to the first type of alarm (using the geographic
+coordinates) and considers the distance of the target location to the current position. For instance, if
+there is only one alarm of this particular active in the application and its target location is far from
+the current position of the device (for example a few kilometers), querying for GPS location every
+second is inefficient, as it is not practically possible to arrive at that location in that short amount of
+time. In such a case, an approximation algorithm that takes into consideration the current speed,
+direction and distance to target and estimates the arrival moment at the location can be used to
+dynamically change the frequency of data acquisition from the GPS hardware.
+Another optimization considers the inactivity of the device or the lack of movement. If it hasn’t
+moved for a considerable amount of time, the frequency at which any type of data acquisition should
+be done can decrease, improving the battery consumption. This can prove highly efficient, as it
+considers cases when, for instance, the user is at work or at home and the mobile device is stationary
+on a table. If this happens for a considerable amount of time, it’s inefficient to acquire location
+information every second and an algorithm can be used to compute a dynamic waiting time between
+data gatherings.
+The third possible type of optimization includes pre-defined inactivity periods, when the user knows
+that he/she will most likely not move very often, if at all. As an example, we can consider the case of
+time spent at home, during the night, when the user is usually stationary and the frequency of
+alarms’ analysis should not be as high as during the day, when the probability of movement is higher.

@@ -2,7 +2,8 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
 
     <style name="Theme.FenceIt" parent="Theme.Sherlock.Light">
-        <item name="android:dropDownSpinnerStyle">@style/SpinnerStyle.Light</item>
+        <item name="android:dropDownSpinnerStyle">@style/SpinnerStyle.Light.Dropdown</item>
+        <item name="android:spinnerDropDownItemStyle">@style/SpinnerDropDownItemStyle.Light</item>
     </style>
 
     <style name="Theme.FenceIt.Dark" parent="Theme.Sherlock"></style>

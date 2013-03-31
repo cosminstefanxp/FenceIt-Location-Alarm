@@ -35,7 +35,8 @@
                 android:layout_height="fill_parent"
                 android:background="@null"
                 android:scaleType="fitCenter"
-                android:src="@drawable/ic_home_alarm2" />
+                android:contentDescription="Alarms"
+                android:src="@drawable/ic_home_alarm" />
         </LinearLayout>
 
         <LinearLayout
@@ -63,6 +64,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:scaleType="fitCenter"
+                android:contentDescription="Locations - Image provided by www.graphicsfuel.com"
                 android:src="@drawable/ic_home_locations" />
         </LinearLayout>
     </TableRow>
@@ -99,6 +101,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:scaleType="fitCenter"
+                android:contentDescription="Settings"
                 android:src="@drawable/ic_home_settings" />
         </LinearLayout>
 
@@ -127,6 +130,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:scaleType="fitCenter"
+                android:contentDescription="About"
                 android:src="@drawable/ic_home_about" />
         </LinearLayout>
     </TableRow>

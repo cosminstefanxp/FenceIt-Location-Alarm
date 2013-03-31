@@ -97,7 +97,7 @@
             android:theme="@style/Theme.FenceIt" />
         <activity
             android:name=".ui.NotificationTriggeredActivity"
-            android:theme="@style/Theme.FenceIt" />
+            android:theme="@style/Theme.FenceIt.NoActionBar" />
 
         <service
             android:name=".service.BackgroundService"
