@@ -34,8 +34,8 @@
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
                 android:background="@null"
-                android:scaleType="fitCenter"
                 android:contentDescription="Alarms"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_home_alarm" />
         </LinearLayout>
 
@@ -54,7 +54,8 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:background="@null"
+                android:gravity="center|center_horizontal"
                 android:padding="7dp"
                 android:text="Locations"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -63,8 +64,8 @@
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:scaleType="fitCenter"
                 android:contentDescription="Locations - Image provided by www.graphicsfuel.com"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_home_locations" />
         </LinearLayout>
     </TableRow>
@@ -91,7 +92,8 @@
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:background="@null"
+                android:gravity="center|center_horizontal"
                 android:padding="7dp"
                 android:text="Settings"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -100,8 +102,8 @@
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:scaleType="fitCenter"
                 android:contentDescription="Settings"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_home_settings" />
         </LinearLayout>
 
@@ -114,13 +116,15 @@
             android:background="@drawable/home_button"
             android:clickable="true"
             android:focusable="true"
+            android:gravity="center_horizontal"
             android:orientation="vertical"
             android:padding="7dp" >
 
             <TextView
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:gravity="center"
+                android:background="@null"
+                android:gravity="center|center_horizontal"
                 android:padding="7dp"
                 android:text="About"
                 android:textAppearance="?android:attr/textAppearanceLarge"
@@ -129,8 +133,8 @@
             <ImageView
                 android:layout_width="fill_parent"
                 android:layout_height="fill_parent"
-                android:scaleType="fitCenter"
                 android:contentDescription="About"
+                android:scaleType="fitCenter"
                 android:src="@drawable/ic_home_about" />
         </LinearLayout>
     </TableRow>
