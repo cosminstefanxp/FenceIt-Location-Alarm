@@ -12,7 +12,6 @@ import org.androwrapee.db.DefaultDAO;
 
 import android.app.Activity;
 import android.content.Intent;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnClickListener;
@@ -161,8 +160,6 @@ public class AlarmAdapter extends BaseAdapter implements OnClickListener {
 			return;
 		Alarm alarm = alarms.get(position);
 		// If the alarm is already checked, skip this
-		Log.i(this.getClass().getName(), "Toggle button for alarm with id " + alarm.getId() + " toggled to "
-				+ buttonView.isChecked());
 		if (alarm.isEnabled() == buttonView.isChecked())
 			return;
 		alarm.setEnabled(buttonView.isChecked());

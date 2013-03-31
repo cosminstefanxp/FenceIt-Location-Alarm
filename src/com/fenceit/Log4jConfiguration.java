@@ -14,20 +14,21 @@ import de.mindpipe.android.logging.log4j.LogConfigurator;
 public class Log4jConfiguration {
 	static {
 		final LogConfigurator logConfigurator = new LogConfigurator();
-		//File log configuration
-		logConfigurator.setUseFileAppender(true);
-		logConfigurator.setFileName(Environment.getExternalStorageDirectory()
-				+ "/FenceIt/Main.log");
-		logConfigurator.setMaxFileSize(1024*50);
-		logConfigurator.setMaxBackupSize(3);
-		logConfigurator.setFilePattern("%d [%-5p] %c - %m%n");
+		logConfigurator.setUseFileAppender(false);
+//		//File log configuration
+//		logConfigurator.setUseFileAppender(true);
+//		logConfigurator.setFileName(Environment.getExternalStorageDirectory()
+//				+ "/FenceIt/Main.log");
+//		logConfigurator.setMaxFileSize(1024*50);
+//		logConfigurator.setMaxBackupSize(3);
+//		logConfigurator.setFilePattern("%d [%-5p] %c - %m%n");
 		
 		//Log cat configuration
 		logConfigurator.setUseLogCatAppender(true);
 		logConfigurator.setLogCatPattern("* %m%n");
 
 		//Basic configuration
-		logConfigurator.setRootLevel(Level.DEBUG);
+		logConfigurator.setRootLevel(Level.ERROR);
 		logConfigurator.configure();
 	}
 }
