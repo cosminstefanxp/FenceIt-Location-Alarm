@@ -2,7 +2,7 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.fenceit"
     android:versionCode="1"
-    android:versionName="1.0.0" >
+    android:versionName="1.0.12" >
 
     <uses-sdk
         android:minSdkVersion="8"
@@ -125,7 +125,7 @@
 
         <meta-data
             android:name="com.google.android.maps.v2.API_KEY"
-            android:value="AIzaSyAmikKmhwEs0tJt_0V0ABhaVXCVAiXySgc" />
+            android:value="AIzaSyCZWXkaRJt0s0-xRZDDEzf9mm9rlxSa9kE" />
     </application>
 
 </manifest>
