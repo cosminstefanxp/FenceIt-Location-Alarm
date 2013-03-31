@@ -42,6 +42,10 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	@DatabaseField
 	private boolean enabled;
 
+	/** Whether the alarm gets automatically disabled when triggered. */
+	@DatabaseField
+	private boolean disableOnTrigger;
+
 	/** The triggers. */
 	transient private List<AlarmTrigger> triggers;
 
@@ -61,8 +65,8 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	/**
 	 * Checks if the alarm should be triggered.
 	 * 
-	 * @param data the environment data which provides enough information for the alarm to check if
-	 *            it should be triggered.
+	 * @param data the environment data which provides enough information for
+	 *            the alarm to check if it should be triggered.
 	 * @return true, if is triggered
 	 */
 	public boolean shouldTrigger(ContextData data) {
@@ -76,7 +80,8 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	}
 
 	/**
-	 * Checks if the alarm is complete and has all the fields correctly filled in.
+	 * Checks if the alarm is complete and has all the fields correctly filled
+	 * in.
 	 * 
 	 * @return true, if is complete
 	 */
@@ -92,6 +97,7 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 	public Alarm() {
 		super();
 		this.enabled = false;
+		this.disableOnTrigger = false;
 		this.triggers = new ArrayList<AlarmTrigger>();
 		this.actions = new ArrayList<AlarmAction>();
 		this.name = "New Alarm";
@@ -107,14 +113,17 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 		this.id = id;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#toString() */
+	 * @see java.lang.Object#toString()
+	 */
 	@Override
 	public String toString() {
-		return "Alarm [id=" + id + ", name=" + name + ", enabled=" + enabled + ", triggers=" + triggers + ", actions="
-				+ actions + "]";
-		// String out = "Alarm [id=" + id + ", name=" + name + ", enabled=" + enabled + "]";
+		return "Alarm [id=" + id + ", name=" + name + ", enabled=" + enabled + ", disableOnTrigger="
+				+ disableOnTrigger + ", triggers=" + triggers + ", actions=" + actions + "]";
+		// String out = "Alarm [id=" + id + ", name=" + name + ", enabled=" +
+		// enabled + "]";
 		// out += "\n\tTriggers:";
 		// for (AlarmTrigger t : triggers)
 		// out += "\n\t" + t.toString();
@@ -253,9 +262,29 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 		this.id = id;
 	}
 
-	/* (non-Javadoc)
+	/**
+	 * Checks if is disabling on trigger.
 	 * 
-	 * @see java.lang.Object#hashCode() */
+	 * @return true, if is disabling on trigger
+	 */
+	public boolean isDisablingOnTrigger() {
+		return disableOnTrigger;
+	}
+
+	/**
+	 * Sets the disable on trigger.
+	 * 
+	 * @param disableOnTrigger the new disable on trigger
+	 */
+	public void setDisableOnTrigger(boolean disableOnTrigger) {
+		this.disableOnTrigger = disableOnTrigger;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see java.lang.Object#hashCode()
+	 */
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -267,9 +296,11 @@ public class Alarm implements Serializable, DatabaseReferenceClass {
 		return result;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
 	 * 
-	 * @see java.lang.Object#equals(java.lang.Object) */
+	 * @see java.lang.Object#equals(java.lang.Object)
+	 */
 	@Override
 	public boolean equals(Object obj) {
 		if (this == obj)

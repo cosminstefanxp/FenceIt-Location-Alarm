@@ -2,11 +2,10 @@
 <resources>
 
     <color name="section_header_title">#606060</color>
-    
     <color name="background">#222233</color>
     <color name="delimiter">#808080</color>
     <color name="setting_item">#dddddd</color>
-    <color name="setting_item_selected">#0099CC</color>
+    <color name="setting_item_selected">@color/holo_blue_light</color>
     <color name="setting_item_border">#1a1a1a</color>
     <color name="title_background">#0099CC</color>
     <color name="title_text">#ffffffff</color>
@@ -17,9 +16,12 @@
     <color name="background2">#ffd5ddeb</color>
     <color name="background3">#ffe3e8f1</color>
     <color name="title_separator">#40ffffff</color>
-    
+    <color name="holo_blue_bright">#ff00ddff</color>
+    <color name="holo_blue_light">#aa33b5e5</color>
+
     <drawable name="screen_background_holo_light">#fff3f3f3</drawable>
     <drawable name="screen_background_holo_dark">#ff000000</drawable>
+
     <color name="background_holo_dark">#ff000000</color>
     <color name="background_holo_light">#fff3f3f3</color>
     <color name="bright_foreground_holo_dark">@color/background_holo_light</color>

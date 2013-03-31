@@ -118,4 +118,8 @@
 
     <string name="location_geo_view_map_hint">Touch to view or set position on map.</string>
 
+    <string name="alarm_disableOnTrigger_description">Touch to set whether this alarm is automatically disabled when triggered.</string>
+    <string name="alarm_disableOnTrigger_disable">Disable when triggered</string>
+    <string name="alarm_disableOnTrigger_keep">Keep enabled when triggered</string>
+
 </resources>

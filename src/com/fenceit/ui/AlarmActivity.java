@@ -7,6 +7,7 @@
 package com.fenceit.ui;
 
 import java.util.HashMap;
+import java.util.Locale;
 
 import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
@@ -51,6 +52,8 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 
 	/** The data access object. */
 	private DefaultDAO<Alarm> dao = null;
+
+	private boolean alarmChanged = false;
 
 	/**
 	 * Called when the activity is first created.
@@ -98,8 +101,24 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		initialiseTabHost(savedInstanceState);
 
 		// Add OnClickListeners
-		// ((TextView) findViewById(R.id.alarm_nameText))
-		// .setOnEditorActionListener(new LoseFocusOnEditorActionListener());
+		findViewById(R.id.alarm_disableOnTriggerSection).setOnClickListener(new View.OnClickListener() {
+
+			@Override
+			// If the section with the DisableOnTrigger option is clicked,
+			// change the alarm accordingly
+			public void onClick(View v) {
+				alarmChanged = true;
+				if (alarm.isDisablingOnTrigger()) {
+					alarm.setDisableOnTrigger(false);
+					((TextView) findViewById(R.id.alarm_disableOnTriggerText))
+							.setText(R.string.alarm_disableOnTrigger_keep);
+				} else {
+					alarm.setDisableOnTrigger(true);
+					((TextView) findViewById(R.id.alarm_disableOnTriggerText))
+							.setText(R.string.alarm_disableOnTrigger_disable);
+				}
+			}
+		});
 
 		refreshActivity();
 	}
@@ -122,10 +141,11 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		super.onPause();
 		// If the name was changed, save it
 		String newName = ((TextView) findViewById(R.id.alarm_nameText)).getText().toString();
-		if (!newName.equals(alarm.getName())) {
+		if (alarmChanged || !newName.equals(alarm.getName())) {
 			alarm.setName(newName);
 			if (storeAlarm(false) == false)
 				Toast.makeText(this, "Alarm not updated due to invalid name.", Toast.LENGTH_LONG).show();
+			alarmChanged = false;
 		}
 
 	}
@@ -139,6 +159,12 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 			return;
 		}
 		((TextView) findViewById(R.id.alarm_nameText)).setText(alarm.getName());
+		if (alarm.isDisablingOnTrigger())
+			((TextView) findViewById(R.id.alarm_disableOnTriggerText))
+					.setText(R.string.alarm_disableOnTrigger_disable);
+		else
+			((TextView) findViewById(R.id.alarm_disableOnTriggerText))
+					.setText(R.string.alarm_disableOnTrigger_keep);
 	}
 
 	/**
@@ -287,13 +313,15 @@ public class AlarmActivity extends DefaultActivity implements TriggersFragmentCo
 		args.putLong("alarmID", alarm.getId());
 
 		// Add the tab for the triggers fragment
-		tabInfo = new TabInfo(TAG_TAB_TRIGGERS, getString(R.string.triggers), TriggersFragment.class, args);
+		tabInfo = new TabInfo(TAG_TAB_TRIGGERS, getString(R.string.triggers).toUpperCase(Locale.ENGLISH),
+				TriggersFragment.class, args);
 		AlarmActivity.addTab(this, this.mTabHost,
 				this.mTabHost.newTabSpec(tabInfo.tag).setIndicator(tabInfo.name), tabInfo);
 		this.mapTabInfo.put(tabInfo.tag, tabInfo);
 
 		// Add the tab for the actions fragment
-		tabInfo = new TabInfo(TAG_TAB_ACTIONS, getString(R.string.actions), ActionsFragment.class, args);
+		tabInfo = new TabInfo(TAG_TAB_ACTIONS, getString(R.string.actions).toUpperCase(Locale.ENGLISH),
+				ActionsFragment.class, args);
 		AlarmActivity.addTab(this, this.mTabHost,
 				this.mTabHost.newTabSpec(tabInfo.tag).setIndicator(tabInfo.name), tabInfo);
 		this.mapTabInfo.put(tabInfo.tag, tabInfo);

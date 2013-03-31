@@ -9,6 +9,7 @@ package com.fenceit.service.checkers;
 import java.util.HashSet;
 import java.util.List;
 
+import org.androwrapee.db.DefaultDAO;
 import org.apache.log4j.Logger;
 
 import android.content.Context;
@@ -22,6 +23,7 @@ import com.fenceit.alarm.locations.AlarmLocation;
 import com.fenceit.alarm.triggers.AlarmTrigger;
 import com.fenceit.alarm.triggers.BasicTrigger;
 import com.fenceit.db.DatabaseAccessor;
+import com.fenceit.db.DatabaseManager;
 import com.fenceit.provider.ContextData;
 import com.fenceit.service.BackgroundServiceHandler;
 import com.fenceit.service.LightedGreenRoomWakeLockManager;
@@ -129,6 +131,16 @@ public abstract class TriggerCheckerThread extends Thread {
 					log.info("Alarm with id: " + alarmId
 							+ " already triggered before, so not executing actions again.");
 					continue;
+				}
+
+				// Check whether the alarm should be disabled
+				if (t.getAlarm().isDisablingOnTrigger()) {
+					t.getAlarm().setEnabled(false);
+					DefaultDAO<Alarm> daoAlarms = DatabaseManager.getDAOInstance(mContext, Alarm.class,
+							Alarm.tableName);
+					daoAlarms.open();
+					daoAlarms.update(t.getAlarm(), t.getAlarm().getId());
+					daoAlarms.close();
 				}
 
 				// Get the reason why the alarm was triggered and send a message

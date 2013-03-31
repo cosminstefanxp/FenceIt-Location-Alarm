@@ -29,6 +29,30 @@
             android:textAppearance="?android:attr/textAppearanceSmall" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/alarm.disableOnTriggerSection"
+        style="@style/SettingItem"
+        android:layout_width="match_parent"
+        android:clickable="true"
+        android:focusable="true"
+        android:orientation="vertical" >
+
+        <TextView
+            android:id="@+id/alarm.disableOnTriggerText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/default_text"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:text="@string/alarm_disableOnTrigger_description"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
+    </LinearLayout>
+
     <TabHost
         android:id="@android:id/tabhost"
         android:layout_width="fill_parent"

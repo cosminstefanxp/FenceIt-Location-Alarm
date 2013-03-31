@@ -5,12 +5,12 @@
         <item name="android:layout_width">fill_parent</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">@dimen/setting_item_padding</item>
-        <item name="android:background">@drawable/bottom_border</item>
+        <item name="android:background">@drawable/list_selector_bottom_border</item>
         <item name="android:minHeight">@dimen/setting_item_height</item>
     </style>
-    
+
     <style name="SettingItem.BothBorders">
-        <item name="android:background">@drawable/top_bottom_border</item>
+        <item name="android:background">@drawable/list_selector_top_bottom_border</item>
     </style>
 
     <style name="SettingItem.Indented">
@@ -45,8 +45,6 @@
         <item name="android:background">@drawable/spinner_background_holo_light</item>
         <item name="android:dropDownSelector">@drawable/list_selector_holo_light</item>
     </style>
-
-
 
     <style name="SpinnerDropDownItemStyle.Light" parent="android:Widget.DropDownItem.Spinner">
         <item name="android:checkMark">@drawable/btn_radio_holo_light</item>
