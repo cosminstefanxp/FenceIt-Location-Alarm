@@ -22,7 +22,6 @@ import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.widget.SearchView;
 import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.fenceit.R;
-import com.fenceit.ui.adapters.LocationMapInfoWindowAdapter_;
 import com.fenceit.ui.helpers.LocationMapSearchTask;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -106,7 +105,7 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 
 				// The Map is verified. It is now safe to manipulate the map:
 				mMap.setMyLocationEnabled(true);
-				mMap.setInfoWindowAdapter(LocationMapInfoWindowAdapter_.getInstance_(getBaseContext()));
+				mMap.setInfoWindowAdapter(com.fenceit.ui.adapters.LocationMapInfoWindowAdapter_.getInstance_(getBaseContext()));
 				if (selectedLocation != null) {
 					// Set default zoom and location
 					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 13f));
