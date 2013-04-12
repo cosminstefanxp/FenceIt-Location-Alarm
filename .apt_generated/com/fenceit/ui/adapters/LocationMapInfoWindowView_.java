@@ -40,9 +40,9 @@ public final class LocationMapInfoWindowView_
     }
 
     private void afterSetContentView_() {
-        descriptionText = ((TextView) findViewById(id.markerInfoWindow_description));
         titleText = ((TextView) findViewById(id.markerInfoWindow_title));
         optionalText = ((TextView) findViewById(id.markerInfoWindow_optional));
+        descriptionText = ((TextView) findViewById(id.markerInfoWindow_description));
     }
 
     /**

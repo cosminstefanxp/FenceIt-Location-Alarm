@@ -1,3 +1,9 @@
+/*
+ * Fence It
+ *
+ * Stefan-Dobrin Cosmin
+ * Copyright 2012
+ */
 package com.fenceit.ui.adapters;
 
 import android.content.Context;
@@ -8,6 +14,11 @@ import com.google.android.gms.maps.model.Marker;
 import com.googlecode.androidannotations.annotations.EBean;
 import com.googlecode.androidannotations.annotations.RootContext;
 
+/**
+ * A custom InfoWindowAdapter that displays data on 3 rows (title, description
+ * and optional). The description and optional texts are taken from the
+ * getSnippet method of the Marker.
+ */
 @EBean
 public class LocationMapInfoWindowAdapter implements InfoWindowAdapter {
 

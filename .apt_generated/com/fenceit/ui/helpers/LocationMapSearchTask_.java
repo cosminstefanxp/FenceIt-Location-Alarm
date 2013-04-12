@@ -79,14 +79,14 @@ public final class LocationMapSearchTask_
     }
 
     @Override
-    public void searchInBackground(final String toSearch) {
+    public void searchAddressInBackground(final String toSearch) {
         BackgroundExecutor.execute(new Runnable() {
 
 
             @Override
             public void run() {
                 try {
-                    LocationMapSearchTask_.super.searchInBackground(toSearch);
+                    LocationMapSearchTask_.super.searchAddressInBackground(toSearch);
                 } catch (RuntimeException e) {
                     Log.e("LocationMapSearchTask_", "A runtime exception was thrown while executing code in a runnable", e);
                 }

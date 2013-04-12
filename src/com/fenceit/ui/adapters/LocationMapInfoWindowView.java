@@ -1,3 +1,9 @@
+/*
+ * Fence It
+ *
+ * Stefan-Dobrin Cosmin
+ * Copyright 2012
+ */
 package com.fenceit.ui.adapters;
 
 import android.content.Context;
@@ -8,6 +14,9 @@ import com.fenceit.R;
 import com.googlecode.androidannotations.annotations.EViewGroup;
 import com.googlecode.androidannotations.annotations.ViewById;
 
+/**
+ * A custom view with 3 rows used in the {@link LocationMapInfoWindowAdapter}.
+ */
 @EViewGroup(R.layout.marker_info_content)
 public class LocationMapInfoWindowView extends LinearLayout {
 
