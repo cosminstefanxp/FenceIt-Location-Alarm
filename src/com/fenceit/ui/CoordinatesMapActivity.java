@@ -8,23 +8,38 @@ package com.fenceit.ui;
 
 import org.apache.log4j.Logger;
 
+import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.location.Address;
 import android.os.Bundle;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
-import com.actionbarsherlock.view.MenuItem;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
+import com.actionbarsherlock.widget.SearchView;
+import com.actionbarsherlock.widget.SearchView.OnQueryTextListener;
 import com.fenceit.R;
+import com.fenceit.ui.adapters.LocationMapInfoWindowAdapter_;
+import com.fenceit.ui.helpers.LocationMapSearchTask;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.googlecode.androidannotations.annotations.Bean;
+import com.googlecode.androidannotations.annotations.EActivity;
+import com.googlecode.androidannotations.annotations.NonConfigurationInstance;
+import com.googlecode.androidannotations.annotations.OptionsItem;
 
 /**
  * The Class CoordinatesMapActivity.
  */
+@EActivity
 public class CoordinatesMapActivity extends SherlockFragmentActivity {
 
 	/** The logger. */
@@ -38,6 +53,12 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 
 	/** The marker. */
 	private Marker mMarker;
+
+	/** The search result marker. */
+	private Marker searchMarker;
+
+	/** The search result location. */
+	private LatLng searchResultLocation;
 
 	/** Whether any changes were made. */
 	private boolean mChangesMade = false;
@@ -82,8 +103,10 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 					R.id.coordinates_map_fragment)).getMap();
 			// Check if we were successful in obtaining the map.
 			if (mMap != null) {
+
 				// The Map is verified. It is now safe to manipulate the map:
 				mMap.setMyLocationEnabled(true);
+				mMap.setInfoWindowAdapter(LocationMapInfoWindowAdapter_.getInstance_(getBaseContext()));
 				if (selectedLocation != null) {
 					// Set default zoom and location
 					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 13f));
@@ -105,20 +128,10 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 						selectedLocation = point;
 						mChangesMade = true;
 						if (mMarker != null) {
-							mMarker.setSnippet(CoordinatesMapActivity.this.getString(
-									R.string.location_geo_map_marker_snippet, selectedLocation.latitude,
-									selectedLocation.longitude));
-							mMarker.setPosition(selectedLocation);
+							updateSelectedMarker();
 							mMarker.hideInfoWindow();
 						} else
-							mMarker = mMap.addMarker(new MarkerOptions()
-									.position(selectedLocation)
-									.title(getString(R.string.location_geo_map_marker_title))
-									.draggable(true)
-									.snippet(
-											CoordinatesMapActivity.this.getString(
-													R.string.location_geo_map_marker_snippet,
-													selectedLocation.latitude, selectedLocation.longitude)));
+							createSelectedMarker();
 					}
 				});
 
@@ -131,31 +144,58 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 
 					@Override
 					public void onMarkerDragEnd(Marker marker) {
-						selectedLocation = marker.getPosition();
-						mChangesMade = true;
+						if (marker == mMarker) {
+							selectedLocation = marker.getPosition();
+							mChangesMade = true;
+						}
 					}
 
 					@Override
 					public void onMarkerDrag(Marker marker) {
 					}
 				});
+
+				// When the search marker is clicked, set it as the mMarker
+				mMap.setOnInfoWindowClickListener(new GoogleMap.OnInfoWindowClickListener() {
+
+					@Override
+					public void onInfoWindowClick(Marker marker) {
+						if (marker.equals(searchMarker)) {
+							selectedLocation = marker.getPosition();
+							if (mMarker == null)
+								createSelectedMarker();
+							else
+								updateSelectedMarker();
+							searchMarker.remove();
+							searchMarker = null;
+						}
+					}
+				});
 			}
 		}
 	}
 
-	@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch (item.getItemId()) {
-		case android.R.id.home:
-			returnSelectedLocation();
-			return true;
-		}
-		return super.onOptionsItemSelected(item);
+	@SuppressLint("InlinedApi")
+	@OptionsItem(android.R.id.home)
+	public void homeSelected() {
+		returnSelectedLocation();
 	}
 
-	@Override
 	public void onBackPressed() {
 		returnSelectedLocation();
+	}
+
+	public void updateSelectedMarker() {
+		mMarker.setSnippet(CoordinatesMapActivity.this.getString(R.string.location_geo_map_marker_snippet,
+				selectedLocation.latitude, selectedLocation.longitude));
+		mMarker.setPosition(selectedLocation);
+	}
+
+	public void createSelectedMarker() {
+		mMarker = mMap.addMarker(new MarkerOptions().title(getString(R.string.location_geo_map_marker_title))
+				.draggable(true).position(selectedLocation));
+		mMarker.setSnippet(CoordinatesMapActivity.this.getString(R.string.location_geo_map_marker_snippet,
+				selectedLocation.latitude, selectedLocation.longitude));
 	}
 
 	/**
@@ -189,4 +229,68 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 			mMap.setMyLocationEnabled(false);
 	}
 
+	@Override
+	public boolean onCreateOptionsMenu(final Menu menu) {
+		MenuInflater menuInflater = getSupportMenuInflater();
+		menuInflater.inflate(R.menu.activity_location_map, menu);
+		// Properly set up the search view
+		final SearchView searchView = (SearchView) menu.findItem(R.id.menu_search).getActionView();
+		searchView.setOnQueryTextListener(new OnQueryTextListener() {
+
+			@Override
+			public boolean onQueryTextSubmit(String query) {
+				// Start the search, in background
+				log.info("Searching for: " + query);
+				searchTask.searchAddressInBackground(query);
+
+				// Hide virtual keyboard
+				InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+				imm.hideSoftInputFromWindow(searchView.getWindowToken(), 0);
+				return false;
+			}
+
+			@Override
+			public boolean onQueryTextChange(String newText) {
+				return false;
+			}
+		});
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	/** The search task executing the search in the background. */
+	@NonConfigurationInstance
+	@Bean
+	protected LocationMapSearchTask searchTask;
+
+	/**
+	 * Shows the search result on the activity
+	 * 
+	 * @param result the result
+	 */
+	public void showSearchResult(Address result) {
+		if (log.isInfoEnabled())
+			log.info("Search result found: " + result);
+		searchResultLocation = new LatLng(result.getLatitude(), result.getLongitude());
+		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchResultLocation, 12f));
+
+		// prepare data
+		String title = result.getMaxAddressLineIndex() >= 0 ? result.getAddressLine(0) : "";
+		StringBuilder description = new StringBuilder();
+		for (int i = 1; i <= result.getMaxAddressLineIndex(); i++)
+			description.append(result.getAddressLine(i)).append(' ');
+
+		// do something with result
+		if (searchMarker != null) {
+			searchMarker.setPosition(searchResultLocation);
+			searchMarker.setTitle(title);
+			searchMarker.setSnippet(description + "~Touch to use this location");
+			searchMarker.showInfoWindow();
+		} else {
+			searchMarker = mMap.addMarker(new MarkerOptions().position(searchResultLocation).title(title)
+					.snippet(description + "~Touch to use this location").draggable(true)
+					.icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+			searchMarker.showInfoWindow();
+		}
+
+	}
 }

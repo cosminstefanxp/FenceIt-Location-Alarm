@@ -111,7 +111,7 @@ public class CoordinatesActivity extends AbstractLocationActivity<CoordinatesLoc
 			break;
 		case R.id.coordinates_mapSection:
 			log.info("Showing map for coordinates selection.");
-			Intent mapIntent = new Intent(this, CoordinatesMapActivity.class);
+			Intent mapIntent = new Intent(this, CoordinatesMapActivity_.class);
 			if (location.isComplete()) {
 				mapIntent.putExtra("lat", location.getLatitude());
 				mapIntent.putExtra("long", location.getLongitude());
