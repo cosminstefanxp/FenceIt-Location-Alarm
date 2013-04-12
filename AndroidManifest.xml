@@ -80,7 +80,7 @@
             android:label="Edit Location"
             android:theme="@style/Theme.FenceIt" />
         <activity
-            android:name=".ui.CoordinatesMapActivity"
+            android:name=".ui.CoordinatesMapActivity_"
             android:label="Location Map"
             android:theme="@style/Theme.FenceIt" />
         <activity
