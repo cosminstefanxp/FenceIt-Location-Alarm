@@ -13,6 +13,8 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.actionbarsherlock.app.SherlockFragmentActivity;
+import com.actionbarsherlock.view.Menu;
+import com.actionbarsherlock.view.MenuInflater;
 import com.actionbarsherlock.view.MenuItem;
 import com.fenceit.R;
 import com.google.android.gms.maps.CameraUpdateFactory;
@@ -144,11 +146,19 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 	}
 
 	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater inflater = getSupportMenuInflater();
+		inflater.inflate(R.menu.activity_location_map, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch (item.getItemId()) {
 		case android.R.id.home:
 			returnSelectedLocation();
 			return true;
+
 		}
 		return super.onOptionsItemSelected(item);
 	}
