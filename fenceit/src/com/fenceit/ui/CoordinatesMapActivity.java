@@ -105,7 +105,8 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 
 				// The Map is verified. It is now safe to manipulate the map:
 				mMap.setMyLocationEnabled(true);
-				mMap.setInfoWindowAdapter(com.fenceit.ui.adapters.LocationMapInfoWindowAdapter_.getInstance_(getBaseContext()));
+				mMap.setInfoWindowAdapter(com.fenceit.ui.adapters.LocationMapInfoWindowAdapter_
+						.getInstance_(getBaseContext()));
 				if (selectedLocation != null) {
 					// Set default zoom and location
 					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 13f));
@@ -145,6 +146,7 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 					public void onMarkerDragEnd(Marker marker) {
 						if (marker == mMarker) {
 							selectedLocation = marker.getPosition();
+							updateSelectedMarker();
 							mChangesMade = true;
 						}
 					}
@@ -161,6 +163,7 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 					public void onInfoWindowClick(Marker marker) {
 						if (marker.equals(searchMarker)) {
 							selectedLocation = marker.getPosition();
+							mChangesMade = true;
 							if (mMarker == null)
 								createSelectedMarker();
 							else
