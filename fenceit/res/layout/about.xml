@@ -1,89 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/RelativeLayout1"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent"
-    android:orientation="vertical" >
+    android:layout_height="fill_parent" >
 
-    <TextView
-        android:id="@+id/about.authorText"
-        android:layout_width="wrap_content"
+    <RelativeLayout
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/about.logoImage"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="14dp"
-        android:text="Cosmin Stefan"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        android:orientation="vertical" >
 
-    <TextView
-        android:id="@+id/about.emailText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/about.authorText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="2dp"
-        android:text="cosminstefanxp@gmail.com"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/about.authorText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about.logoImage"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="14dp"
+            android:text="Cosmin Stefan"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:id="@+id/about.copyrightText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/about.emailText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="2dp"
-        android:text="Copyright 2012-2013"
-        android:textAppearance="?android:attr/textAppearanceSmall" />
+        <TextView
+            android:id="@+id/about.emailText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about.authorText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:text="cosminstefanxp@gmail.com"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
-        android:id="@+id/about.attributions"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:padding="10dp"
-        android:text="Attributions: The Bell image used in the logo is designed by Cyrille LE FLOCH from The Noun Project"
-        android:textStyle="italic" />
+        <TextView
+            android:id="@+id/about.copyrightText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about.emailText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="2dp"
+            android:text="Copyright 2012-2013"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
-    <TextView
-        android:id="@+id/about.titleText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentTop="true"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="36dp"
-        android:text="FenceIt"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textColor="@color/title_background"
-        android:textSize="30sp" />
+        <TextView
+            android:id="@+id/about.attributions"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerHorizontal="true"
+            android:layout_below="@+id/about.eulaText"
+            android:padding="10dp"
+            android:text="Attributions: The Bell image used in the logo is designed by Cyrille LE FLOCH from The Noun Project"
+            android:textStyle="italic" />
 
-    <TextView
-        android:id="@+id/about.versionText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/about.titleText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="12dp"
-        android:text="Version 1.0.12"
-        android:textAppearance="?android:attr/textAppearanceMedium" />
+        <TextView
+            android:id="@+id/about.titleText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="36dp"
+            android:text="FenceIt"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textColor="@color/title_background"
+            android:textSize="30sp" />
 
-    <ImageView
-        android:id="@+id/about.logoImage"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/about.versionText"
-        android:layout_centerHorizontal="true"
-        android:layout_marginTop="30dp"
-        android:src="@drawable/ic_launcher" />
+        <TextView
+            android:id="@+id/about.versionText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about.titleText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="12dp"
+            android:text="Version 1.0.12"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
 
-    <TextView
-        android:id="@+id/about.eulaText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/about.attributions"
-        android:text="End User License Agreement"
-        android:layout_centerHorizontal="true"
-        android:textColor="@color/link_text_holo_dark"
-        android:textStyle="italic" />
+        <ImageView
+            android:id="@+id/about.logoImage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about.versionText"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="30dp"
+            android:src="@drawable/ic_launcher" />
 
-</RelativeLayout>
+        <TextView
+            android:id="@+id/about.eulaText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/about.copyrightText"
+            android:layout_marginTop="120dp"
+            android:layout_centerHorizontal="true"
+            android:text="End User License Agreement"
+            android:textColor="@color/link_text_holo_dark"
+            android:textStyle="italic" />
+    </RelativeLayout>
+
+</ScrollView>
