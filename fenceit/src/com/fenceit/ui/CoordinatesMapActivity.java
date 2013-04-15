@@ -12,6 +12,7 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.location.Address;
+import android.location.Location;
 import android.os.Bundle;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Toast;
@@ -26,6 +27,7 @@ import com.fenceit.ui.helpers.LocationMapSearchTask;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.GoogleMap.OnMyLocationChangeListener;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -105,10 +107,11 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 
 				// The Map is verified. It is now safe to manipulate the map:
 				mMap.setMyLocationEnabled(true);
-				mMap.setInfoWindowAdapter(com.fenceit.ui.adapters.LocationMapInfoWindowAdapter_.getInstance_(getBaseContext()));
+				mMap.setInfoWindowAdapter(com.fenceit.ui.adapters.LocationMapInfoWindowAdapter_
+						.getInstance_(getBaseContext()));
 				if (selectedLocation != null) {
 					// Set default zoom and location
-					mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 13f));
+					mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(selectedLocation, 13f));
 					mMarker = mMap.addMarker(new MarkerOptions()
 							.position(selectedLocation)
 							.draggable(true)
@@ -116,6 +119,18 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 							.snippet(
 									getString(R.string.location_geo_map_marker_snippet,
 											selectedLocation.latitude, selectedLocation.longitude)));
+				}else {
+					// Move the camera to the myLocation position. Only move the camera to the user's location
+					// once.
+					mMap.setOnMyLocationChangeListener(new OnMyLocationChangeListener() {
+
+						@Override
+						public void onMyLocationChange(Location location) {
+							mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
+									new LatLng(location.getLatitude(), location.getLongitude()), 13f));
+							mMap.setOnMyLocationChangeListener(null);
+						}
+					});
 				}
 
 				// On long click on the map select a new location and create a
@@ -145,6 +160,7 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 					public void onMarkerDragEnd(Marker marker) {
 						if (marker == mMarker) {
 							selectedLocation = marker.getPosition();
+							updateSelectedMarker();	
 							mChangesMade = true;
 						}
 					}
@@ -161,6 +177,7 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 					public void onInfoWindowClick(Marker marker) {
 						if (marker.equals(searchMarker)) {
 							selectedLocation = marker.getPosition();
+							mChangesMade = true;
 							if (mMarker == null)
 								createSelectedMarker();
 							else
@@ -270,7 +287,7 @@ public class CoordinatesMapActivity extends SherlockFragmentActivity {
 		if (log.isInfoEnabled())
 			log.info("Search result found: " + result);
 		searchResultLocation = new LatLng(result.getLatitude(), result.getLongitude());
-		mMap.moveCamera(CameraUpdateFactory.newLatLngZoom(searchResultLocation, 12f));
+		mMap.animateCamera(CameraUpdateFactory.newLatLngZoom(searchResultLocation, 12f));
 
 		// prepare data
 		String title = result.getMaxAddressLineIndex() >= 0 ? result.getAddressLine(0) : "";
